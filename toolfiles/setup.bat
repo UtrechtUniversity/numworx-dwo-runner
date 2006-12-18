@@ -1,0 +1,1 @@
+..\..\..\tools\InnoSetup\ISCC.exe Setup.iss
