@@ -17,7 +17,7 @@ import java.lang.reflect.InvocationTargetException;
             //}
             args = new String[2];
             args[0] = "http://www.fi.uu.nl/dwo/jars/dwo.jar";
-            args[1] = "15";
+            args[1] = "13";
             URL url = null;
             try {
                 url = new URL(args[0]);
