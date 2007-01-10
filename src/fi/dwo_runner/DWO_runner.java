@@ -15,9 +15,11 @@ import java.lang.reflect.InvocationTargetException;
             //if (args.length < 1) {
             //    usage();
             //}
-            args = new String[2];
+            args = new String[4];
             args[0] = "http://www.fi.uu.nl/dwo/jars/dwo.jar";
-            args[1] = "13";
+            args[1] = "1";
+            
+            
             URL url = null;
             try {
                 url = new URL(args[0]);
