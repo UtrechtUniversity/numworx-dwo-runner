@@ -1,12 +1,6 @@
 -classpath %JAVA_HOME%\jre\lib\rt.jar
 -manifestMain
 ..\output\classes\fi
-..\output\scorm\course\cp\sco
-..\output\scorm\course\cp\adlcp_rootv1p2.xsd
-..\output\scorm\course\cp\ims_xml.xsd
-..\output\scorm\course\cp\imscp_rootv1p1p2.xsd
-..\output\scorm\course\cp\imsmanifest.xml
-..\output\scorm\course\cp\imsmd_rootv1p2p1.xsd
 -keepInterface fi.?
 -o ..\output\jar\dwo_runner.jar
 
