@@ -18,7 +18,7 @@ import java.lang.reflect.InvocationTargetException;
             args = new String[4];
             args[0] = "http://www.fi.uu.nl/dwo/jars/dwo.jar";
             args[1] = "15";
-            args[2] = "andre_sag";
+            args[2] = "peterb_sag";
             args[3] = "passw";
             
             
