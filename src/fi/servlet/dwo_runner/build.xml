@@ -1,0 +1,63 @@
+<?xml version='1.0' ?>
+
+<!--
+     Zet deze file met de naam 'build.xml' in de main package source folder van je project.
+     Voor een Applet/Application is dat:
+	..../ProjectName/src/fi/package_name/
+     Voor bv een Servlet is dat:
+        ..../ProjectName/src/fi/servlet/package_name/
+        
+     Zet naast deze file een 'build.properties' template. Bekijk de properties en constateer dat
+     daarin alles wat je nodig hebt kan worden geconfigureerd ....
+     
+     ... op 1 eigenschap na:
+        
+    !!! VERVANG HIERONDER bij name='ProjectName' ProjectName door een handige unieke naam voor de build task.
+    Die komt bij Eclipse in een lijstje van ant build tasks te staan. Typisch voor elk Eclipse project 1.
+    
+    Wat is een handige naam voor de task?
+    1 het wordt sterk aangeraden de build task dezelfde naam te geven als de bijbehorende Eclipse
+      project name, die weer gelijk is aan de naam van de project subFolder in je Workspace Folder.
+    2 het wordt ook sterk aangeraden de naam  gelijk te laten zijn aan de (CamelCase) main class name
+    
+    Het kan zijn dat je niet zomaar aan 1. EN 2. wilt/kunt voldoen. 
+
+    Je hebt alle vrijheid de zaak minder transparant voor anderen te maken.
+    Het gevolg kan dan zijn dat jouw opzet niet aan 2 voldoet.
+    In dat geval MOET je in de build.properties file de 'afwijkende' main class name opgeven bij ###(2).
+
+    !!! LET OP BASEDIR: de waarde van basedir hieronder geldt voor Applets&Applications;
+    	voeg aan het begin nog een ../ toe als het gaat om servlet, demo of bean
+    	het path vanaf de basedir is dan nl 1 subFolder langer
+ -->
+<project name='_servlet_dwo_runner' basedir='../../../..' default='cpjc' >
+
+	<description>
+	Auteur: Wim
+
+	Deze ant build kan je gebruiken voor het automatiseren van common tasks in de referentie omgeving.
+	De goede werking hangt af van een bijbehorende file 'build.properties',
+	waarmee je dingen kunt instellen voor het project waarvoor deze build task zal worden gebruikt.
+
+
+	</description>
+
+	<dirname property="ant.dir" file="${ant.file}"  />
+	<property file="${ant.dir}/build.properties"/>
+
+	<property name='dosdrive' value='N:' />
+	<property name='java.resources' value='/home/java/resources' />
+	<property name='common.build' value='${java.resources}/ant/common-build.xml' />
+	<condition property='dos' value='dos' >
+	   	<os family='dos' />
+	</condition>
+	<condition property='drive' value='${dosdrive}'>
+		<os family='dos' />
+	</condition>
+	<condition property='drive' value=''  >
+		<os family='unix' />
+	</condition>
+
+	<import file="${drive}${common.build}" />
+
+</project>
