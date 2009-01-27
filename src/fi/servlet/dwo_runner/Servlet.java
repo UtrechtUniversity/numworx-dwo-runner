@@ -3,11 +3,13 @@ package fi.servlet.dwo_runner;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
@@ -26,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.alfaariss.aselect.integration.ASelectException;
 
 import fi.beans.fidentity.FidentityManager;
+import fi.beans.fidentity.db.DbAccess;
 import fi.beans.licman.LicMan;
 import fi.dwo_runner.SecureDWORunner;
 
@@ -35,11 +38,13 @@ public class Servlet extends HttpServlet {
 	private ASelectServletFilter secureFilter;
 	
 	protected void doGet(HttpServletRequest xRequest, HttpServletResponse xResponse) throws ServletException, IOException {
-        try
+		String username="";
+		try
         {
             if( secureFilter.authentication(xRequest,xResponse))
             {
-            	String username  = secureFilter.getASelectUserId(xRequest);
+                String message = "&nbsp;";
+            	username  = secureFilter.getASelectUserId(xRequest);
             	username = URLDecoder.decode(username, "UTF-8");
             	if(username.endsWith("@fi.uu.nl"))
             		username = username.substring(0, username.length()-9);
@@ -47,17 +52,21 @@ public class Servlet extends HttpServlet {
 // empty  => null
             	if("".equals(profileId))
             		profileId = null;
-            	int profile = 1;
+            	int profile = -1;
             	if(profileId != null)
             		profile = Integer.parseInt(profileId);
             	String action    = xRequest.getParameter("action");
             	String password  = xRequest.getParameter("password");
 // empty = null
-            	if("".equals(password))
+            	if("".equals(password) || password == null)
             		password = null;
-            	
+            	else if(!fm.checkAccount(username, password))
+            	{
+            		action = null;
+            		message = "Incorrect password";
+            	}
             	Map attributes = fm.getAccount(username);
-            	Properties parameters = createParameters(profileId, username, password, attributes);
+            	Properties parameters = createParameters(profile, username, password, attributes);
             	
             	
             	if("download".equalsIgnoreCase(action))
@@ -73,19 +82,12 @@ public class Servlet extends HttpServlet {
             	// display form....
             	
             	
-                PrintWriter xOut = xResponse.getWriter(); 
                 xResponse.setContentType("text/html");
-                xOut.println("<html><body><br><i>A-Select Test Servlet</i><br>");
-                xOut.println("<p>Welcome, " + username);
-                xOut.println("<p>action " + action);
-                xOut.println("<p>profile " + profileId);
-                xOut.println("<p>attributes " + attributes);
-                xOut.println("<pre>");
-                parameters.list(xOut);
-                xOut.println("</pre>");
-               
-                xOut.println("<p><hr>Copyright &copy 2009 Freudenthal instituut</body></html>");
-                xOut.flush(); 
+                xResponse.setCharacterEncoding("UTF-8");
+                PrintWriter xOut = xResponse.getWriter(); 
+                
+                String community = access.getSchoolByID(getCommunity(attributes)).get(access.SCHOOLNAME).toString();
+				displayForm(xOut, profile, username, community, message);
                 return;
             }
         }
@@ -93,11 +95,14 @@ public class Servlet extends HttpServlet {
         {
             try
             {
+            	log(username, e);
                 PrintWriter xOut = xResponse.getWriter(); 
                 xResponse.setContentType("text/html");
                 xOut.println("<html><body><br><i>Download DWO runner</i><br>");
-                xOut.println("<br><br>Error : " + e.getMessage());
-                xOut.println("<p><hr>Copyright &copy 2009 Freudenthal Instituut</body></html>");
+                xOut.println("<br><br>U heeft geen toegang tot deze website!");
+                if(e.getMessage()!= null)
+                	xOut.println("<br>Error : " + e.getMessage());
+                xOut.println("<p><hr>Copyright &copy; 2009 Freudenthal Instituut</body></html>");
                 xOut.flush(); 
                 return;
             }
@@ -105,7 +110,17 @@ public class Servlet extends HttpServlet {
         }
  	}
 
-	Properties createParameters(String profileId, String username, String password, Map attributes) {
+	void displayForm(PrintWriter out, int profile, String username, String community, String message) throws IOException {
+		InputStream in = getClass().getResourceAsStream("resources/form.html");
+		InputStreamReader  reader = new InputStreamReader(in, "UTF-8");
+		StringBuffer inbuf = new StringBuffer(in.available());
+		int c;
+		while (  (c = reader.read()) != -1 ) inbuf.append((char)c);
+		Object[] args = new Object[] { Integer.toString(profile), username, community, message } ;
+		out.write(MessageFormat.format(inbuf.toString(), args));
+	}
+
+	Properties createParameters(int profile, String username, String password, Map attributes) {
 		int community = getCommunity(attributes);
 		
 		Properties parameters = new Properties();
@@ -113,10 +128,10 @@ public class Servlet extends HttpServlet {
 			parameters.put(SecureDWORunner.USERNAME, username);
 		if(password != null)
 			parameters.put(SecureDWORunner.PASSWORD, password);
-		if(profileId!= null)
-			parameters.put(SecureDWORunner.PROFILE, profileId);
+		if(profile != -1);
+			parameters.put(SecureDWORunner.PROFILE, Integer.toString(profile));
 // TODO produktie...
-		String license = "TEST_LICENSE"; // LicMan.getLicense(community, profile, getClass());
+		String license = LicMan.getLicense(community, profile, getClass());
 
 		if(license!=null)
 			parameters.put(LicMan.LICENSE_KEY, license);
@@ -157,6 +172,7 @@ public class Servlet extends HttpServlet {
 		}
 		
 		fm = new FidentityManager();
+		access  = new DbAccess();
 		
 		xConfiguration = new Properties();
         xConfiguration.put("aselect_use_logging","true");
@@ -177,6 +193,7 @@ public class Servlet extends HttpServlet {
 
 	private URL runnerSrc, htmlForm;
 	private FidentityManager fm;
+	private DbAccess access;
 	
 	public final String RUNNER_PROPERTIES = "fi/dwo_runner/resources/runner.properties";
 	

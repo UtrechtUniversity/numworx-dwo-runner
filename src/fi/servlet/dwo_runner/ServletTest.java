@@ -1,6 +1,7 @@
 package fi.servlet.dwo_runner;
 
 import java.io.FileOutputStream;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Properties;
@@ -9,6 +10,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import fi.beans.fidentity.FidentityManager;
 import fi.beans.licman.LicMan;
 import fi.dwo_runner.SecureDWORunner;
 
@@ -50,12 +52,12 @@ public class ServletTest extends TestCase {
 		Servlet s = new Servlet();
 		HashMap attributes = new HashMap();
 		attributes.put("DL_FIUUNL_K1K", "D136");
-		Properties p = s.createParameters("1", "amadeus", "mozart", attributes);
+		Properties p = s.createParameters(1, "amadeus", "mozart", attributes);
 		p.list(System.out);
-		p = s.createParameters("1", "x", null, attributes);
+		p = s.createParameters(1, "x", null, attributes);
 		
 		try { 
-			p = s.createParameters("1", null, null, new HashMap());
+			p = s.createParameters(1, null, null, new HashMap());
 			fail("no license!");
 		} catch( IllegalArgumentException e)
 		{
@@ -63,5 +65,18 @@ public class ServletTest extends TestCase {
 		}
 	}
 	
-
+	public void testDisplayForm() throws Exception { 
+		Servlet s = new Servlet() ;
+		int profile = 1234;
+		PrintWriter pw = new PrintWriter(System.out);
+		s.displayForm(pw, profile, "username", "community", "errormessage");
+		pw.flush();
+	}
+	
+	public void testCheckAccount() throws Exception { 
+		FidentityManager fm = new FidentityManager();
+		assertTrue(fm.checkAccount("meesterwim", "paulien"));
+		assertFalse(fm.checkAccount("meesterwim", "hoepla"));
+	}
+	
 }

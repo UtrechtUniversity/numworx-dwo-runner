@@ -24,12 +24,12 @@ public class SecureDWORunner extends MainFrame implements LicensedApplication {
 
 	private static final String JAR = "jar";
 	private static final String MAIN_CLASS = "main-class";
+	private static final String TITLE = "title";
 	public static final String USERNAME = "username";
 	public static final String PROFILE  = "profile";
 	public static final String PASSWORD = "password";
 	private static final int WIDTH = 800;
 	private static final int HEIGHT= 600;
-	private static final String LICENSE = LicMan.LICENSE_KEY;
 	static private Properties parameters; 
 	
 	
@@ -82,9 +82,10 @@ public class SecureDWORunner extends MainFrame implements LicensedApplication {
 			LicMan.checkLicense((LicensedApplication)frame);
 		} catch (LicenseException e) {
 			JOptionPane.showMessageDialog(frame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			System.exit(1);
 		}
 // copy from DWO class
-        frame.setTitle("DWO");
+        frame.setTitle(parameters.getProperty(TITLE,"DWO"));
         frame.pack();
         frame.setSize(WIDTH + 10, HEIGHT + 20);
         frame.show();
