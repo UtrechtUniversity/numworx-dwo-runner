@@ -5,7 +5,6 @@ package fi.dwo_runner;
 
 import fi.beans.licman.*;
 import java.applet.Applet;
-import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
@@ -87,7 +86,7 @@ public class SecureDWORunner extends MainFrame implements LicensedApplication {
 // copy from DWO class
         frame.setTitle(parameters.getProperty(TITLE,"DWO"));
         frame.pack();
-        frame.setSize(WIDTH + 10, HEIGHT + 20);
+        dwo.setSize(WIDTH, HEIGHT);
         frame.show();
 		
 	}
