@@ -1,8 +1,11 @@
 package fi.dwo_runner;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.net.MalformedURLException;
+import java.util.Properties;
+import java.util.Vector;
 import java.lang.reflect.InvocationTargetException;
 
     /**
@@ -11,17 +14,61 @@ import java.lang.reflect.InvocationTargetException;
      * be passed to the application's main method.
      */
     public class DWO_runner {
-        public static void main(String[] args) {
+
+    	private static final String JAR = "jar";
+    	private static final String MAIN_CLASS = "main-class";
+    	private static final String TITLE = "title";
+    	public static final String USERNAME = "username";
+    	public static final String PROFILE  = "profile";
+    	public static final String PASSWORD = "password";
+    	public static final String PARAM = "param.";
+    	private static final int WIDTH = 800;
+    	private static final int HEIGHT= 600;
+    	static private Properties parameters; 
+
+    	
+    	private static void addArg(Vector v, String arg)
+    	{
+    		if(arg != null)
+    			v.add(arg);
+    	}
+    	
+    	/**
+    	 * Start de DWO met parameters die in een property file staan.
+    	 * Resources/runner.properties bevat:
+    	 * <ul>
+    	 * <li>jar
+    	 * <li>profile (optioneel)
+    	 * <li>param.<em>n</em> (start met 1)
+    	 * <li>username (optioneel)
+    	 * <li>password (optioneel)
+    	 * <li>main-class (word niet gebruikt)
+    	 * @param args not used
+    	 * @throws Exception
+    	 */
+    	public static void main(String[] args) throws Exception {
             //if (args.length < 1) {
             //    usage();
             //}
-            args = new String[2];
-            args[0] = "http://www.fi.uu.nl/dwo/jars/dwo.jar";
-            args[1] = "50";
-            
-            
-            
-            URL url = null;
+    		InputStream in = DWO_runner.class.getResourceAsStream("resources/runner.properties");
+    		parameters = new Properties();
+    		parameters.load(in);
+    		Vector vargs = new Vector();
+    		vargs.add (parameters.getProperty(JAR));
+    		for (int i = 1; true; i++)
+    		{
+    			String param = parameters.getProperty(PARAM + i);
+    			if(param == null)
+    				break;
+    			addArg(vargs, param);
+    		}
+    		addArg(vargs, parameters.getProperty(PROFILE));
+    		addArg(vargs, parameters.getProperty(USERNAME));
+    		addArg(vargs, parameters.getProperty(PASSWORD));
+    		args = new String[vargs.size()];
+    		vargs.copyInto(args);
+
+    		URL url = null;
             try {
                 url = new URL(args[0]);
             } catch (MalformedURLException e) {
@@ -47,7 +94,7 @@ import java.lang.reflect.InvocationTargetException;
             System.arraycopy(args, 1, newArgs, 0, newArgs.length);
             //Invoke application's main class
             
-            name = "fi.dwo.client.domain.DWO";
+            //name = "fi.dwo.client.domain.DWO";
             try {
                 cl.invokeClass(name, newArgs);
                 

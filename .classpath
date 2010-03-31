@@ -4,8 +4,8 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="/_base/codebase" sourcepath="/_base/codesource"/>
 	<classpathentry kind="lib" path="/_base/codebase/jars/jsdk.jar"/>
-	<classpathentry kind="lib" path="/home/wim/ASelectServletProxyClasses.jar" sourcepath="/home/wim/jad"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3.8.1"/>
 	<classpathentry kind="lib" path="/_base/codebase/jars/ldap.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/ASelectServletProxyClasses.jar"/>
 	<classpathentry kind="output" path="output/classes"/>
 </classpath>
