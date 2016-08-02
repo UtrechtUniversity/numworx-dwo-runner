@@ -1,0 +1,50 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>fi.microserver</groupId>
+  <artifactId>MicroServer</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <dependencies>
+	<!-- https://mvnrepository.com/artifact/org.apache.felix/org.apache.felix.connect -->
+	<dependency>
+	    <groupId>org.apache.felix</groupId>
+	    <artifactId>org.apache.felix.connect</artifactId>
+	    <version>0.1.0</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/org.apache.felix/org.apache.felix.httplite.complete -->
+	<dependency>
+	    <groupId>org.apache.felix</groupId>
+	    <artifactId>org.apache.felix.httplite.complete</artifactId>
+	    <version>0.1.4</version>
+	    <exclusions>
+	    	<exclusion>
+	    		<artifactId>org.apache.felix.httplite.core</artifactId>
+	    		<groupId>org.apache.felix</groupId>
+	    	</exclusion>
+	    	<exclusion>
+	    		<artifactId>servlet-api</artifactId>
+	    		<groupId>javax.servlet</groupId>
+	    	</exclusion>
+	    </exclusions>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/org.apache.felix.gogo/org.apache.felix.gogo.console -->
+	<dependency>
+	    <groupId>org.apache.felix.gogo</groupId>
+	    <artifactId>org.apache.felix.gogo.console</artifactId>
+	    <version>0.4.0</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/org.apache.felix.gogo/org.apache.felix.gogo.commands -->
+	<dependency>
+	    <groupId>org.apache.felix.gogo</groupId>
+	    <artifactId>org.apache.felix.gogo.commands</artifactId>
+	    <version>0.4.0</version>
+	</dependency>
+
+
+
+	<dependency>
+		<groupId>fi.servlet</groupId>
+		<artifactId>staticfiles</artifactId>
+		<version>1.0.1-SNAPSHOT</version>
+	</dependency>
+  </dependencies>
+</project>
