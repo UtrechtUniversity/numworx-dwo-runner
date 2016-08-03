@@ -41,16 +41,12 @@ public class MicroServer {
 		framework = factory.newFramework(map);
 		
 		framework.init();
-				
-//		Activator act = new Activator();
-//		act.start(framework.getBundleContext());
-		
-		installServlet();
-		installLogging();
-		installConfigurator();
+						
 		try {
 			framework.start();
-			
+			installServlet();
+			installLogging();
+			installConfigurator();
 			installBrowser();
 			framework.waitForStop(0);
 		} catch (InterruptedException e) {
@@ -87,6 +83,11 @@ public class MicroServer {
 			final HttpServlet servlet = new StatusServlet();
 			@SuppressWarnings("rawtypes")
 			final Dictionary initparams = new Properties();
+
+			{ 
+				initparams.put("status", "from installServlet");
+	
+			}
 
 			public HttpService addingService(ServiceReference<HttpService> ref) {
 				HttpService httpd = context.getService(ref);

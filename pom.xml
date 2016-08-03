@@ -28,15 +28,15 @@
 	</dependency>
 	<!-- https://mvnrepository.com/artifact/org.apache.felix.gogo/org.apache.felix.gogo.console -->
 	<dependency>
-	    <groupId>org.apache.felix.gogo</groupId>
-	    <artifactId>org.apache.felix.gogo.console</artifactId>
-	    <version>0.4.0</version>
+	    <groupId>org.apache.felix</groupId>
+	    <artifactId>org.apache.felix.gogo.shell</artifactId>
+	    <version>0.12.0</version>
 	</dependency>
 	<!-- https://mvnrepository.com/artifact/org.apache.felix.gogo/org.apache.felix.gogo.commands -->
 	<dependency>
-	    <groupId>org.apache.felix.gogo</groupId>
-	    <artifactId>org.apache.felix.gogo.commands</artifactId>
-	    <version>0.4.0</version>
+	    <groupId>org.apache.felix</groupId>
+	    <artifactId>org.apache.felix.gogo.command</artifactId>
+	    <version>0.16.0</version>
 	</dependency>
 
 
@@ -45,6 +45,11 @@
 		<groupId>fi.servlet</groupId>
 		<artifactId>staticfiles</artifactId>
 		<version>1.0.1-SNAPSHOT</version>
+	</dependency>
+	<dependency>
+		<groupId>org.apache.felix</groupId>
+		<artifactId>org.apache.felix.gogo.runtime</artifactId>
+		<version>0.16.2</version>
 	</dependency>
   </dependencies>
 </project>

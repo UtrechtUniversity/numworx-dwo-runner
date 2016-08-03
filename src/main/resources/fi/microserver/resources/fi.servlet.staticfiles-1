@@ -1,0 +1,8 @@
+alias=/dwo/resources
+#base = file:/opt/dwo/webapps/war-shared/resources/
+base=http://cdn.dwo.nl/resources/
+resource = false
+#
+# 20 uur
+expires=1200m
+gz=application/x-gzip
