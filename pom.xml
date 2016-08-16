@@ -4,28 +4,38 @@
   <artifactId>MicroServer</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <dependencies>
+	<dependency>
+	  <groupId>org.osgi</groupId>
+	  <artifactId>org.osgi.compendium</artifactId>
+	  <version>5.0.0</version>
+	</dependency>
+	<dependency>
+	  <groupId>javax.servlet</groupId>
+	  <artifactId>servlet-api</artifactId>
+	  <version>2.4</version>
+	</dependency>
 	<!-- https://mvnrepository.com/artifact/org.apache.felix/org.apache.felix.connect -->
-	<dependency>
-	    <groupId>org.apache.felix</groupId>
-	    <artifactId>org.apache.felix.connect</artifactId>
-	    <version>0.1.0</version>
-	</dependency>
+<!-- 	<dependency> -->
+<!-- 	    <groupId>org.apache.felix</groupId> -->
+<!-- 	    <artifactId>org.apache.felix.connect</artifactId> -->
+<!-- 	    <version>0.1.0</version> -->
+<!-- 	</dependency> -->
 	<!-- https://mvnrepository.com/artifact/org.apache.felix/org.apache.felix.httplite.complete -->
-	<dependency>
-	    <groupId>org.apache.felix</groupId>
-	    <artifactId>org.apache.felix.httplite.complete</artifactId>
-	    <version>0.1.4</version>
-	    <exclusions>
-	    	<exclusion>
-	    		<artifactId>org.apache.felix.httplite.core</artifactId>
-	    		<groupId>org.apache.felix</groupId>
-	    	</exclusion>
-	    	<exclusion>
-	    		<artifactId>servlet-api</artifactId>
-	    		<groupId>javax.servlet</groupId>
-	    	</exclusion>
-	    </exclusions>
-	</dependency>
+<!-- 	<dependency> -->
+<!-- 	    <groupId>org.apache.felix</groupId> -->
+<!-- 	    <artifactId>org.apache.felix.httplite.complete</artifactId> -->
+<!-- 	    <version>0.1.4</version> -->
+<!-- 	    <exclusions> -->
+<!-- 	    	<exclusion> -->
+<!-- 	    		<artifactId>org.apache.felix.httplite.core</artifactId> -->
+<!-- 	    		<groupId>org.apache.felix</groupId> -->
+<!-- 	    	</exclusion> -->
+<!-- 	    	<exclusion> -->
+<!-- 	    		<artifactId>servlet-api</artifactId> -->
+<!-- 	    		<groupId>javax.servlet</groupId> -->
+<!-- 	    	</exclusion> -->
+<!-- 	    </exclusions> -->
+<!-- 	</dependency> -->
 
 <!-- 	<dependency> -->
 <!-- 	    <groupId>org.apache.felix</groupId> -->
@@ -43,15 +53,36 @@
 <!-- 		<version>0.16.2</version> -->
 <!-- 	</dependency> -->
 
-	<dependency>
-		<groupId>fi.servlet</groupId>
-		<artifactId>staticfiles</artifactId>
-		<version>1.0.1-SNAPSHOT</version>
-	</dependency>
-	<dependency>
-		<groupId>org.eclipse.concierge</groupId>
-		<artifactId>org.eclipse.concierge.shell</artifactId>
-		<version>5.0.0.20151029184259</version>
-	</dependency>
+<!-- 	<dependency> -->
+<!-- 		<groupId>fi.servlet</groupId> -->
+<!-- 		<artifactId>staticfiles</artifactId> -->
+<!-- 		<version>1.0.1-SNAPSHOT</version> -->
+<!-- 	</dependency> -->
+<!-- 	<dependency> -->
+<!-- 		<groupId>org.eclipse.concierge</groupId> -->
+<!-- 		<artifactId>org.eclipse.concierge.shell</artifactId> -->
+<!-- 		<version>5.0.0.20151029184259</version> -->
+<!-- 	</dependency> -->
+<!-- 	<dependency> -->
+<!-- 		<groupId>fi.dwo</groupId> -->
+<!-- 		<artifactId>DWOJApplet</artifactId> -->
+<!-- 		<version>2.0-SNAPSHOT</version> -->
+<!-- 		<classifier>jar-with-dependencies</classifier> -->
+<!-- 		<exclusions> -->
+<!-- 			<exclusion> -->
+<!-- 				<artifactId>DWO-commons-lib</artifactId> -->
+<!-- 				<groupId>fi.dwo</groupId> -->
+<!-- 			</exclusion> -->
+<!-- 			<exclusion> -->
+<!-- 				<artifactId>DWO-rest-lib</artifactId> -->
+<!-- 				<groupId>fi.dwo.rest</groupId> -->
+<!-- 			</exclusion> -->
+<!-- 		</exclusions> -->
+<!-- 	</dependency> -->
+  	<dependency>
+  		<groupId>org.apache.felix</groupId>
+  		<artifactId>org.apache.felix.framework</artifactId>
+  		<version>5.4.0</version>
+  	</dependency>
   </dependencies>
 </project>
