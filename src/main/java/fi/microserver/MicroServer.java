@@ -3,21 +3,26 @@ package fi.microserver;
 import java.util.Date;
 import java.util.Dictionary;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.ServiceLoader;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
 import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
 import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.launch.Framework;
 import org.osgi.framework.launch.FrameworkFactory;
+import org.osgi.framework.startlevel.FrameworkStartLevel;
 import org.osgi.service.cm.ManagedServiceFactory;
 import org.osgi.service.http.HttpContext;
 import org.osgi.service.http.HttpService;
@@ -32,8 +37,11 @@ import fi.microserver.servlet.StatusServlet;
 
 public class MicroServer {
 
+	private static final String CODEBASE = "file://" + "/opt/dwo/webapps/war-shared/jars/";
 	private static final String DWOJAPPLET = "file:///Users/wim/Documents/workspace-luna/DWOJApplet/target/" + "DWOJApplet-2.0-SNAPSHOT-jar-with-dependencies.jar" ;
 	private static final String CONSOLE = "file://" +"/Users/wim/Downloads/concierge-incubation-5.0.0/bundles/" + "org.eclipse.concierge.shell-5.0.0.20151029184259.jar";
+	private static final String PREVIEW = "file://" +"/Users/wim/Documents/workspace-luna/PreviewHTML/target/" + "previewhtml.jar";
+	private static final String WISKOPDR = CODEBASE + "wiskopdr.jar";
 	private static Framework framework;
 	private static BundleContext context;
 	private static LogService logger;
@@ -46,19 +54,28 @@ public class MicroServer {
 		FrameworkFactory factory = ServiceLoader.load(FrameworkFactory.class).iterator().next();
 		Map<String, String> map = new HashMap<String,String>();
 		//map.put(Constants.FRAMEWORK_STORAGE_CLEAN,Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT);
-		map.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, "javax.swing,javax.swing.border,javax.swing.event,javax.swing.filechooser,javax.swing.plaf,javax.swing.plaf.basic,javax.swing.plaf.metal,javax.swing.table,javax.swing.text,javax.swing.text.html,javax.swing.tree");
+		//map.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, "javax.swing,javax.swing.border,javax.swing.event,javax.swing.filechooser,javax.swing.plaf,javax.swing.plaf.basic,javax.swing.plaf.metal,javax.swing.table,javax.swing.text,javax.swing.text.html,javax.swing.tree");
+		map.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, "javafx.application,javafx.beans.property,javafx.beans.value,javafx.collections,javafx.concurrent,javafx.embed.swing,javafx.event,javafx.scene,javafx.scene.control,javafx.scene.web,javafx.util,javax.swing,javax.swing.border,netscape.javascript"
+				+ ",com.apple.eawt"
+			);
 		map.put("fi.dwo.profile", "77");
 		framework = factory.newFramework(map);
 		framework.init();
 		context = framework.getBundleContext();
+		FrameworkStartLevel frameLevel;
+		frameLevel = framework.adapt(FrameworkStartLevel.class);
 		try {
-			framework.start();
+			installWrap();
 			installConsole();
-			installServlet();
+			framework.start();
+			frameLevel.setInitialBundleStartLevel(10);
+			//installServlet();
 			installLogging();
-			installConfigurator();
-			installDWO();
+			//installConfigurator();
+			installWiskOpdr();
+			//installDWO();
 			//installBrowser();
+			frameLevel.setStartLevel(10);
 			framework.waitForStop(0);
 		} catch (InterruptedException e) {
 		} finally {
@@ -66,28 +83,66 @@ public class MicroServer {
 		}	
 	}
 
+	private static void installWiskOpdr() {
+		Set<String> work = new HashSet<String>();
+		Set<String> done = new HashSet<String>();
+		String bnd = "Bundle-SymbolicName=fi.wiskopdr.WiskOpdr&DynamicImport-Package=*";
+		work.add("wiskopdr.jar");
+		while( !work.isEmpty()) {
+			Iterator<String> list = work.iterator();
+			String jar = list.next();
+			list.remove();
+			if( done.add(jar)) {
+				String wrap = "wrap:" + CODEBASE + jar + "$" + bnd;
+				Bundle b;
+				try {
+					b = istart(wrap);
+					Dictionary<String, String> headers = b.getHeaders();
+					String classPath = headers.get("Class-Path");
+					if (classPath != null) {
+					String[] jars = classPath.split(" ");
+					for (String item : jars) {
+						work.add(item);
+					}}
+				}
+				catch(Exception e) {}
+				bnd = Constants.FRAGMENT_HOST + "=fi.wiskopdr.WiskOpdr";	
+			}
+		}
+	}
+	
+	
 	private static void installDWO() {
 		try {
+			istart(PREVIEW);
 			dwo = context.getBundle(DWOJAPPLET);
 			if(dwo == null)
+			{
 				dwo = context.installBundle(DWOJAPPLET);
+			}
 			else 
 			{
 				long modified = dwo.getLastModified();
 				System.out.println(new Date(modified));
-				if(false) dwo.update();
+				if(true) dwo.update();
 			}
 			dwo.start();
 		} catch (Exception e) {
 			logger.log(LogService.LOG_ERROR, "installing DWO", e);
 		}
 	}
+
+	private static Bundle istart(String location) throws BundleException {
+		Bundle bundle = context.getBundle(location);
+		if(bundle == null) 
+			bundle = context.installBundle(location);
+		if(bundle.getHeaders().get(Constants.FRAGMENT_HOST) == null)
+			bundle.start();
+		return bundle;
+	}
 	
 	private static void installConsole() throws BundleException {
-		console = context.getBundle(CONSOLE);
-		if(console == null)
-			console = context.installBundle(CONSOLE);
-		console.start();
+		console = istart(CONSOLE);
 	}
 	
 	private static void installBrowser() {
@@ -95,6 +150,18 @@ public class MicroServer {
 		browser.start("status");
 	}
 
+	private static void installWrap() {
+		BundleActivator activator;
+		
+		try {
+			activator = new org.ops4j.pax.url.wrap.internal.Activator();
+			activator.start(context);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	private static void installLogging() {
 		logger = new Logger();
 		Dictionary<String, ?> dict = new Hashtable<String,String>();
