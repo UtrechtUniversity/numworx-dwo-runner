@@ -1,5 +1,6 @@
 package fi.microserver;
 
+import java.net.URL;
 import java.util.Date;
 import java.util.Dictionary;
 import java.util.HashMap;
@@ -45,7 +46,6 @@ public class MicroServer {
 	private static Framework framework;
 	private static BundleContext context;
 	private static LogService logger;
-	private static Configurator cm;
 	private static Bundle dwo;
 	private static Bundle console;
 
@@ -55,6 +55,7 @@ public class MicroServer {
 		Map<String, String> map = new HashMap<String,String>();
 		//map.put(Constants.FRAMEWORK_STORAGE_CLEAN,Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT);
 		//map.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, "javax.swing,javax.swing.border,javax.swing.event,javax.swing.filechooser,javax.swing.plaf,javax.swing.plaf.basic,javax.swing.plaf.metal,javax.swing.table,javax.swing.text,javax.swing.text.html,javax.swing.tree");
+		map.put(Constants.FRAMEWORK_STORAGE, System.getProperty("user.home") + "/felix-cache");
 		map.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, "javafx.application,javafx.beans.property,javafx.beans.value,javafx.collections,javafx.concurrent,javafx.embed.swing,javafx.event,javafx.scene,javafx.scene.control,javafx.scene.web,javafx.util,javax.swing,javax.swing.border,netscape.javascript"
 				+ ",com.apple.eawt"
 			);
@@ -71,9 +72,9 @@ public class MicroServer {
 			frameLevel.setInitialBundleStartLevel(10);
 			//installServlet();
 			installLogging();
-			//installConfigurator();
+			installConfigurator();
 			installWiskOpdr();
-			//installDWO();
+			installDWO();
 			//installBrowser();
 			frameLevel.setStartLevel(10);
 			framework.waitForStop(0);
@@ -86,16 +87,22 @@ public class MicroServer {
 	private static void installWiskOpdr() {
 		Set<String> work = new HashSet<String>();
 		Set<String> done = new HashSet<String>();
-		String bnd = "Bundle-SymbolicName=fi.wiskopdr.WiskOpdr&DynamicImport-Package=*";
+		URL U = framework.getResource("fi/microserver/resources/" + "fi.wiskopdr.WiskOpdr");
+		
+		String bnd = "$Bundle-SymbolicName=fi.wiskopdr.WiskOpdr&DynamicImport-Package=*";
+		if (U != null)
+			bnd = "," + U;
+		
 		work.add("wiskopdr.jar");
 		while( !work.isEmpty()) {
 			Iterator<String> list = work.iterator();
 			String jar = list.next();
 			list.remove();
 			if( done.add(jar)) {
-				String wrap = "wrap:" + CODEBASE + jar + "$" + bnd;
+				String wrap = "wrap:" + CODEBASE + jar + bnd;
 				Bundle b;
 				try {
+					System.out.println(wrap);
 					b = istart(wrap);
 					Dictionary<String, String> headers = b.getHeaders();
 					String classPath = headers.get("Class-Path");
@@ -106,7 +113,7 @@ public class MicroServer {
 					}}
 				}
 				catch(Exception e) {}
-				bnd = Constants.FRAGMENT_HOST + "=fi.wiskopdr.WiskOpdr";	
+				bnd = "$" + Constants.FRAGMENT_HOST + "=fi.wiskopdr.WiskOpdr";	
 			}
 		}
 	}
@@ -169,8 +176,8 @@ public class MicroServer {
 	}
 
 	private static void installConfigurator() {
-		cm = new Configurator(context, logger);
-		cm.open();
+		new Configurator(context, logger).open();
+		new ConfiguratorSingleton(context, logger).open();
 	}
 		
 	private static void installServlet() {
