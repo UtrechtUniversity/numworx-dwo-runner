@@ -42,11 +42,10 @@ import fi.microserver.servlet.StatusServlet;
 
 public class MicroServer {
 
-	private static final String CODEBASE = "file://" + "/opt/dwo/webapps/war-shared/jars/";
+	private static  String CODEBASE = "file://" + "/opt/dwo/webapps/war-shared/jars/";
 	private static  String DWOJAPPLET = "file:///Users/wim/Documents/workspace-luna/DWOJApplet/target/" + "DWOJApplet-2.0-SNAPSHOT-jar-with-dependencies.jar" ;
 	private static  String CONSOLE = "file://" +"/Users/wim/Downloads/concierge-incubation-5.0.0/bundles/" + "org.eclipse.concierge.shell-5.0.0.20151029184259.jar";
 	private static final String PREVIEW = "file://" +"/Users/wim/Documents/workspace-luna/PreviewHTML/target/" + "previewhtml.jar";
-	private static final String WISKOPDR = CODEBASE + "wiskopdr.jar";
 	private static Framework framework;
 	private static BundleContext context;
 	private static LogService logger;
@@ -58,20 +57,22 @@ public class MicroServer {
 	
 	public static void main(String[] args) throws Exception {
 		
-		
+		CODEBASE = "https://app.dwo.nl/dwo/jars/";
 		DWOJAPPLET = new File( "C:/Users/wim/workspace-luna/DWOJApplet/target/" + "DWOJApplet-2.0-SNAPSHOT-jar-with-dependencies.jar") .toURL().toString();
 		CONSOLE = new File("C:\\Users\\wim\\Downloads\\").toURL() + "org.eclipse.concierge.shell-5.0.0.20151029184259.jar";
 		
 		
 		FrameworkFactory factory = ServiceLoader.load(FrameworkFactory.class).iterator().next();
 		Map<String, String> map = new HashMap<String,String>();
-		//map.put(Constants.FRAMEWORK_STORAGE_CLEAN,Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT);
+	    //map.put(Constants.FRAMEWORK_STORAGE_CLEAN,Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT);
 		//map.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, "javax.swing,javax.swing.border,javax.swing.event,javax.swing.filechooser,javax.swing.plaf,javax.swing.plaf.basic,javax.swing.plaf.metal,javax.swing.table,javax.swing.text,javax.swing.text.html,javax.swing.tree");
 		map.put(Constants.FRAMEWORK_STORAGE, System.getProperty("user.home") + "/felix-cache");
 		map.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, "javafx.application,javafx.beans.property,javafx.beans.value,javafx.collections,javafx.concurrent,javafx.embed.swing,javafx.event,javafx.scene,javafx.scene.control,javafx.scene.web,javafx.util,javax.swing,javax.swing.border,netscape.javascript"
 				+ ",com.apple.eawt"
 			);
 		map.put("fi.dwo.profile", "77");
+		map.put("fi.dwo.language", "nl");
+		map.put("fi.dwo.codebase", CODEBASE);
 		framework = factory.newFramework(map);
 		framework.init();
 		context = framework.getBundleContext();
@@ -85,8 +86,8 @@ public class MicroServer {
 			//installServlet();
 			installLogging();
 			//installConfigurator();
-			//installWiskOpdr();
 			installDWO();
+			installWiskOpdr();
 			//installBrowser();
 			frameLevel.setStartLevel(10);
 			framework.waitForStop(0);
@@ -140,6 +141,8 @@ public class MicroServer {
 	
 	private static void installDWO() {
 		try {
+			String DWOJAPPLET_STARTER = new File("C:\\Users\\wim\\workspace-luna\\DWOJApplet-Starter\\target").toURL() + "/" + "DWOJApplet-Starter.jar";
+			Bundle dwostarter = context.installBundle(DWOJAPPLET_STARTER);
 			//istart(PREVIEW);
 			dwo = context.getBundle(DWOJAPPLET);
 			if(dwo == null)
@@ -150,11 +153,11 @@ public class MicroServer {
 			{
 				long modified = dwo.getLastModified();
 				System.out.println(new Date(modified));
-				if(true) dwo.update();
+				if(false) dwo.update();
 			}
 			//dwo.start();
 			DWOJAPPLET = new File("C:\\Users\\wim\\workspace-luna\\DWOJApplet-Starter\\target").toURL() + "/" + "DWOJApplet-Starter.jar";
-			dwo = istart(DWOJAPPLET);
+			dwostarter.start();
 		} catch (Exception e) {
 			logger.log(LogService.LOG_ERROR, "installing DWO", e);
 		}
