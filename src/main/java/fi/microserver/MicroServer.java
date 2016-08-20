@@ -1,5 +1,8 @@
 package fi.microserver;
 
+import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.URL;
 import java.util.Date;
 import java.util.Dictionary;
@@ -14,6 +17,7 @@ import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
+import javax.swing.JOptionPane;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
@@ -39,8 +43,8 @@ import fi.microserver.servlet.StatusServlet;
 public class MicroServer {
 
 	private static final String CODEBASE = "file://" + "/opt/dwo/webapps/war-shared/jars/";
-	private static final String DWOJAPPLET = "file:///Users/wim/Documents/workspace-luna/DWOJApplet/target/" + "DWOJApplet-2.0-SNAPSHOT-jar-with-dependencies.jar" ;
-	private static final String CONSOLE = "file://" +"/Users/wim/Downloads/concierge-incubation-5.0.0/bundles/" + "org.eclipse.concierge.shell-5.0.0.20151029184259.jar";
+	private static  String DWOJAPPLET = "file:///Users/wim/Documents/workspace-luna/DWOJApplet/target/" + "DWOJApplet-2.0-SNAPSHOT-jar-with-dependencies.jar" ;
+	private static  String CONSOLE = "file://" +"/Users/wim/Downloads/concierge-incubation-5.0.0/bundles/" + "org.eclipse.concierge.shell-5.0.0.20151029184259.jar";
 	private static final String PREVIEW = "file://" +"/Users/wim/Documents/workspace-luna/PreviewHTML/target/" + "previewhtml.jar";
 	private static final String WISKOPDR = CODEBASE + "wiskopdr.jar";
 	private static Framework framework;
@@ -49,8 +53,16 @@ public class MicroServer {
 	private static Bundle dwo;
 	private static Bundle console;
 
+	
+	
+	
 	public static void main(String[] args) throws Exception {
-
+		
+		
+		DWOJAPPLET = new File( "C:/Users/wim/workspace-luna/DWOJApplet/target/" + "DWOJApplet-2.0-SNAPSHOT-jar-with-dependencies.jar") .toURL().toString();
+		CONSOLE = new File("C:\\Users\\wim\\Downloads\\").toURL() + "org.eclipse.concierge.shell-5.0.0.20151029184259.jar";
+		
+		
 		FrameworkFactory factory = ServiceLoader.load(FrameworkFactory.class).iterator().next();
 		Map<String, String> map = new HashMap<String,String>();
 		//map.put(Constants.FRAMEWORK_STORAGE_CLEAN,Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT);
@@ -72,14 +84,21 @@ public class MicroServer {
 			frameLevel.setInitialBundleStartLevel(10);
 			//installServlet();
 			installLogging();
-			installConfigurator();
-			installWiskOpdr();
+			//installConfigurator();
+			//installWiskOpdr();
 			installDWO();
 			//installBrowser();
 			frameLevel.setStartLevel(10);
 			framework.waitForStop(0);
 		} catch (InterruptedException e) {
-		} finally {
+		} catch (Throwable t) {
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			t.printStackTrace(pw);
+			pw.close();
+			JOptionPane.showMessageDialog(null, sw);			
+		}		
+		finally {
 			System.exit(0);
 		}	
 	}
@@ -121,7 +140,7 @@ public class MicroServer {
 	
 	private static void installDWO() {
 		try {
-			istart(PREVIEW);
+			//istart(PREVIEW);
 			dwo = context.getBundle(DWOJAPPLET);
 			if(dwo == null)
 			{
@@ -133,7 +152,9 @@ public class MicroServer {
 				System.out.println(new Date(modified));
 				if(true) dwo.update();
 			}
-			dwo.start();
+			//dwo.start();
+			DWOJAPPLET = new File("C:\\Users\\wim\\workspace-luna\\DWOJApplet-Starter\\target").toURL() + "/" + "DWOJApplet-Starter.jar";
+			dwo = istart(DWOJAPPLET);
 		} catch (Exception e) {
 			logger.log(LogService.LOG_ERROR, "installing DWO", e);
 		}
