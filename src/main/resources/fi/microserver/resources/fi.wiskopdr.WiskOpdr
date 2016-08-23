@@ -1,3 +1,0 @@
-Bundle-SymbolicName=fi.wiskopdr.WiskOpdr
-Import-Package=fi.beans.mainframe,fi.beans.scorm,fi.beans.xmlrpc,javax.*
-Export-Package=!uk.*,*
