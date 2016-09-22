@@ -3,7 +3,9 @@ package fi.microserver;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Dictionary;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 import java.util.Properties;
 import java.util.ServiceLoader;
@@ -13,15 +15,23 @@ import javax.swing.JOptionPane;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleEvent;
 import org.osgi.framework.BundleException;
+import org.osgi.framework.BundleListener;
 import org.osgi.framework.Constants;
+import org.osgi.framework.FrameworkEvent;
+import org.osgi.framework.ServiceFactory;
+import org.osgi.framework.ServiceRegistration;
 import org.osgi.framework.launch.Framework;
 import org.osgi.framework.launch.FrameworkFactory;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventAdmin;
 
 public class MicroServer {
 
 	private static Framework framework;
 	private static BundleContext context;
+	private static ServiceRegistration<EventAdmin> registration;
 	
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws Exception {
@@ -51,9 +61,10 @@ public class MicroServer {
 		context = framework.getBundleContext();
 		try {
 			installWrap();
-			installBoot();
+			installEvent();
 			framework.start();
-			framework.waitForStop(0);
+			installBoot();
+			FrameworkEvent event = framework.waitForStop(0);
 		} catch (InterruptedException e) {
 		} catch (Throwable t) {
 			StringWriter sw = new StringWriter();
@@ -67,16 +78,50 @@ public class MicroServer {
 		}	
 	}
 
+	private static final String STOP_EVENT = "fi/microserver/MicroServer/STOP";
+	private static BundleActivator wrapActivator;
+	
+	private static void installEvent() {
+		EventAdmin service;
+		Dictionary<String, Object> properties = new Hashtable<String, Object>();
+		properties.put(Constants.SERVICE_RANKING, Integer.MIN_VALUE);
+		properties.put(Constants.SERVICE_VENDOR, "fi.microserver.MicroServer");
+		service = new EventAdmin() {
+
+			public void postEvent(Event event) {
+				System.out.println("Post " + event);
+				if(STOP_EVENT.equals(event.getTopic()))
+					stop();
+			}
+
+			public void sendEvent(Event event) {
+				System.out.println("Send " + event);
+				if(STOP_EVENT.equals(event.getTopic()))
+					stop();
+			} };
+		registration = 
+		context.registerService(EventAdmin.class, service, properties);
+		
+	}
+
 	private static void installBoot() throws BundleException {
 		String BOOT = context.getProperty("fi.dwo.boot");
-		Bundle bootloader = context.installBundle(BOOT);
-		bootloader.start();
+		final Bundle bootloader = context.installBundle(BOOT);
+		bootloader.start(Bundle.START_TRANSIENT);
 	}
 
 	private static void installWrap() throws Exception {
-		BundleActivator activator;
-		activator = new org.ops4j.pax.url.wrap.internal.Activator();
-		activator.start(context);
+		wrapActivator = new org.ops4j.pax.url.wrap.internal.Activator();
+		wrapActivator.start(context);
+	}
+
+	private static void stop() {
+		try {
+			wrapActivator.stop(context);
+			registration.unregister();			
+			framework.stop();
+		} catch (Exception e) {
+		}
 	}
 	
 }
