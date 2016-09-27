@@ -44,7 +44,7 @@ public class MicroServer {
 		map.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, "javafx.application,javafx.beans.property,javafx.beans.value,javafx.collections,javafx.concurrent,javafx.embed.swing,javafx.event,javafx.scene,javafx.scene.control,javafx.scene.web,javafx.util,javax.swing,javax.swing.border,netscape.javascript"
 				+ ",com.apple.eawt"
 				+ ",org.osgi.service.cm;version=1.5, org.osgi.service.log;version=1.3"
-
+				+ ",org.osgi.service.event;version=1.3.1"
 			);
 		Properties props = new Properties();
 		InputStream in = MicroServer.class.getResourceAsStream("resources/DWO.properties");
@@ -116,12 +116,18 @@ public class MicroServer {
 	}
 
 	private static void stop() {
-		try {
-			wrapActivator.stop(context);
-			registration.unregister();			
-			framework.stop();
-		} catch (Exception e) {
-		}
+			new Thread() {
+				public void run() {
+					try {
+						wrapActivator.stop(context);
+						registration.unregister();			
+						framework.stop();
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}.start();
 	}
 	
 }
