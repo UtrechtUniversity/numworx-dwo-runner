@@ -26,12 +26,14 @@ import org.osgi.framework.launch.Framework;
 import org.osgi.framework.launch.FrameworkFactory;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
+import org.osgi.service.event.EventConstants;
+import org.osgi.service.event.EventHandler;
 
 public class MicroServer {
 
 	private static Framework framework;
 	private static BundleContext context;
-	private static ServiceRegistration<EventAdmin> registration;
+	private static ServiceRegistration<EventHandler> registration;
 	
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws Exception {
@@ -82,25 +84,20 @@ public class MicroServer {
 	private static BundleActivator wrapActivator;
 	
 	private static void installEvent() {
-		EventAdmin service;
+		EventHandler service;
 		Dictionary<String, Object> properties = new Hashtable<String, Object>();
 		properties.put(Constants.SERVICE_RANKING, Integer.MIN_VALUE);
 		properties.put(Constants.SERVICE_VENDOR, "fi.microserver.MicroServer");
-		service = new EventAdmin() {
+		properties.put(EventConstants.EVENT_TOPIC, STOP_EVENT);
+		service = new EventHandler() {
 
-			public void postEvent(Event event) {
-				System.out.println("Post " + event);
-				if(STOP_EVENT.equals(event.getTopic()))
-					stop();
-			}
-
-			public void sendEvent(Event event) {
-				System.out.println("Send " + event);
+			public void handleEvent(Event event) {
+				System.out.println("Handle " + event);
 				if(STOP_EVENT.equals(event.getTopic()))
 					stop();
 			} };
 		registration = 
-		context.registerService(EventAdmin.class, service, properties);
+		context.registerService(EventHandler.class, service, properties);
 		
 	}
 
