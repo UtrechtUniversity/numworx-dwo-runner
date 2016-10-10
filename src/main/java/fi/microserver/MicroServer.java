@@ -92,7 +92,6 @@ public class MicroServer {
 		service = new EventHandler() {
 
 			public void handleEvent(Event event) {
-				System.out.println("Handle " + event);
 				if(STOP_EVENT.equals(event.getTopic()))
 					stop();
 			} };
