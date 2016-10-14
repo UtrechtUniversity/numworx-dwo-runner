@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Dictionary;
 import java.util.HashMap;
@@ -17,6 +18,7 @@ import java.util.prefs.Preferences;
 import java.util.prefs.PreferencesFactory;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
@@ -98,15 +100,32 @@ public class MicroServer {
 			} while (type != FrameworkEvent.STOPPED);
 		} catch (InterruptedException e) {
 		} catch (Throwable t) {
-			StringWriter sw = new StringWriter();
-			PrintWriter pw = new PrintWriter(sw);
-			t.printStackTrace(pw);
-			pw.close();
-			JOptionPane.showMessageDialog(null, sw);			
+			displayException(t);			
 		}		
 		finally {
 			System.exit(0);
 		}	
+	}
+
+	private static void displayException(final Throwable t) {
+		try {
+			SwingUtilities.invokeAndWait(
+			new Runnable() {
+				public void run() {
+					StringWriter sw = new StringWriter();
+					PrintWriter pw = new PrintWriter(sw);
+					t.printStackTrace(pw);
+					pw.close();
+					JOptionPane.showMessageDialog(null, sw);
+				}
+			});
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private static final String STOP_EVENT = "fi/microserver/MicroServer/STOP";
@@ -123,7 +142,11 @@ public class MicroServer {
 
 			public void handleEvent(Event event) {
 				if(STOP_EVENT.equals(event.getTopic()))
+				{
+					Throwable t = (Throwable) event.getProperty(EventConstants.EXCEPTION);
+					if(t != null) displayException(t);
 					stop();
+				}
 			} };
 		registration = 
 		context.registerService(EventHandler.class, service, properties);
@@ -141,18 +164,18 @@ public class MicroServer {
 	}
 
 	private static void stop() {
-			new Thread() {
+			SwingUtilities.invokeLater(
+			new Runnable() {
 				public void run() {
 					try {
 						wrapActivator.stop(context);
 						registration.unregister();			
 						framework.stop();
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						displayException(e);
 					}
 				}
-			}.start();
+			});
 	}
 	
 }
