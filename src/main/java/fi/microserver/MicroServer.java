@@ -1,31 +1,33 @@
 package fi.microserver;
 
+import java.io.File;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Arrays;
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.ServiceLoader;
+import java.util.UUID;
+import java.util.prefs.Preferences;
+import java.util.prefs.PreferencesFactory;
 
 import javax.swing.JOptionPane;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.BundleEvent;
 import org.osgi.framework.BundleException;
-import org.osgi.framework.BundleListener;
 import org.osgi.framework.Constants;
 import org.osgi.framework.FrameworkEvent;
-import org.osgi.framework.ServiceFactory;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.framework.launch.Framework;
 import org.osgi.framework.launch.FrameworkFactory;
 import org.osgi.service.event.Event;
-import org.osgi.service.event.EventAdmin;
 import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
 
@@ -34,15 +36,34 @@ public class MicroServer {
 	private static Framework framework;
 	private static BundleContext context;
 	private static ServiceRegistration<EventHandler> registration;
-	
-	@SuppressWarnings("unchecked")
-	public static void main(String[] args) throws Exception {
-		
-		FrameworkFactory factory = ServiceLoader.load(FrameworkFactory.class).iterator().next();
+	// Whether Windows/Mac
+	static boolean isWindows = (System.getProperty("os.name").indexOf("Windows") >= 0);
+	static boolean isMac = (System.getProperty("os.name").indexOf("Mac OS X") >= 0);
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static void main(String[] args) throws Exception {
+		Preferences pref = Preferences.userRoot().node("fi/microserver");
+		String uuid = pref.get("uuid", null);
+		if(uuid == null) {
+			uuid = UUID.randomUUID().toString();
+			pref.put("uuid", uuid);
+			try {
+				pref.flush(); // Jammer als niet werkt, maar niet een showstopper
+			} catch (Exception e) {
+			}
+		}
+		
+		List<String> arglist = Arrays.asList(args);
+		FrameworkFactory factory = ServiceLoader.load(FrameworkFactory.class).iterator().next();
 		Map<String, String> map = new HashMap<String,String>();
-	    //map.put(Constants.FRAMEWORK_STORAGE_CLEAN,Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT);
-		map.put(Constants.FRAMEWORK_STORAGE, System.getProperty("user.home") + "/felix-cache");
+	    if(arglist.contains("-clean"))
+	    	map.put(Constants.FRAMEWORK_STORAGE_CLEAN,Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT);
+	    map.put("fi.dwo.console", Boolean.valueOf(arglist.contains("-console")).toString());
+	    map.put("fi.dwo.uuid", uuid);
+	    String dir = System.getProperty("user.home");
+	    if(isWindows) dir += File.separator + "AppData" + File.separator + "Local";
+	    else if(isMac) dir += File.separator + "Library" + File.separator + "Application Support";
+
 		map.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, "javafx.application,javafx.beans.property,javafx.beans.value,javafx.collections,javafx.concurrent,javafx.embed.swing,javafx.event,javafx.scene,javafx.scene.control,javafx.scene.web,javafx.util,javax.swing,javax.swing.border,netscape.javascript"
 				+ ",com.apple.eawt"
 				+ ",org.osgi.service.cm;version=1.5, org.osgi.service.log;version=1.3"
@@ -53,6 +74,9 @@ public class MicroServer {
 		props.load(in);
 		in.close();
 		map.putAll((Map)props);
+		String target = props.getProperty("fi.dwo.target", "DWO-docent");
+		map.put(Constants.FRAMEWORK_STORAGE, dir + File.separator + target + "-cache");
+		
 		if("true".equals(props.getProperty("fi.dwo.properties")))
 			map.put("fi.dwo.documentbase", MicroServer.class.getResource("resources/").toExternalForm());
 		else 
@@ -64,9 +88,14 @@ public class MicroServer {
 		try {
 			installWrap();
 			installEvent();
-			framework.start();
 			installBoot();
-			FrameworkEvent event = framework.waitForStop(0);
+			int type;
+			do { 
+				framework.start();
+				bootloader.start(Bundle.START_TRANSIENT);
+				FrameworkEvent event = framework.waitForStop(0);
+				type  = event.getType();
+			} while (type != FrameworkEvent.STOPPED);
 		} catch (InterruptedException e) {
 		} catch (Throwable t) {
 			StringWriter sw = new StringWriter();
@@ -82,6 +111,7 @@ public class MicroServer {
 
 	private static final String STOP_EVENT = "fi/microserver/MicroServer/STOP";
 	private static BundleActivator wrapActivator;
+	private static Bundle bootloader;
 	
 	private static void installEvent() {
 		EventHandler service;
@@ -102,8 +132,7 @@ public class MicroServer {
 
 	private static void installBoot() throws BundleException {
 		String BOOT = context.getProperty("fi.dwo.boot");
-		final Bundle bootloader = context.installBundle(BOOT);
-		bootloader.start(Bundle.START_TRANSIENT);
+		bootloader = context.installBundle(BOOT);
 	}
 
 	private static void installWrap() throws Exception {
