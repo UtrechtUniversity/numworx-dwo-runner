@@ -153,9 +153,25 @@ public class MicroServer {
 		
 	}
 
+	static final String BOOTLOADER  = "fi.dwo.BootLoader";
 	private static void installBoot() throws BundleException {
-		String BOOT = context.getProperty("fi.dwo.boot");
-		bootloader = context.installBundle(BOOT);
+		String BOOT = context.getProperty("fi.dwo.boot");	
+		try {
+			bootloader = context.installBundle(BOOT);
+		} catch (BundleException e) {
+			int type = e.getType();
+			if (type == BundleException.DUPLICATE_BUNDLE_ERROR) { // uninstall asap
+				Bundle[] bundles = context.getBundles();
+				for (int i = 0; i < bundles.length; i++) {
+					String name = bundles[i].getSymbolicName();
+					if(BOOTLOADER.equals(name)) {
+						bundles[i].uninstall();
+						installBoot(); return; // recurse
+					}
+				}
+			}
+			throw e;
+		}
 	}
 
 	private static void installWrap() throws Exception {
