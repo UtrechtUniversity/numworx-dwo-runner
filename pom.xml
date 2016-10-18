@@ -2,8 +2,14 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>fi.microserver</groupId>
   <artifactId>MicroServer</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.1</version>
   <build>
+  	<resources>
+  		<resource>
+  			<directory>src/main/resources</directory>
+  			<filtering>true</filtering>
+  		</resource>
+  	</resources>
     <plugins>
     <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -140,5 +146,6 @@
   <properties>
   	<maven.compiler.source>1.8</maven.compiler.source>
   	<maven.compiler.target>1.8</maven.compiler.target>
+  	<fi.dwo.boot>http://cdn.dwo.nl/bundles/BootLoader-2.0.jar</fi.dwo.boot>
   </properties>
 </project>

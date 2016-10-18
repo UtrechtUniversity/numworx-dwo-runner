@@ -11,12 +11,12 @@ $jh/bin/javapackager -deploy \
 	-BjvmOptions=-Xmx1024m \
 	-nosign \
 	-native dmg \
-	-name MicroServer \
-	-title MicroServer \
+	-name DWO-docent \
+	-title DWO-docent \
 	-vendor Numworx \
 	-description "Start the DWO" \
 	-height 600 -width 800 \
 	-appclass fi.microserver.MicroServer \
 	$build \
 	-outdir deploy \
-	-outfile MicroServer
+	-outfile DWO-docent
