@@ -5,7 +5,9 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -29,9 +31,15 @@ import org.osgi.framework.FrameworkEvent;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.framework.launch.Framework;
 import org.osgi.framework.launch.FrameworkFactory;
+import org.osgi.resource.Requirement;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
+import org.osgi.service.repository.Repository;
+import org.xml.sax.InputSource;
+
+import aQute.bnd.osgi.resource.CapReqBuilder;
+import aQute.bnd.osgi.resource.RequirementImpl;
 
 public class MicroServer {
 
@@ -41,6 +49,7 @@ public class MicroServer {
 	// Whether Windows/Mac
 	static boolean isWindows = (System.getProperty("os.name").indexOf("Windows") >= 0);
 	static boolean isMac = (System.getProperty("os.name").indexOf("Mac OS X") >= 0);
+	private static ServiceRegistration<Repository> reposRegistration;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void main(String[] args) throws Exception {
@@ -70,6 +79,7 @@ public class MicroServer {
 				+ ",com.apple.eawt"
 				+ ",org.osgi.service.cm;version=1.5, org.osgi.service.log;version=1.3"
 				+ ",org.osgi.service.event;version=1.3.1"
+				+ ",org.osgi.service.repository;version=1.0"
 			);
 		Properties props = new Properties();
 		InputStream in = MicroServer.class.getResourceAsStream("resources/DWO.properties");
@@ -90,6 +100,7 @@ public class MicroServer {
 		try {
 			installWrap();
 			installEvent();
+			installRepository();
 			installBoot();
 			int type;
 			do { 
@@ -105,6 +116,22 @@ public class MicroServer {
 		finally {
 			System.exit(0);
 		}	
+	}
+
+	private static void installRepository() throws Exception {
+		String u = context.getProperty("fi.dwo.repository");
+		if(u == null) return;
+		InputSource input = new InputSource(u);
+		Repository repos = new RepoImpl(input);
+		Dictionary<String, Object> properties = new Hashtable<String, Object>();
+		properties.put(Repository.URL, u);
+		properties.put(Constants.SERVICE_PID, "fi.dwo.repository");
+		reposRegistration = context.registerService(Repository.class, repos, properties);
+		CapReqBuilder builder = new CapReqBuilder("osgi.identity");
+		builder.addDirective("filter", "(osgi.identity=org.apache.felix.framework)");
+		Requirement r = builder.buildSyntheticRequirement();
+		Object output = repos.findProviders(Collections.singleton(r));
+	
 	}
 
 	private static void displayException(final Throwable t) {
@@ -185,7 +212,9 @@ public class MicroServer {
 				public void run() {
 					try {
 						wrapActivator.stop(context);
-						registration.unregister();			
+						registration.unregister();
+						if(reposRegistration != null) // optional.
+							reposRegistration.unregister();
 						framework.stop();
 					} catch (Exception e) {
 						displayException(e);
