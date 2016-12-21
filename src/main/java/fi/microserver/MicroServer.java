@@ -80,6 +80,7 @@ public class MicroServer {
 				+ ",org.osgi.service.cm;version=1.5, org.osgi.service.log;version=1.3"
 				+ ",org.osgi.service.event;version=1.3.1"
 				+ ",org.osgi.service.repository;version=1.0"
+				+ ",aQute.bnd.osgi.resource;version=1.4.0"
 			);
 		Properties props = new Properties();
 		InputStream in = MicroServer.class.getResourceAsStream("resources/DWO.properties");
