@@ -7,6 +7,7 @@ import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Dictionary;
 import java.util.HashMap;
@@ -31,7 +32,9 @@ import org.osgi.framework.FrameworkEvent;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.framework.launch.Framework;
 import org.osgi.framework.launch.FrameworkFactory;
+import org.osgi.resource.Capability;
 import org.osgi.resource.Requirement;
+import org.osgi.resource.Resource;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
@@ -128,10 +131,10 @@ public class MicroServer {
 		properties.put(Repository.URL, u);
 		properties.put(Constants.SERVICE_PID, "fi.dwo.repository");
 		reposRegistration = context.registerService(Repository.class, repos, properties);
-		CapReqBuilder builder = new CapReqBuilder("osgi.identity");
-		builder.addDirective("filter", "(osgi.identity=org.apache.felix.framework)");
-		Requirement r = builder.buildSyntheticRequirement();
-		Object output = repos.findProviders(Collections.singleton(r));
+//		CapReqBuilder builder = new CapReqBuilder("osgi.identity");
+//		builder.addDirective("filter", "(osgi.identity=org.apache.felix.framework)");
+//		Requirement r = builder.buildSyntheticRequirement();
+//		Object output = repos.findProviders(Collections.singleton(r));
 	
 	}
 
@@ -185,6 +188,22 @@ public class MicroServer {
 	private static void installBoot() throws BundleException {
 		String BOOT = context.getProperty("fi.dwo.boot");	
 		try {
+			if (reposRegistration != null) {
+				CapReqBuilder builder = new CapReqBuilder("osgi.identity");
+				builder.addDirective("filter", "(osgi.identity="+ BOOTLOADER +")");
+				Requirement r = builder.buildSyntheticRequirement();
+				Repository repos = context.getService(reposRegistration.getReference());
+				Map<Requirement, Collection<Capability>> providers = repos.findProviders(Collections.singleton(r));
+				Collection<Capability> caps = providers.get(r);
+				context.ungetService(reposRegistration.getReference());repos = null;
+				for(Capability c: caps) {
+					Resource res = c.getResource();
+					List<Capability> list = res.getCapabilities("osgi.content");
+					for(Capability cc: list)
+						BOOT = cc.getAttributes().get("url").toString();
+				}
+			}
+			
 			bootloader = context.installBundle(BOOT);
 		} catch (BundleException e) {
 			int type = e.getType();
