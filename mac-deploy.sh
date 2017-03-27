@@ -6,7 +6,7 @@ jh=$(/usr/libexec/java_home -v 1.8)
 export JAVA_HOME=$jh
 build=$(for i in target/*.jar; do /bin/echo -n " -srcfiles " $i; done)
 $jh/bin/javapackager -deploy \
-	-BappVersion=0.0.1 \
+	-BappVersion=0.0.2 \
 	-Bruntime="$jh/../../" \
 	-BjvmOptions=-Xmx1024m \
 	-nosign \

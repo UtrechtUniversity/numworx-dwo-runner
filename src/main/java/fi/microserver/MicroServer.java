@@ -84,6 +84,7 @@ public class MicroServer {
 				+ ",org.osgi.service.event;version=1.3.1"
 				+ ",org.osgi.service.repository;version=1.0"
 				+ ",aQute.bnd.osgi.resource;version=1.4.0"
+				+ ",aQute.bnd.osgi;version=2.3.0"
 			);
 		Properties props = new Properties();
 		InputStream in = MicroServer.class.getResourceAsStream("resources/DWO.properties");
@@ -102,7 +103,7 @@ public class MicroServer {
 		framework.init();
 		context = framework.getBundleContext();
 		try {
-			installWrap();
+			//installWrap();
 			installEvent();
 			installRepository();
 			installBoot();
@@ -130,12 +131,7 @@ public class MicroServer {
 		Dictionary<String, Object> properties = new Hashtable<String, Object>();
 		properties.put(Repository.URL, u);
 		properties.put(Constants.SERVICE_PID, "fi.dwo.repository");
-		reposRegistration = context.registerService(Repository.class, repos, properties);
-//		CapReqBuilder builder = new CapReqBuilder("osgi.identity");
-//		builder.addDirective("filter", "(osgi.identity=org.apache.felix.framework)");
-//		Requirement r = builder.buildSyntheticRequirement();
-//		Object output = repos.findProviders(Collections.singleton(r));
-	
+		reposRegistration = context.registerService(Repository.class, repos, properties);	
 	}
 
 	private static void displayException(final Throwable t) {
@@ -160,7 +156,7 @@ public class MicroServer {
 	}
 
 	private static final String STOP_EVENT = "fi/microserver/MicroServer/STOP";
-	private static BundleActivator wrapActivator;
+	//private static BundleActivator wrapActivator;
 	private static Bundle bootloader;
 	
 	private static void installEvent() {
@@ -221,17 +217,17 @@ public class MicroServer {
 		}
 	}
 
-	private static void installWrap() throws Exception {
-		wrapActivator = new org.ops4j.pax.url.wrap.internal.Activator();
-		wrapActivator.start(context);
-	}
+//	private static void installWrap() throws Exception {
+//		wrapActivator = new org.ops4j.pax.url.wrap.internal.Activator();
+//		wrapActivator.start(context);
+//	}
 
 	private static void stop() {
 			SwingUtilities.invokeLater(
 			new Runnable() {
 				public void run() {
 					try {
-						wrapActivator.stop(context);
+						//wrapActivator.stop(context);
 						registration.unregister();
 						if(reposRegistration != null) // optional.
 							reposRegistration.unregister();
