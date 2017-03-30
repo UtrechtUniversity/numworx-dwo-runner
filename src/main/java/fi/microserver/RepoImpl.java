@@ -32,6 +32,9 @@ import aQute.bnd.osgi.resource.ResourceBuilder;
 
 class RepoImpl implements Repository {
 
+	String increment;
+	String name;
+	
 	class ResourceImpl implements Resource, RepositoryContent {
 
 		public InputStream getContent() {
@@ -59,7 +62,12 @@ class RepoImpl implements Repository {
 		@Override
 		public void startElement(String uri, String localName, String qName,
 				Attributes attributes) throws SAXException {
-			if("resource".equals(localName))
+			if ("repository".equals(localName))
+			{
+				name = attributes.getValue("name");
+				increment = attributes.getValue("increment");
+			}
+			else if ("resource".equals(localName))
 				builder = new ResourceBuilder();
 			else if ("capability".equals(localName)||"requirement".equals(localName)) {
 				String namespace = attributes.getValue("namespace");

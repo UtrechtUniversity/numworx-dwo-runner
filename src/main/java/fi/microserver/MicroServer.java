@@ -127,10 +127,12 @@ public class MicroServer {
 		String u = context.getProperty("fi.dwo.repository");
 		if(u == null) return;
 		InputSource input = new InputSource(u);
-		Repository repos = new RepoImpl(input);
+		RepoImpl repos = new RepoImpl(input);
 		Dictionary<String, Object> properties = new Hashtable<String, Object>();
 		properties.put(Repository.URL, u);
 		properties.put(Constants.SERVICE_PID, "fi.dwo.repository");
+		properties.put("repository.name", repos.name);
+		properties.put("repository.increment", Long.valueOf(repos.increment));
 		reposRegistration = context.registerService(Repository.class, repos, properties);	
 	}
 
