@@ -32,6 +32,8 @@ import org.osgi.framework.FrameworkEvent;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.framework.launch.Framework;
 import org.osgi.framework.launch.FrameworkFactory;
+import org.osgi.framework.wiring.BundleCapability;
+import org.osgi.framework.wiring.FrameworkWiring;
 import org.osgi.resource.Capability;
 import org.osgi.resource.Requirement;
 import org.osgi.resource.Resource;
@@ -110,7 +112,12 @@ public class MicroServer {
 			int type;
 			do { 
 				framework.start();
-				bootloader.start(Bundle.START_TRANSIENT);
+				try {
+					bootloader.start(Bundle.START_TRANSIENT);
+				} catch (BundleException e) {
+					bootloader.uninstall();
+					throw e;
+				}
 				FrameworkEvent event = framework.waitForStop(0);
 				type  = event.getType();
 			} while (type != FrameworkEvent.STOPPED);
@@ -184,12 +191,13 @@ public class MicroServer {
 
 	static final String BOOTLOADER  = "fi.dwo.BootLoader";
 	private static void installBoot() throws BundleException {
-		String BOOT = context.getProperty("fi.dwo.boot");	
+		String BOOT = context.getProperty("fi.dwo.boot");
+		CapReqBuilder builder = new CapReqBuilder("osgi.identity");
+		builder.addDirective("filter", "(osgi.identity="+ BOOTLOADER +")");
+		Requirement r = builder.buildSyntheticRequirement();
+
 		try {
 			if (reposRegistration != null) {
-				CapReqBuilder builder = new CapReqBuilder("osgi.identity");
-				builder.addDirective("filter", "(osgi.identity="+ BOOTLOADER +")");
-				Requirement r = builder.buildSyntheticRequirement();
 				Repository repos = context.getService(reposRegistration.getReference());
 				Map<Requirement, Collection<Capability>> providers = repos.findProviders(Collections.singleton(r));
 				Collection<Capability> caps = providers.get(r);
@@ -206,13 +214,11 @@ public class MicroServer {
 		} catch (BundleException e) {
 			int type = e.getType();
 			if (type == BundleException.DUPLICATE_BUNDLE_ERROR) { // uninstall asap
-				Bundle[] bundles = context.getBundles();
-				for (int i = 0; i < bundles.length; i++) {
-					String name = bundles[i].getSymbolicName();
-					if(BOOTLOADER.equals(name)) {
-						bundles[i].uninstall();
-						installBoot(); return; // recurse
-					}
+				FrameworkWiring fw = context.getBundle(0).adapt(FrameworkWiring.class);
+				Collection<BundleCapability> res = fw.findProviders(r);
+				for (BundleCapability bc:res) {
+					bc.getRevision().getBundle().uninstall();
+					installBoot(); return; // recurse
 				}
 			}
 			throw e;
