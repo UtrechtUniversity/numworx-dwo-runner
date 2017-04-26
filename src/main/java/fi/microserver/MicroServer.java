@@ -68,7 +68,7 @@ public class MicroServer {
 			} catch (Exception e) {
 			}
 		}
-		
+		String increment = pref.get("increment", "");
 		List<String> arglist = Arrays.asList(args);
 		FrameworkFactory factory = ServiceLoader.load(FrameworkFactory.class).iterator().next();
 		Map<String, String> map = new HashMap<String,String>();
@@ -100,6 +100,17 @@ public class MicroServer {
 			map.put("fi.dwo.documentbase", MicroServer.class.getResource("resources/").toExternalForm());
 		else 
 			map.remove("fi.dwo.properties");
+		String u = props.getProperty("fi.dwo.repository");
+		RepoImpl repos = null;
+		if(u != null) {
+			InputSource input = new InputSource(u);
+			repos = new RepoImpl(input);
+			if(!increment.equals(repos.increment)) {
+				increment = repos.increment;
+			} else {
+				map.put("fi.dwo.update", "NEVER");
+			}
+		}
 		
 		framework = factory.newFramework(map);
 		framework.init();
@@ -107,7 +118,7 @@ public class MicroServer {
 		try {
 			//installWrap();
 			installEvent();
-			installRepository();
+			installRepository(repos);
 			installBoot();
 			int type;
 			do { 
@@ -121,6 +132,8 @@ public class MicroServer {
 				FrameworkEvent event = framework.waitForStop(0);
 				type  = event.getType();
 			} while (type != FrameworkEvent.STOPPED);
+			pref.put("increment", increment);
+			pref.flush();
 		} catch (InterruptedException e) {
 		} catch (Throwable t) {
 			displayException(t);			
@@ -130,11 +143,11 @@ public class MicroServer {
 		}	
 	}
 
-	private static void installRepository() throws Exception {
+	private static void installRepository(RepoImpl repos2) throws Exception {
 		String u = context.getProperty("fi.dwo.repository");
 		if(u == null) return;
 		InputSource input = new InputSource(u);
-		RepoImpl repos = new RepoImpl(input);
+		RepoImpl repos = repos2;
 		Dictionary<String, Object> properties = new Hashtable<String, Object>();
 		properties.put(Repository.URL, u);
 		properties.put(Constants.SERVICE_PID, "fi.dwo.repository");
