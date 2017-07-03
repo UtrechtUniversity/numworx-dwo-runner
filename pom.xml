@@ -73,7 +73,7 @@
 					<!-- <serverId>staff</serverId> -->
 					<!-- <url>scp://staff.science.uu.nl/home/staff/velth101/tmp</url> -->
 					<serverId>ubuntu</serverId>
-					<url>s3://test-dwo-nl</url>
+					<url>${s3}</url>
 					<toDir>bundles</toDir>
 				</configuration>
 
@@ -150,4 +150,16 @@
 			<version>5.0.0.20151029184259</version>
 		</dependency>
 	</dependencies>
+	<properties>
+		<s3>s3://test-dwo-nl</s3>
+	</properties>
+	<profiles>
+		<profile>
+			<id>cds</id>
+			<properties>
+				<s3>s3://cds.dwo.nl</s3>
+			</properties>
+		</profile>
+	
+	</profiles>
 </project>
