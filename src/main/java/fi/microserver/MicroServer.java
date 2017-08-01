@@ -108,7 +108,8 @@ public class MicroServer {
 			if(!increment.equals(repos.increment)) {
 				increment = repos.increment;
 			} else {
-				map.put("fi.dwo.update", "NEVER");
+				if(null == props.getProperty("fi.dwo.boot"))
+					map.put("fi.dwo.update", "NEVER");
 			}
 		}
 		
@@ -210,7 +211,7 @@ public class MicroServer {
 		Requirement r = builder.buildSyntheticRequirement();
 
 		try {
-			if (reposRegistration != null) {
+			if (reposRegistration != null && BOOT == null) {
 				Repository repos = context.getService(reposRegistration.getReference());
 				Map<Requirement, Collection<Capability>> providers = repos.findProviders(Collections.singleton(r));
 				Collection<Capability> caps = providers.get(r);
@@ -221,8 +222,10 @@ public class MicroServer {
 					for(Capability cc: list)
 						BOOT = cc.getAttributes().get("url").toString();
 				}
+			} else if (BOOT == null) {
+				BOOT = context.getProperty("fi.dwo.boot0");
 			}
-			
+ 			
 			bootloader = context.installBundle(BOOT);
 		} catch (BundleException e) {
 			int type = e.getType();

@@ -111,4 +111,9 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<fi.dwo.boot>http://cdn.dwo.nl/bundles/BootLoader-2.0.jar</fi.dwo.boot>
 	</properties>
+	<parent>
+		<groupId>nl.uu.fi.dwo</groupId>
+		<artifactId>DWO.master.pom</artifactId>
+		<version>1.0</version>
+	</parent>
 </project>
