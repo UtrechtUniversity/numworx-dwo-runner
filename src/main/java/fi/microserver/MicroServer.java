@@ -17,10 +17,13 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.ServiceLoader;
 import java.util.UUID;
+import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import java.util.prefs.PreferencesFactory;
 
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
 import org.osgi.framework.Bundle;
@@ -60,6 +63,7 @@ public class MicroServer {
 	public static void main(String[] args) throws Exception {
 		Preferences pref = Preferences.userRoot().node("fi/microserver");
 		String uuid = pref.get("uuid", null);
+		String clean = pref.get(Constants.FRAMEWORK_STORAGE_CLEAN, null);
 		if(uuid == null) {
 			uuid = UUID.randomUUID().toString();
 			pref.put("uuid", uuid);
@@ -73,7 +77,8 @@ public class MicroServer {
 		FrameworkFactory factory = ServiceLoader.load(FrameworkFactory.class).iterator().next();
 		Map<String, String> map = new HashMap<String,String>();
 	    if(arglist.contains("-clean"))
-	    	map.put(Constants.FRAMEWORK_STORAGE_CLEAN,Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT);
+	    	clean = Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT;
+	    map.put(Constants.FRAMEWORK_STORAGE_CLEAN,clean);
 	    map.put("fi.dwo.console", Boolean.valueOf(arglist.contains("-console")).toString());
 	    map.put("fi.dwo.uuid", uuid);
 	    String dir = System.getProperty("user.home");
@@ -112,7 +117,7 @@ public class MicroServer {
 					map.put("fi.dwo.update", "NEVER");
 			}
 		}
-		
+		cleanOnExit(true);
 		framework = factory.newFramework(map);
 		framework.init();
 		context = framework.getBundleContext();
@@ -135,6 +140,7 @@ public class MicroServer {
 			} while (type != FrameworkEvent.STOPPED);
 			pref.put("increment", increment);
 			pref.flush();
+			cleanOnExit(false);
 		} catch (InterruptedException e) {
 		} catch (Throwable t) {
 			displayException(t);			
@@ -166,7 +172,8 @@ public class MicroServer {
 					PrintWriter pw = new PrintWriter(sw);
 					t.printStackTrace(pw);
 					pw.close();
-					JOptionPane.showMessageDialog(null, sw);
+					JTextArea area = new JTextArea(sw.toString());
+					JOptionPane.showMessageDialog(null, new JScrollPane(area));
 				}
 			});
 		} catch (InvocationTargetException e) {
@@ -261,6 +268,19 @@ public class MicroServer {
 					}
 				}
 			});
+	}
+	
+	private static void cleanOnExit(boolean on) {
+		try {
+			Preferences pref = Preferences.userRoot().node("fi/microserver");
+			if(on)
+				pref.put(Constants.FRAMEWORK_STORAGE_CLEAN, Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT);
+			else
+				pref.remove(Constants.FRAMEWORK_STORAGE_CLEAN);
+			pref.flush();
+		} catch (BackingStoreException e) {
+		}
+		
 	}
 	
 }
