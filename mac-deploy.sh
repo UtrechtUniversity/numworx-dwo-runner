@@ -16,7 +16,7 @@ $jh/bin/javapackager -deploy \
 	-vendor Numworx \
 	-description "Start the DWO" \
 	-height 600 -width 800 \
-	-appclass fi.microserver.MicroServer \
+	-appclass fi.microserver.DWO \
 	$build \
 	-outdir deploy \
 	-outfile DWO-docent

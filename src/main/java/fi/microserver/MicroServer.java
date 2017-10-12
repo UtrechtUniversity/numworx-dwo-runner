@@ -61,6 +61,8 @@ public class MicroServer {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void main(String[] args) throws Exception {
+	    System.setProperty("apple.eawt.quitStrategy", "CLOSE_ALL_WINDOWS");
+
 		Preferences pref = Preferences.userRoot().node("fi/microserver");
 		String uuid = pref.get("uuid", null);
 		String clean = pref.get(Constants.FRAMEWORK_STORAGE_CLEAN, null);
@@ -121,6 +123,7 @@ public class MicroServer {
 		framework = factory.newFramework(map);
 		framework.init();
 		context = framework.getBundleContext();
+
 		try {
 			//installWrap();
 			installEvent();
@@ -141,6 +144,7 @@ public class MicroServer {
 			pref.put("increment", increment);
 			pref.flush();
 			cleanOnExit(false);
+			System.err.println("DWO exit");
 		} catch (InterruptedException e) {
 		} catch (Throwable t) {
 			displayException(t);			
