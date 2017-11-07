@@ -3,12 +3,17 @@ package fi.microserver.microindex;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
+import java.util.TreeSet;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
@@ -36,6 +41,22 @@ public class Activator implements BundleActivator, FilenameFilter,
 		activator = this;
 	}
 
+	private List<String> jars = null;
+	
+	boolean contains(String f) { 
+		if (jars == null) return true;
+		for(String item: jars) {
+			if(item.startsWith("!"))
+			{	if(f.matches(item.substring(1)))
+					return false;
+			} else {
+				if (f.matches(item))
+					return true;
+			}
+		}
+		return false;
+	}
+	
 	public void start(BundleContext context) throws Exception {
 		
 		ResourceAnalyzer analyser = new Analyser();
@@ -53,8 +74,12 @@ public class Activator implements BundleActivator, FilenameFilter,
 		if(name == null)
 			name = ResourceIndexer.REPOSITORYNAME_DEFAULT;
 		f = context.getProperty("microindex.includes");
-		 
-		
+		if ( f != null ) {
+			StringTokenizer st = new StringTokenizer(f, ",");
+			List<String> t = new ArrayList<String>(st.countTokens());
+			while(st.hasMoreTokens()) t.add(st.nextToken().trim());
+			jars = t;
+		}
 		tracker.open();
 	}
 
@@ -63,7 +88,7 @@ public class Activator implements BundleActivator, FilenameFilter,
 	}
 
 	public boolean accept(File dir, String name) {
-		return name.endsWith(".jar");
+		return name.endsWith(".jar") && contains(name);
 	}
 
 	public synchronized ResourceIndexer addingService(
