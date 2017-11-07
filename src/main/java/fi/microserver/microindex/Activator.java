@@ -52,6 +52,9 @@ public class Activator implements BundleActivator, FilenameFilter,
 		name = context.getProperty(ResourceIndexer.REPOSITORY_NAME);
 		if(name == null)
 			name = ResourceIndexer.REPOSITORYNAME_DEFAULT;
+		f = context.getProperty("microindex.includes");
+		 
+		
 		tracker.open();
 	}
 

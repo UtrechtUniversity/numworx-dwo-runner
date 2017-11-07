@@ -32,7 +32,8 @@ public class Main {
 		map.put("microindex.outfile", outfile);
 		if(args.length>2)
 			map.put(ResourceIndexer.REPOSITORY_NAME, args[2]);
-
+		if(args.length>3)
+			map.put("microindex.includes", args[3]);
 		factory.newPojoServiceRegistry(map);
 		Activator activator = Activator.activator;
 		synchronized(activator) {
