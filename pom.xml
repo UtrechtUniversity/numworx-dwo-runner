@@ -15,6 +15,16 @@
 			<groupId>org.apache.felix</groupId>
 			<artifactId>org.apache.felix.connect</artifactId>
 			<version>0.1.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.osgi</groupId>
+					<artifactId>org.osgi.core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.osgi</groupId>
+					<artifactId>org.osgi.compendium</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
   </dependencies>
   <build>
