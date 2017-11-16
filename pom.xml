@@ -71,7 +71,7 @@
 					<fromDir>${project.build.directory}</fromDir>
 					<includes>*</includes>
 					<!-- <serverId>staff</serverId> -->
-					<!-- <url>scp://staff.science.uu.nl/home/staff/velth101/tmp</url> -->
+					<!-- <url>scp://gemini.science.uu.nl/home/staff/velth101/tmp</url> -->
 					<serverId>ubuntu</serverId>
 					<url>${s3}</url>
 					<toDir>bundles</toDir>
@@ -100,7 +100,7 @@
 		<dependency>
 			<groupId>fi.dwo</groupId>
 			<artifactId>BootLoader</artifactId>
-			<version>2.0.2</version>
+			<version>2.0.3</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>org.osgi.core</artifactId>
