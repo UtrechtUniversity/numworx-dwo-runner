@@ -110,13 +110,18 @@ public class MicroServer {
 		String u = props.getProperty("fi.dwo.repository");
 		RepoImpl repos = null;
 		if(u != null) {
-			InputSource input = new InputSource(u);
-			repos = new RepoImpl(input);
-			if(!increment.equals(repos.increment)) {
-				increment = repos.increment;
-			} else {
-				if(null == props.getProperty("fi.dwo.boot"))
-					map.put("fi.dwo.update", "NEVER");
+			try {
+				InputSource input = new InputSource(u);
+				repos = new RepoImpl(input);
+				if(!increment.equals(repos.increment)) {
+					increment = repos.increment;
+				} else {
+					if(null == props.getProperty("fi.dwo.boot"))
+						map.put("fi.dwo.update", "NEVER");
+				}
+			} catch (Exception e) {
+				displayException(e);
+				System.exit(1);
 			}
 		}
 		cleanOnExit(true);
