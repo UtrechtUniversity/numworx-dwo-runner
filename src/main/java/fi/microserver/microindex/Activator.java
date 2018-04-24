@@ -31,8 +31,8 @@ public class Activator implements BundleActivator, FilenameFilter,
 	boolean waiting = true;
 	static Activator activator;
 	
-	private String indir = "/opt/dwo/webapps/war-shared/jars";
-	private String outfile = "/opt/dwo/webapps/war-shared/jars/index.xml";
+	private String indir   = null;
+	private String outfile = null;
 	private String name;
 	
 	
@@ -80,7 +80,8 @@ public class Activator implements BundleActivator, FilenameFilter,
 			while(st.hasMoreTokens()) t.add(st.nextToken().trim());
 			jars = t;
 		}
-		tracker.open();
+		if (indir != null) 
+		  tracker.open();
 	}
 
 	public void stop(BundleContext context) throws Exception {
@@ -94,6 +95,7 @@ public class Activator implements BundleActivator, FilenameFilter,
 	public synchronized ResourceIndexer addingService(
 			ServiceReference<ResourceIndexer> ref) {
 		ResourceIndexer indexer = tracker.addingService(ref);
+		if(indir == null) return null;
 		try {
 			File d = new File(indir);
 			File[] list = d.listFiles(this);
