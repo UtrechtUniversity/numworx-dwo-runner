@@ -4,7 +4,7 @@ set -x
 rm -rf deploy
 jh=$(/usr/libexec/java_home -v 1.8)
 export JAVA_HOME=$jh
-build=$(for i in target/*.jar; do /bin/echo -n " -srcfiles " $i; done)
+build=$(for i in target/*.jar target/dependency/*.jar; do /bin/echo -n " -srcfiles " $i; done)
 $jh/bin/javapackager -deploy \
 	-BappVersion=0.0.3 \
 	-Bruntime="$jh/../../" \

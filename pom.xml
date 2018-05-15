@@ -27,7 +27,6 @@
 				</executions>
 				<configuration>
 					<includeScope>runtime</includeScope>
-					<outputDirectory>${project.build.directory}</outputDirectory>
 				</configuration>
 			</plugin>
 			<plugin>
