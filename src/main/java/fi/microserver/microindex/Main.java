@@ -34,7 +34,7 @@ public class Main {
 			map.put(ResourceIndexer.REPOSITORY_NAME, args[2]);
 		if(args.length>3)
 			map.put("microindex.includes", args[3]);
-		factory.newPojoServiceRegistry(map);
+		PojoServiceRegistry framework = factory.newPojoServiceRegistry(map);
 		Activator activator = Activator.activator;
 		synchronized(activator) {
 			while(activator.waiting)
@@ -42,7 +42,7 @@ public class Main {
 				activator.wait();
 			}
 		}
-		System.exit(0);
+		framework.getBundleContext().getBundle().stop();
 	}
 
 }

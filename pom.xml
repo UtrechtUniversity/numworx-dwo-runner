@@ -82,4 +82,12 @@
   	<maven.compiler.source>1.8</maven.compiler.source>
   	<maven.compiler.target>1.8</maven.compiler.target>
   </properties>
+  <parent>
+  	<groupId>nl.uu.fi.dwo</groupId>
+  	<artifactId>DWO.master.pom</artifactId>
+  	<version>1.1</version>
+  </parent>
+  <scm>
+  	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.projects/MicroIndex/trunk</developerConnection>
+  </scm>
 </project>
