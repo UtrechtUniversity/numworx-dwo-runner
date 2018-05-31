@@ -38,35 +38,8 @@ class Unpack200Handler extends AbstractURLStreamHandlerService {
             full = full.substring(1);
         }
         full = full.trim();
-		URLConnection connection = new URL(full).openConnection();
-		InputStream in = connection.getInputStream();
-// optional gzip?
-		BufferedInputStream bin = new BufferedInputStream(in);
-		byte[] header = new byte[3];
-		bin.mark(header.length);
-		bin.read(header);
-		bin.reset();
-		in = bin;
-		if(iszip(header))
-		{
-			in = new GZIPInputStream(in);
-		}
-		Unpacker u = Pack200.newUnpacker();
-		File temp = context.getDataFile("temp");
-		if(temp != null) 
-			temp.mkdirs();
-		File filename = File.createTempFile("pack", ".jar", temp);
-		JarOutputStream out = new JarOutputStream(new FileOutputStream(filename));
-		u.unpack(in, out);
-		out.close();
-		connection = filename.toURI().toURL().openConnection();
-		filename.deleteOnExit();
-		return connection;
+		return new UnpackConnection(url, full, context);
 	}
 
-	private boolean iszip(byte[] header) {
-		int magic = ((header[1]&0xFF) << 8)|(header[0]&0xFF); // Little Endian
-		return (magic == GZIPInputStream.GZIP_MAGIC) && (header[2] == 8);
-	}
 
 }
