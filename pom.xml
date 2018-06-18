@@ -23,6 +23,8 @@
         <configuration>
           <instructions>
 				<Bundle-Activator>fi.dwo.unpack200.Activator</Bundle-Activator>
+				<Private-Package>fi.dwo.unpack200</Private-Package>
+				<Export-Package></Export-Package>
           </instructions>
         </configuration>
       </plugin>
