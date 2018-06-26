@@ -220,10 +220,10 @@ class UnpackConnection extends HttpURLConnection {
     return proxy.getRequestProperties();
   }
 
-  @Override
-  public URL getURL() {
-    return full;
-  }
+//  @Override
+//  public URL getURL() {
+//    return full;
+//  }
 
   public int getContentLength() {
     try {
