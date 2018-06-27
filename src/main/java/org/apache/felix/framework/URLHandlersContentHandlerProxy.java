@@ -55,7 +55,7 @@ class URLHandlersContentHandlerProxy extends ContentHandler
     private static final Class[] STRING_TYPES = new Class[]{String.class};
 
     private static final String CONTENT_HANDLER_PACKAGE_PROP = "java.content.handler.pkgs";
-    private static final String DEFAULT_CONTENT_HANDLER_PACKAGE = "sun.net.www.content|com.ibm.oti.net.www.content|gnu.java.net.content|org.apache.harmony.luni.internal.net.www.content|COM.newmonics.www.content";
+    private static final String DEFAULT_CONTENT_HANDLER_PACKAGE = "sun.awt.www.content|sun.net.www.content|com.ibm.oti.net.www.content|gnu.java.net.content|org.apache.harmony.luni.internal.net.www.content|COM.newmonics.www.content";
 
     private static final ConcurrentHashMap<String, ContentHandler> m_builtIn = new ConcurrentHashMap<String, ContentHandler>();
     private static final String m_pkgs;
@@ -181,6 +181,7 @@ class URLHandlersContentHandlerProxy extends ContentHandler
                 // This could be a class not found exception or an
                 // instantiation exception, not much we can do in either
                 // case other than ignore it.
+            	ex.printStackTrace();
             }
         }
         return null;
