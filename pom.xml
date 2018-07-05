@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>fi.microserver</groupId>
   <artifactId>MicroIndex</artifactId>
-  <version>0.1.0</version>
+  <version>0.1.1-SNAPSHOT</version>
   <dependencies>
 		<dependency>
     		<groupId>biz.aQute.bnd</groupId>
@@ -88,6 +88,6 @@
   	<version>1.1</version>
   </parent>
   <scm>
-  	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.projects/MicroIndex/tags/MicroIndex-0.1.0</developerConnection>
+  	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.projects/MicroIndex/trunk</developerConnection>
   </scm>
 </project>
