@@ -131,6 +131,7 @@ public class MicroServer {
 
 		try {
 			//installWrap();
+		    JULHandler.install(context);
 			installEvent();
 			installRepository(repos);
 			installBoot();
@@ -149,7 +150,7 @@ public class MicroServer {
 			pref.put("increment", increment);
 			pref.flush();
 			cleanOnExit(false);
-			System.err.println("DWO exit");
+			java.util.logging.Logger.getLogger("").info("DWO exit");
 		} catch (InterruptedException e) {
 		} catch (Throwable t) {
 			displayException(t);			
@@ -174,7 +175,7 @@ public class MicroServer {
 
 	private static void displayException(final Throwable t) {
 		try {
-			SwingUtilities.invokeAndWait(
+			Runnable run = 
 			new Runnable() {
 				public void run() {
 					StringWriter sw = new StringWriter();
@@ -184,7 +185,12 @@ public class MicroServer {
 					JTextArea area = new JTextArea(sw.toString());
 					JOptionPane.showMessageDialog(null, new JScrollPane(area));
 				}
-			});
+			};
+			if(SwingUtilities.isEventDispatchThread()) {
+			  run.run();
+			} else {
+			  SwingUtilities.invokeAndWait(run);
+			}
 		} catch (InvocationTargetException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -181,7 +181,7 @@ class URLHandlersContentHandlerProxy extends ContentHandler
                 // This could be a class not found exception or an
                 // instantiation exception, not much we can do in either
                 // case other than ignore it.
-            	ex.printStackTrace();
+            	// ex.printStackTrace();
             }
         }
         return null;
