@@ -88,12 +88,13 @@ public class JULHandler extends Handler  {
     if (old != null) for (Handler o : old)
       root.removeHandler(o);
     root.addHandler(new JULHandler(context));
-    root.setLevel(Level.FINE);
+    root.setLevel(Level.INFO); // anders NPE in wiskOpdr .... toString();
     root.setFilter(JULHandler::classFilter);
   }
 
   static boolean classFilter(LogRecord record) {
     String src = record.getSourceClassName();
+    if(src == null) return true;
     return !(src.startsWith("java.awt")||src.startsWith("sun.")||src.startsWith("javax.swing"));
   }
   
