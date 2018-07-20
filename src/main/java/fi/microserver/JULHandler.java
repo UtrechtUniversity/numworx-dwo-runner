@@ -55,7 +55,6 @@ public class JULHandler extends Handler  {
 
     @Override
     public boolean isAssignableTo(Bundle bundle, String className) {
-      // TODO Auto-generated method stub
       return false;
     }
 
@@ -65,6 +64,10 @@ public class JULHandler extends Handler  {
       return 0;
     }
 
+    @Override
+    public String toString() {
+      return "[" + record.getSourceClassName() + "]";
+    }
   }
 
   final private BundleContext context;
