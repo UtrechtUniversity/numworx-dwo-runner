@@ -41,7 +41,48 @@
 					</archive>
 				</configuration>
 			</plugin>
-		</plugins>
+	<plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-antrun-plugin</artifactId>
+		<version>1.8</version>
+		<executions>
+			<execution>
+				<phase>package</phase>
+				<configuration>
+
+					<target
+						xmlns:fx="javafx:com.sun.javafx.tools.ant">
+						<echo message="JAVA_HOME = ${JAVA_HOME}" />
+						<taskdef resource="com/sun/javafx/tools/ant/antlib.xml"
+							uri="javafx:com.sun.javafx.tools.ant"
+							classpath="${JAVA_HOME}/lib/ant-javafx.jar" />
+
+						<fx:application id="HelloWorldID"
+							name="DWO-docent" mainClass="fi.microserver.DWO" />
+						<fx:resources id="appRes">
+						    <fx:fileset dir="target/dependency" includes="*.jar"/>
+						</fx:resources>
+						<fx:deploy width="800" height="600"
+						        outdir="deploy" embedJNLP="true"
+						        outfile="DWO-docent"
+								nativeBundles='all'
+						        <fx:application refId="HelloWorldID"/>					 
+						        <fx:resources refid="appRes"/>						 
+						        <fx:info 
+						        	title="DWO-docent"
+						          	vendor="Numworx"/>
+						      </fx:deploy>
+
+					</target>
+
+				</configuration>
+				<goals>
+					<goal>run</goal>
+				</goals>
+			</execution>
+		</executions>
+	</plugin>
+	</plugins>
 	</build>
 	<dependencies>
 		<dependency>
