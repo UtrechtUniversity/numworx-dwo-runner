@@ -57,22 +57,35 @@
 							uri="javafx:com.sun.javafx.tools.ant"
 							classpath="${JAVA_HOME}/lib/ant-javafx.jar" />
 
-						<fx:application id="HelloWorldID"
-							name="DWO-docent" mainClass="fi.microserver.DWO" />
+						<fx:application id="fi.microserver"
+							name="DWO-docent" 
+							mainClass="fi.microserver.DWO" 
+							version="${project.version}" 
+							toolkit="swing" />
 						<fx:resources id="appRes">
 						    <fx:fileset dir="target/dependency" includes="*.jar"/>
 						</fx:resources>
 						<fx:deploy width="800" height="600"
-						        outdir="deploy" embedJNLP="true"
-						        outfile="DWO-docent"
-								nativeBundles='all'
-						        <fx:application refId="HelloWorldID"/>					 
-						        <fx:resources refid="appRes"/>						 
-						        <fx:info 
-						        	title="DWO-docent"
-						          	vendor="Numworx"/>
-						      </fx:deploy>
-
+					        outdir="target/deploy" embedJNLP="true"
+					        outfile="DWO-docent"
+							nativeBundles='dmg'
+							signBundle='false'
+						>
+							<fx:platform j2se="8.0" >
+								<fx:jvmarg value="-Xmx1024m" />
+							</fx:platform>
+					        <fx:application refId="fi.microserver"/>					 
+					        <fx:resources refid="appRes"/>						 
+					        <fx:info 
+					        	title="DWO-docent"
+					          	vendor="Numworx"
+					          	description="Start the DWO"
+					         >
+						         <fx:association extension='dwo' />
+						         <fx:icon href='package/macosx/DWO-docent.icns' />
+					         </fx:info>
+<!-- 					         <fx:bundleArgument arg='icon' value='package/macosx/DWO-docent-volume.icns' /> -->
+					      </fx:deploy>
 					</target>
 
 				</configuration>
