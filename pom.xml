@@ -160,6 +160,12 @@
 			<artifactId>unpack200</artifactId>
 			<version>0.0.2-SNAPSHOT</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.sling/org.apache.sling.javax.activation -->
+		<dependency>
+		    <groupId>org.apache.sling</groupId>
+		    <artifactId>org.apache.sling.javax.activation</artifactId>
+		    <version>0.1.0</version>
+		</dependency>
 	</dependencies>
 	<properties>
 		<s3>s3://test-dwo-nl</s3>
