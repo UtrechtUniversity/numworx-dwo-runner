@@ -119,6 +119,7 @@
 							toolkit="swing" />
 						<fx:resources id="appRes">
 						    <fx:fileset dir="target/dependency" includes="*.jar"/>
+						    <fx:fileset dir="target" includes='${project.build.finalName}.jar' />
 						</fx:resources>
 						<fx:deploy width="800" height="600"
 					        outdir="target/deploy" embedJNLP="true"
