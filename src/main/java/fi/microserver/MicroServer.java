@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -19,15 +18,12 @@ import java.util.ServiceLoader;
 import java.util.UUID;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
-import java.util.prefs.PreferencesFactory;
-
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
 import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
 import org.osgi.framework.Constants;
@@ -46,8 +42,7 @@ import org.osgi.service.event.EventHandler;
 import org.osgi.service.repository.Repository;
 import org.xml.sax.InputSource;
 
-import aQute.bnd.osgi.resource.CapReqBuilder;
-import aQute.bnd.osgi.resource.RequirementImpl;
+//import aQute.bnd.osgi.resource.CapReqBuilder;
 
 public class MicroServer {
 

@@ -1,6 +1,5 @@
 package fi.microserver;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
@@ -12,6 +11,9 @@ import java.util.Map;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.osgi.framework.Filter;
+import org.osgi.framework.FrameworkUtil;
+import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.Version;
 import org.osgi.resource.Capability;
 import org.osgi.resource.Requirement;
@@ -24,11 +26,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
-
-import aQute.bnd.osgi.resource.CapReqBuilder;
-import aQute.bnd.osgi.resource.FilterParser;
-import aQute.bnd.osgi.resource.FilterParser.Expression;
-import aQute.bnd.osgi.resource.ResourceBuilder;
 
 class RepoImpl implements Repository {
 
@@ -131,29 +128,30 @@ class RepoImpl implements Repository {
 	public Map<Requirement, Collection<Capability>> findProviders(
 			Collection<? extends Requirement> requirements) {
 		Map<Requirement, Collection<Capability>> result = new HashMap<Requirement, Collection<Capability>>();
-		FilterParser parser = new FilterParser();
 		for(Requirement r: requirements) {
 			try {
-				Expression e = parser.parse(r);
+			    String string = r.getDirectives().get("filter");
+			    Filter e = FrameworkUtil.createFilter(string);
 				Collection<Capability> items = new ArrayList<Capability>();
 				String namespace = r.getNamespace();
 				for(Resource res : resources) {
 					List<Capability> caps = res.getCapabilities(namespace);
+					if(caps == null) 
+					  continue;
 					for (Capability capability : caps) {
 						Map<String, Object> map = capability.getAttributes();
-						if(e.eval(map))
+						if(e.matches(map))
 							items.add(capability);
 					}
 				}	
 				result.put(r,  items);
-			} catch (IOException e) {
+			} catch (InvalidSyntaxException e) {
 				LogService log = null;
 				if (log != null)
 					log.log(LogService.LOG_ERROR, "findProviders for " + r, e);
 				
 			}
-		}
-		
+		}		
 		return result;
 	}
 
