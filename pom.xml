@@ -165,6 +165,12 @@
 		    <groupId>org.apache.sling</groupId>
 		    <artifactId>org.apache.sling.javax.activation</artifactId>
 		    <version>0.1.0</version>
+		    <exclusions>
+		    	<exclusion>
+		    		<groupId>javax.activation</groupId>
+		    		<artifactId>activation</artifactId>
+		    	</exclusion>
+		    </exclusions>
 		</dependency>
 	</dependencies>
 	<properties>
