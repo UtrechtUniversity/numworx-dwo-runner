@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.osgi.framework.BundleContext;
 import org.osgi.framework.Filter;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.InvalidSyntaxException;
@@ -31,24 +32,7 @@ class RepoImpl implements Repository {
 
 	String increment;
 	String name;
-	
-	class ResourceImpl implements Resource, RepositoryContent {
-
-		public InputStream getContent() {
-			return null;
-		}
-
-		public List<Capability> getCapabilities(String namespace) {
-			return null;
-		}
-
-		public List<Requirement> getRequirements(String namespace) {
-			return null;
-		}
 		
-	}
-	
-	
 	private Collection<Resource> resources = new ArrayList<Resource>();
 	
 	private class ResourceReader extends DefaultHandler {
@@ -114,6 +98,7 @@ class RepoImpl implements Repository {
 	}
 	
 	URI base;
+	BundleContext context;
 	
 	public RepoImpl(InputSource repo) throws Exception {
 		base = URI.create(repo.getSystemId());
@@ -131,7 +116,7 @@ class RepoImpl implements Repository {
 		for(Requirement r: requirements) {
 			try {
 			    String string = r.getDirectives().get("filter");
-			    Filter e = FrameworkUtil.createFilter(string);
+			    Filter e = context.createFilter(string);
 				Collection<Capability> items = new ArrayList<Capability>();
 				String namespace = r.getNamespace();
 				for(Resource res : resources) {
@@ -154,5 +139,9 @@ class RepoImpl implements Repository {
 		}		
 		return result;
 	}
+
+  public void setContext(BundleContext context2) {
+    context = context2;
+  }
 
 }

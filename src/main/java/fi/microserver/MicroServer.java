@@ -123,7 +123,7 @@ public class MicroServer {
 		framework = factory.newFramework(map);
 		framework.init();
 		context = framework.getBundleContext();
-
+		repos.setContext(context);
 		try {
 			//installWrap();
 		    JULHandler.install(context);

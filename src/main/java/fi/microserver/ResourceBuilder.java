@@ -1,6 +1,8 @@
 package fi.microserver;
 
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -10,21 +12,34 @@ import java.util.stream.Collectors;
 import org.osgi.resource.Capability;
 import org.osgi.resource.Requirement;
 import org.osgi.resource.Resource;
+import org.osgi.service.repository.RepositoryContent;
 
 class ResourceBuilder {
 
-  static class ResourceImpl implements Resource {
+  static class ResourceImpl implements Resource, RepositoryContent {
 
     private Map<String,List<Capability>> capabilities;
     private Map<String, List<Requirement>> requirements;;
 
     @Override
     public List<Capability> getCapabilities(String namespace) {
+      if (namespace == null) {
+        return flatten(capabilities.values());
+      }
       return capabilities.getOrDefault(namespace, Collections.EMPTY_LIST);
+    }
+
+    private <T> List<T> flatten(Collection<List<T>> values) {
+      List<T> list = new ArrayList<T>();
+      values.forEach(item -> list.addAll(item));
+      return list;
     }
 
     @Override
     public List<Requirement> getRequirements(String namespace) {
+      if(namespace == null) {
+        return flatten(requirements.values());
+      }
       return requirements.getOrDefault(namespace, Collections.EMPTY_LIST);
     }
 
@@ -38,6 +53,11 @@ class ResourceBuilder {
       req.forEach((k,v) -> {
         requirements.put(k, v.stream().map(r -> r.buildRequirement(this)).collect(Collectors.toList()));
       });
+    }
+
+    @Override
+    public InputStream getContent() {
+      return null;
     }
     
   }

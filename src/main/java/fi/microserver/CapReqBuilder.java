@@ -22,6 +22,10 @@ class CapReqBuilder {
     super(namespace, directives, attributes);
     this.resource = resource;
   }
+    @Override
+    public String toString() {
+      return "Requirement[namespace=" + namespace + ", directives=" + directives + "]";
+    }
    
   }
   private static class CapabilityImpl extends Impl implements Capability {
@@ -31,7 +35,14 @@ class CapReqBuilder {
     super(namespace, directives, attributes);
     this.resource = resource;
   }
-   
+
+  @Override
+  public String toString() {
+    return "Capability[namespace=" + namespace + ", attributes=" + attributes + "]";
+  }
+
+ 
+  
   }
  
   private static abstract class Impl {
