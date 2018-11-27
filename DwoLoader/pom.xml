@@ -1,0 +1,61 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>fi.dwo</groupId>
+	<artifactId>DwoLoader</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>DWO Loader</name>
+	<description>Load DWO via Resolver</description>
+	<dependencies>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.core</artifactId>
+			<version>6.0.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>fi.dwo</groupId>
+			<artifactId>BootLoader</artifactId>
+			<version>2.0.4</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.felix</groupId>
+			<artifactId>org.apache.felix.bundlerepository</artifactId>
+			<version>2.0.8</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.compendium</artifactId>
+			<version>5.0.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>osgi.promise</artifactId>
+			<version>6.0.0</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+	<build>
+  <plugins>
+  	  <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <version>2.5.3</version>
+        <extensions>true</extensions>
+        <configuration>
+          <instructions>
+				<Bundle-Activator>fi.dwo.dwoloader_impl.Activator</Bundle-Activator>
+				<Embed-Transitive>false</Embed-Transitive>
+ 				<Embed-Dependency></Embed-Dependency>
+ 				<Export-Package>!fi.dwo.dwoloader_impl</Export-Package>
+ 				<Private-Package>fi.dwo.dwoloader_impl</Private-Package>
+          </instructions>
+        </configuration>
+      </plugin>
+  </plugins>
+	</build>
+	<packaging>bundle</packaging>
+</project>
