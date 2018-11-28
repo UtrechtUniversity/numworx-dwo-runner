@@ -95,8 +95,11 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-
-
+		<dependency>
+			<groupId>fi.dwo</groupId>
+			<artifactId>DwoLoader</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 		<dependency>
 			<groupId>fi.dwo</groupId>
 			<artifactId>BootLoader</artifactId>
@@ -105,6 +108,12 @@
 				<exclusion>
 					<artifactId>org.osgi.core</artifactId>
 					<groupId>org.osgi</groupId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.aries.async</groupId>
+					<artifactId>
+						org.apache.aries.async.promise.api
+					</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -137,6 +146,10 @@
 				<exclusion>
 					<groupId>org.osgi</groupId>
 					<artifactId>org.osgi.core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.easymock</groupId>
+					<artifactId>easymock</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
