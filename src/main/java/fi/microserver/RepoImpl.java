@@ -1,6 +1,5 @@
 package fi.microserver;
 
-import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,15 +12,14 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Filter;
-import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.framework.ServiceReference;
 import org.osgi.framework.Version;
 import org.osgi.resource.Capability;
 import org.osgi.resource.Requirement;
 import org.osgi.resource.Resource;
 import org.osgi.service.log.LogService;
 import org.osgi.service.repository.Repository;
-import org.osgi.service.repository.RepositoryContent;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -131,9 +129,13 @@ class RepoImpl implements Repository {
 				}	
 				result.put(r,  items);
 			} catch (InvalidSyntaxException e) {
-				LogService log = null;
+				ServiceReference<LogService> ref = context.getServiceReference(LogService.class);
+				LogService log = ref != null ? context.getService(ref) : null;
 				if (log != null)
+				{
 					log.log(LogService.LOG_ERROR, "findProviders for " + r, e);
+					context.ungetService(ref);
+				}
 				
 			}
 		}		
