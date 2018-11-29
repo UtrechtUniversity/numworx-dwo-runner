@@ -185,6 +185,11 @@
 		    	</exclusion>
 		    </exclusions>
 		</dependency>
+		<dependency>
+			<groupId>fi.dwo</groupId>
+			<artifactId>eawt</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 	<properties>
 		<s3>s3://test-dwo-nl</s3>
