@@ -186,6 +186,94 @@
 		<profile>
 			<id>windows</id>
 			<activation><os><family>windows</family></os></activation>
+			<build>
+				<plugins>
+	<plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-antrun-plugin</artifactId>
+		<version>1.8</version>
+		<dependencies>
+			<dependency>
+				<groupId>javafx</groupId>
+				<artifactId>ant-javafx.jar</artifactId>
+				<version>9.0.4</version>
+				<systemPath>${java.home}/../lib/ant-javafx.jar</systemPath>
+				<scope>system</scope>
+			</dependency>
+		</dependencies>
+		<executions>
+			<execution>
+				<phase>verify</phase>
+				<configuration>
+					<target
+						xmlns:fx="javafx:com.sun.javafx.tools.ant">
+						<echo message="JAVA_HOME = ${java.home}" />
+						<taskdef resource="com/sun/javafx/tools/ant/antlib.xml"
+							uri="javafx:com.sun.javafx.tools.ant"
+						/>
+						<fx:application id="fi.microserver"
+							name="DWO-docent" 
+							mainClass="fi.microserver.DWO" 
+							version="${project.version}" 
+							toolkit="swing" />
+						<fx:resources id="appRes">
+						    <fx:fileset dir="target/dependency" includes="*.jar"/>
+						    <fx:fileset dir="target" includes='${project.build.finalName}.jar' />
+						</fx:resources>
+						<fx:deploy width="800" height="600"
+					        outdir="target/deploy" embedJNLP="true"
+					        outfile="DWO-docent"
+							nativeBundles='exe'
+							signBundle='false'
+						>
+							<fx:platform j2se="9.0" >
+								<fx:jvmarg value="-Xmx1024m --add-exports=java.desktop/sun.awt.www.content.image=ALL-UNNAMED --add-modules java.activation,java.desktop" />
+							</fx:platform>
+					        <fx:application refId="fi.microserver"/>					 
+					        <fx:resources refid="appRes"/>						 
+					        <fx:info 
+					        	title="DWO-docent"
+					          	vendor="Numworx"
+					          	description="Start the DWO"
+					         >
+						         <fx:association extension='dwo' />
+						         <fx:icon href='package/windows/DWO-docent.ico' />
+					         </fx:info>
+<!-- 					         <fx:bundleArgument arg='icon' value='package/macosx/DWO-docent-volume.icns' /> -->
+					      </fx:deploy>
+					</target>
+				</configuration>
+				<goals>
+					<goal>run</goal>
+				</goals>
+			</execution>
+		</executions>
+	</plugin>
+   <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <id>attach-artifacts</id>
+            <phase>package</phase>
+            <goals>
+              <goal>attach-artifact</goal>
+            </goals>
+            <configuration>
+              <artifacts>
+                <artifact>
+                  <file>target/deploy/bundles/DWO-docent-${project.version}.exe</file>
+                  <type>exe</type>
+                  <classifier>installer</classifier>
+                </artifact>
+              </artifacts>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>	
+     </plugins>
+			</build>
 		
 		</profile>
 	
