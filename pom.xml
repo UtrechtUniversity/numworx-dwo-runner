@@ -60,7 +60,6 @@
 					<groupId>org.osgi</groupId>
 				</exclusion>
 			</exclusions>
-			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.felix</groupId>
@@ -255,7 +254,7 @@
         <executions>
           <execution>
             <id>attach-artifacts</id>
-            <phase>package</phase>
+            <phase>verify</phase>
             <goals>
               <goal>attach-artifact</goal>
             </goals>
