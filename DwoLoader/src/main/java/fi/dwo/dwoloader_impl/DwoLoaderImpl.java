@@ -48,7 +48,7 @@ public class DwoLoaderImpl implements DwoLoader, ManagedService {
 	public Update getUpdate() {
 		if(lastModified == repos.getLastModified())
 			return Update.NEVER;
-		return Update.MAYBE;
+		return Update.ALWAYS;
 	}
 
 	public void updated(Dictionary<String, ?> properties) throws ConfigurationException {

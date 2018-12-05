@@ -1,6 +1,7 @@
 package fi.dwo.dwoloader_impl;
 
 import java.net.URI;
+import java.util.Dictionary;
 
 import org.apache.felix.bundlerepository.Repository;
 import org.apache.felix.bundlerepository.RepositoryAdmin;
@@ -8,6 +9,7 @@ import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.log.LogService;
+import org.osgi.service.provisioning.ProvisioningService;
 import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
@@ -51,7 +53,15 @@ public class Activator implements BundleActivator {
 	
 	public void start(BundleContext context) throws Exception {
 		this.context = context;
-		index = context.getProperty("fi.dwo.dwojapplet.domain.DWO");
+		ServiceReference<ProvisioningService> ref = context.getServiceReference(org.osgi.service.provisioning.ProvisioningService.class);
+		if (ref != null) {
+		  ProvisioningService service = context.getService(ref);
+		  Dictionary<?, ?> dict = service.getInformation();
+		  index = (String) dict.get("fi.dwo.dwojapplet.domain.DWO");
+		  context.ungetService(ref);
+		}
+		if (index == null)
+		  index = context.getProperty("fi.dwo.dwojapplet.domain.DWO");
 		if(index == null) 
 			index = "https://app.dwo.nl/dwo/index.xml";
 		else
@@ -67,6 +77,7 @@ public class Activator implements BundleActivator {
 	public void stop(BundleContext context) throws Exception {
 		reposTracker.close();
 		logTracker.close();
+		index = null;
 	}
 
 }
