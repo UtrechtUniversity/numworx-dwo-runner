@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -39,6 +40,7 @@ import org.osgi.resource.Resource;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
+import org.osgi.service.provisioning.ProvisioningService;
 import org.osgi.service.repository.Repository;
 import org.xml.sax.InputSource;
 
@@ -70,13 +72,13 @@ public class MicroServer {
 			}
 		}
 		String increment = pref.get("increment", "");
-		List<String> arglist = Arrays.asList(args);
+		List<String> arglist = new ArrayList<String>(Arrays.asList(args));
 		FrameworkFactory factory = ServiceLoader.load(FrameworkFactory.class).iterator().next();
 		Map<String, String> map = new HashMap<String,String>();
-	    if(arglist.contains("-clean"))
+	    if(arglist.remove("-clean"))
 	    	clean = Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT;
 	    map.put(Constants.FRAMEWORK_STORAGE_CLEAN,clean);
-	    map.put("fi.dwo.console", Boolean.valueOf(arglist.contains("-console")).toString());
+	    map.put("fi.dwo.console", Boolean.valueOf(arglist.remove("-console")).toString());
 	    map.put("fi.dwo.uuid", uuid);
 	    String dir = System.getProperty("user.home");
 	    if(isWindows) dir += File.separator + "AppData" + File.separator + "Local";
@@ -89,6 +91,7 @@ public class MicroServer {
 				+ ",org.osgi.service.repository;version=1.0"
 				+ ",aQute.bnd.osgi.resource;version=1.4.0"
 				+ ",aQute.bnd.osgi;version=2.3.0"
+				+ ",org.osgi.service.provisioning;version=1.2.0"
 			);
 		Properties props = new Properties();
 		InputStream in = MicroServer.class.getResourceAsStream("resources/DWO.properties");
@@ -119,14 +122,21 @@ public class MicroServer {
 				System.exit(1);
 			}
 		}
+		if (!arglist.isEmpty()) {
+		  File f = new File(arglist.get(0));
+		  if ( f.isFile()) {
+		    map.put(ProvisioningService.PROVISIONING_REFERENCE, f.toURI().toString());
+		  }
+		}
+		
 		cleanOnExit(true);
 		framework = factory.newFramework(map);
 		framework.init();
 		context = framework.getBundleContext();
 		repos.setContext(context);
 		try {
-			//installWrap();
 		    JULHandler.install(context);
+		    ServiceRegistration<ProvisioningService> ref = Provisioning.install(context);
 			installEvent();
 			installRepository(repos);
 			installBoot();
