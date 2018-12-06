@@ -52,7 +52,7 @@ public class DwoLoaderImpl implements DwoLoader, ManagedService {
 	}
 
 	public void updated(Dictionary<String, ?> properties) throws ConfigurationException {
-		Object object = properties.get("lastModified");
+		Object object = properties != null ? properties.get("lastModified") : null;
 		if (object instanceof Number)
 			lastModified = ((Number) object).longValue();
 		managed.unregister();managed = null;
