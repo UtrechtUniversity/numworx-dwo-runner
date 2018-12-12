@@ -145,7 +145,7 @@
 					          	vendor="Numworx"
 					          	description="Start the DWO"
 					         >
-						         <fx:association extension='dwo' />
+						         <fx:association extension='dwo' mimetype="application/x-numworx-dwo-configuration" />
 						         <fx:icon href='package/macosx/DWO-docent.icns' />
 					         </fx:info>
 <!-- 					         <fx:bundleArgument arg='icon' value='package/macosx/DWO-docent-volume.icns' /> -->
@@ -268,7 +268,7 @@
             <configuration>
               <artifacts>
                 <artifact>
-                  <file>target/deploy/bundles/DWO-docent-${project.version}.exe</file>
+                  <file>target/deploy/DWO-docent-${project.version}.exe</file>
                   <type>exe</type>
                   <classifier>installer</classifier>
                 </artifact>
