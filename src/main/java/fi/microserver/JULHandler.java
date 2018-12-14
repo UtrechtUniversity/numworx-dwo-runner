@@ -2,6 +2,8 @@ package fi.microserver;
 
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.logging.Filter;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -20,7 +22,7 @@ import fi.microserver.JULHandler.LogReference;
 
 public class JULHandler extends Handler  {
 
-  static class LogReference implements ServiceReference {
+  static class LogReference<T> implements ServiceReference<T> {
 
     final LogRecord record;
     final Bundle bundle;
@@ -67,6 +69,17 @@ public class JULHandler extends Handler  {
     @Override
     public String toString() {
       return "[" + record.getSourceClassName() + "]";
+    }
+
+    /**
+     * @since 1.9
+     */
+    public Dictionary<String,Object> getProperties() {
+      Dictionary<String,Object> result = new Hashtable<>();
+      for(String key: getPropertyKeys()) {
+        result.put(key, getProperty(key));
+      }
+      return result;
     }
   }
 

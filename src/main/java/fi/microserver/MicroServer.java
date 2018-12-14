@@ -84,9 +84,11 @@ public class MicroServer {
 	    if(isWindows) dir += File.separator + "AppData" + File.separator + "Local";
 	    else if(isMac) dir += File.separator + "Library" + File.separator + "Application Support";
 
-		map.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, "javafx.application,javafx.beans.property,javafx.beans.value,javafx.collections,javafx.concurrent,javafx.embed.swing,javafx.event,javafx.scene,javafx.scene.control,javafx.scene.web,javafx.util,javax.swing,javax.swing.border,netscape.javascript"
+		map.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, 
+		  "javafx.application,javafx.beans.property,javafx.beans.value,javafx.collections,javafx.concurrent,javafx.embed.swing,javafx.event,javafx.scene,javafx.scene.control,javafx.scene.web,javafx.util,javax.swing,javax.swing.border,netscape.javascript"
 				+ ",com.apple.eawt"
-				+ ",org.osgi.service.cm;version=1.5, org.osgi.service.log;version=1.3"
+				+ ",org.osgi.service.cm;version=1.5"
+				+ ",org.osgi.service.log;version=1.3"
 				+ ",org.osgi.service.event;version=1.3.1"
 				+ ",org.osgi.service.repository;version=1.0"
 				+ ",aQute.bnd.osgi.resource;version=1.4.0"
@@ -136,7 +138,7 @@ public class MicroServer {
 		repos.setContext(context);
 		try {
 		    JULHandler.install(context);
-		    ServiceRegistration<ProvisioningService> ref = Provisioning.install(context);
+		    Provisioning.install(context);
 			installEvent();
 			installRepository(repos);
 			installBoot();

@@ -11,8 +11,11 @@ import java.util.zip.ZipInputStream;
 import org.osgi.framework.*;
 import org.osgi.service.provisioning.*;
 
+import ch.jm.osgi.provisioning.ProvisioningServiceImpl;
+
 public class Provisioning implements ProvisioningService {
   static String DWOv1 = "#DWOv1";
+  static String DWOv2 = "PK";
   
   @SuppressWarnings({"deprecation", "unchecked", "rawtypes"})
   static ServiceRegistration<ProvisioningService> install(BundleContext context) {
@@ -26,7 +29,8 @@ public class Provisioning implements ProvisioningService {
           in.mark(6);
           byte[] buf = new byte[6];
           in.read(buf);
-          if (DWOv1.equals (new String(buf, 0)))
+          String string = new String(buf, 0);
+          if (DWOv1.equals (string))
           {
             in.reset();
             Provisioning p = new Provisioning();
@@ -35,6 +39,11 @@ public class Provisioning implements ProvisioningService {
             p.props.put(PROVISIONING_UPDATE_COUNT, new Integer(mod));
             ServiceRegistration<ProvisioningService> result = context.registerService(ProvisioningService.class, p, (Dictionary)p.props);
             return result;
+          } else if (DWOv2.equals(string.substring(0, 2))){
+            in.close();
+            ProvisioningServiceImpl s = new ProvisioningServiceImpl(context);
+            s.start();
+            // return s.getregistration();
           }
           in.close();
           
