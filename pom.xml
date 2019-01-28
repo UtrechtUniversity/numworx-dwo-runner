@@ -187,7 +187,7 @@
 		</dependency>
 		<dependency>
 			<groupId>fi.dwo</groupId>
-			<artifactId>eawt</artifactId>
+			<artifactId>fi.dwo.eawt</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
