@@ -7,10 +7,9 @@ cp target/*.jar target/dependency
 jh=$(/usr/libexec/java_home -v 10)
 export JAVA_HOME=$jh
 $jh/bin/javapackager -deploy \
-	-BappVersion=0.0.4 \
+	-BappVersion=0.0.5 \
 	-BjvmOptions="-Xmx1024m --add-exports=java.desktop/sun.awt.www.content.image=ALL-UNNAMED" \
 	--add-modules java.activation,java.desktop \
-	-singleton \
 	-nosign \
 	-native native \
 	-name DWO-docent \
@@ -24,3 +23,4 @@ $jh/bin/javapackager -deploy \
 	-outfile DWO-docent
 #	-Bruntime="$jh/../../" \
 #	-srcdir target/classes \
+#	-singleton \

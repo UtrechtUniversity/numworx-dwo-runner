@@ -7,11 +7,11 @@ jh=/usr/lib/jvm/oracle_jdk8
 export JAVA_HOME=$jh
 build=$(for i in target/*.jar target/dependency/*.jar; do /bin/echo -n " -srcfiles " $i; done)
 $jh/bin/javapackager -deploy \
-	-BappVersion=0.0.3 \
+	-BappVersion=0.0.5 \
 	-Bruntime="$jh/jre" \
 	-BjvmOptions=-Xmx1024m \
 	-nosign \
-	-native deb \
+	-native installer \
 	-name DWO-docent \
 	-title DWO-docent \
 	-vendor Numworx \
