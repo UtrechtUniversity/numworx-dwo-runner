@@ -62,7 +62,7 @@ public class MicroServer {
 
 		Preferences pref = Preferences.userRoot().node("fi/microserver");
 		String uuid = pref.get("uuid", null);
-		String clean = pref.get(Constants.FRAMEWORK_STORAGE_CLEAN, null);
+		String clean = pref.get(Constants.FRAMEWORK_STORAGE_CLEAN, "");
 		if(uuid == null) {
 			uuid = UUID.randomUUID().toString();
 			pref.put("uuid", uuid);
@@ -77,7 +77,8 @@ public class MicroServer {
 		Map<String, String> map = new HashMap<String,String>();
 	    if(arglist.remove("-clean"))
 	    	clean = Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT;
-	    map.put(Constants.FRAMEWORK_STORAGE_CLEAN,clean);
+	    if (clean != null)
+	      map.put(Constants.FRAMEWORK_STORAGE_CLEAN,clean);
 	    map.put("fi.dwo.console", Boolean.valueOf(arglist.remove("-console")).toString());
 	    map.put("fi.dwo.uuid", uuid);
 	    String dir = System.getProperty("user.home");
