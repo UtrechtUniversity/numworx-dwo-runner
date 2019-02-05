@@ -52,6 +52,7 @@
  				<Embed-Dependency></Embed-Dependency>
  				<Export-Package>!fi.dwo.dwoloader_impl</Export-Package>
  				<Private-Package>fi.dwo.dwoloader_impl</Private-Package>
+ 				<Import-Package>org.osgi.service.provisioning;resolution:=optional,*</Import-Package>
           </instructions>
         </configuration>
       </plugin>

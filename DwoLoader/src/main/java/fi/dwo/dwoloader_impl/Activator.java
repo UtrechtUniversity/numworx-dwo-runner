@@ -53,9 +53,9 @@ public class Activator implements BundleActivator {
 	
 	public void start(BundleContext context) throws Exception {
 		this.context = context;
-		ServiceReference<ProvisioningService> ref = context.getServiceReference(org.osgi.service.provisioning.ProvisioningService.class);
+		ServiceReference<?> ref = context.getServiceReference("org.osgi.service.provisioning.ProvisioningService");
 		if (ref != null) {
-		  ProvisioningService service = context.getService(ref);
+		  ProvisioningService service = (ProvisioningService) context.getService(ref);
 		  Dictionary<?, ?> dict = service.getInformation();
 		  index = (String) dict.get("fi.dwo.dwojapplet.domain.DWO");
 		  context.ungetService(ref);
