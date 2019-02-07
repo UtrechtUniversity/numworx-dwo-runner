@@ -1,6 +1,6 @@
 set -x
 cd target
-x=$(jdeps --print-module-deps MicroServer-0.0.4.jar dependency/*.jar)
+x=$(jdeps --print-module-deps MicroServer-0.0.5.jar dependency/*.jar)
 echo $x
 x='java.base,java.desktop,java.naming,java.prefs,java.scripting,java.sql,java.xml.bind,jdk.jsobject,javafx.swing,javafx.web'
 rm -rf java-runtime
