@@ -85,11 +85,16 @@ public class MicroServer {
 	    if(isWindows) dir += File.separator + "AppData" + File.separator + "Local";
 	    else if(isMac) dir += File.separator + "Library" + File.separator + "Application Support";
 
+		String system = "javafx.application,javafx.beans.property,javafx.beans.value,javafx.collections,javafx.concurrent,javafx.embed.swing,javafx.event,javafx.scene,javafx.scene.control,javafx.scene.web,javafx.util,javax.swing,javax.swing.border,netscape.javascript," + 
+						"com.apple.eawt,";
+		String version = System.getProperty("java.version", "0.0.0");
+		if ( Integer.parseInt(version.split("\\.")[0]) >= 9)
+			system = "netscape.javascript"; // vanaf 9 geen netscape automatisch (felix 5.6.10 defaults.properties)
+		
 		map.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, 
 // Java 8,9 en 10, 11 alleen met een eigen java
-		  "javafx.application,javafx.beans.property,javafx.beans.value,javafx.collections,javafx.concurrent,javafx.embed.swing,javafx.event,javafx.scene,javafx.scene.control,javafx.scene.web,javafx.util,javax.swing,javax.swing.border,netscape.javascript," + 
-				"com.apple.eawt"
-				+ ",org.osgi.service.cm;version=1.5"
+		  system
+				+ "org.osgi.service.cm;version=1.5"
 				+ ",org.osgi.service.log;version=1.3"
 				+ ",org.osgi.service.event;version=1.3.1"
 				+ ",org.osgi.service.repository;version=1.0"
