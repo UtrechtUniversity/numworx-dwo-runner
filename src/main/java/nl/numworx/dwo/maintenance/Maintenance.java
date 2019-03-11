@@ -94,7 +94,8 @@ public class Maintenance {
   }
 
   void setURL(String url) throws MalformedURLException {
-    authenticator.setServerUrlPath(new URL(url));    
+    authenticator.setServerUrlPath(new URL(url));
+    LOG.info("Connect to url " + url);
   }
 
   private Boolean removeUser(DomUser user) {
@@ -118,6 +119,7 @@ public class Maintenance {
    */
   public void setUser(String user) {
     this.user = user;
+    LOG.info("Connect as " + user);
   }
 
   /**

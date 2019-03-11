@@ -28,4 +28,38 @@
   	<maven.compiler.source>1.8</maven.compiler.source>
   	<maven.compiler.target>1.8</maven.compiler.target>
   </properties>
+  <build>
+  	<plugins>
+  	     <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.6.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>java</goal>
+            </goals>
+            <phase>package</phase>
+          </execution>
+        </executions>
+        <configuration>
+          <mainClass>nl.numworx.dwo.maintenance.Maintenance</mainClass>
+          <systemProperties>
+            <systemProperty>
+              <key>maintenance.url</key>
+              <value>https://teuniz.dwo.nl/dwo/</value>
+            </systemProperty>
+            <systemProperty>
+              <key>maintenance.user</key>
+              <value>${user}</value>
+            </systemProperty>
+            <systemProperty>
+              <key>maintenance.pass</key>
+              <value>${pass}</value>
+            </systemProperty>
+          </systemProperties>
+        </configuration>
+      </plugin>
+  	</plugins>
+  </build>
 </project>
