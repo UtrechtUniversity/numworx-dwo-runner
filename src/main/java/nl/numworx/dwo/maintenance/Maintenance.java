@@ -80,9 +80,16 @@ public class Maintenance {
     long count = main.getUsers()       
         .map(main::removeUser)
         .filter(Boolean::booleanValue)
-        .count();
+        .count();  
+    LOG.info("count removed users " + count);
     
-    LOG.info("count removed users " + count);;
+    count = main.getContexts()
+        .map(main::removeContext)
+        .filter(Boolean::booleanValue)
+        .count();
+    LOG.info("count removed contexts " + count);
+
+
     main.logout();
 
   }
@@ -91,6 +98,10 @@ public class Maintenance {
     return garbage.getUsers(amount, since).stream()
         .limit(getAmount().longValue())
         .map(DomUserFullwLoginContext::getDomUserFull);
+  }
+  
+  private Stream<DomLoginContext> getContexts() throws Dwo2Exception {
+    return garbage.getContexts(amount).stream().limit(amount.longValue());
   }
 
   void setURL(String url) throws MalformedURLException {
@@ -103,6 +114,15 @@ public class Maintenance {
       return garbage.removeUser(user);
     } catch (Dwo2Exception e) {
       LOG.log(Level.SEVERE, "remove User " + user.getUniqueDisplayName(), e);
+      return Boolean.FALSE;
+    }
+  }
+  
+  private Boolean removeContext(DomLoginContext context) {
+    try {
+      return garbage.removeContext(context);
+    } catch (Dwo2Exception e) {
+      LOG.log(Level.SEVERE, "remove Context " + context.getUserId(), e);
       return Boolean.FALSE;
     }
   }
