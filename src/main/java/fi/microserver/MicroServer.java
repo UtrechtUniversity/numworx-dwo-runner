@@ -98,8 +98,8 @@ public class MicroServer {
 				+ ",org.osgi.service.log;version=1.3"
 				+ ",org.osgi.service.event;version=1.3.1"
 				+ ",org.osgi.service.repository;version=1.0"
-				+ ",aQute.bnd.osgi.resource;version=1.4.0"
-				+ ",aQute.bnd.osgi;version=2.3.0"
+//				+ ",aQute.bnd.osgi.resource;version=1.4.0"
+//				+ ",aQute.bnd.osgi;version=2.3.0"
 				+ ",org.osgi.service.provisioning;version=1.2.0"
 			);
 		Properties props = new Properties();
@@ -114,27 +114,12 @@ public class MicroServer {
 			map.put("fi.dwo.documentbase", MicroServer.class.getResource("resources/").toExternalForm());
 		else 
 			map.remove("fi.dwo.properties");
-		String u = props.getProperty("fi.dwo.repository");
-		RepoImpl repos = null;
-		if(u != null) {
-			try {
-				InputSource input = new InputSource(u);
-				repos = new RepoImpl(input);
-				if(!increment.equals(repos.increment)) {
-					increment = repos.increment;
-				} else {
-					if(null == props.getProperty("fi.dwo.boot"))
-						map.put("fi.dwo.update", "NEVER");
-				}
-			} catch (Exception e) {
-				displayException(e);
-				System.exit(1);
-			}
-		}
+		String null_zip = MicroServer.class.getResource("resources/null.zip").toExternalForm();
+        map.put(ProvisioningService.PROVISIONING_REFERENCE, null_zip);
 		if (!arglist.isEmpty()) {
 		  File f = new File(arglist.get(0));
 		  if ( f.isFile()) {
-		    map.put(ProvisioningService.PROVISIONING_REFERENCE, f.toURI().toString());
+		    map.put("fi.dwo.provisioning", f.toURI().toString());
 		  }
 		}
 		
@@ -142,13 +127,37 @@ public class MicroServer {
 		framework = factory.newFramework(map);
 		framework.init();
 		context = framework.getBundleContext();
-		repos.setContext(context);
 		try {
 		    JULHandler.install(context);
-		    Provisioning.install(context);
+		    ProvisioningService ps = Provisioning.install(context);
 			installEvent();
-			installRepository(repos);
-			installBoot();
+	        String u = getProperty("fi.dwo.repository", ps);
+	        RepoImpl repos = null;
+	        if(u != null) {
+	            try {
+	                InputSource input = new InputSource(u);
+	                repos = new RepoImpl(input);
+	                if(!increment.equals(repos.increment)) {
+	                    increment = repos.increment;
+	                    Properties p = new Properties(); 
+	                    p.setProperty("fi.dwo.update", "MAYBE");
+                        ps.addInformation(p);
+                    } else {
+	                    if(!"NEVER".equals(getProperty("fi.dwo.update",ps)))
+	                    {
+	                      map.put("fi.dwo.update", "NEVER"); // too late
+	                      Properties p = new Properties(); p.setProperty("fi.dwo.update", "NEVER");
+	                      ps.addInformation(p);
+	                    }
+	                }
+	            } catch (Exception e) {
+	                displayException(e);
+	                System.exit(1);
+	            }
+	        }
+	        repos.setContext(context);
+	        installRepository(ps,repos);
+			installBoot(ps);
 			int type;
 			do { 
 				framework.start();
@@ -174,10 +183,15 @@ public class MicroServer {
 		}	
 	}
 
-	private static void installRepository(RepoImpl repos2) throws Exception {
-		String u = context.getProperty("fi.dwo.repository");
+  private static String getProperty( String key, ProvisioningService ps) {
+    Object value = ps.getInformation().get(key);
+    if (value != null) return value.toString();
+    return context.getProperty(key);
+  }
+
+	private static void installRepository(ProvisioningService ps, RepoImpl repos2) throws Exception {
+		String u = getProperty("fi.dwo.repository",ps);
 		if(u == null) return;
-		InputSource input = new InputSource(u);
 		RepoImpl repos = repos2;
 		Dictionary<String, Object> properties = new Hashtable<String, Object>();
 		properties.put(Repository.URL, u);
@@ -240,8 +254,8 @@ public class MicroServer {
 	}
 
 	static final String BOOTLOADER  = "fi.dwo.BootLoader";
-	private static void installBoot() throws BundleException {
-		String BOOT = context.getProperty("fi.dwo.boot");
+	private static void installBoot(ProvisioningService ps) throws BundleException {
+		String BOOT = getProperty("fi.dwo.boot",ps);
 		CapReqBuilder builder = new CapReqBuilder("osgi.identity");
 		builder.addDirective("filter", "(osgi.identity="+ BOOTLOADER +")");
 		Requirement r = builder.buildSyntheticRequirement();
@@ -259,7 +273,7 @@ public class MicroServer {
 						BOOT = cc.getAttributes().get("url").toString();
 				}
 			} else if (BOOT == null) {
-				BOOT = context.getProperty("fi.dwo.boot0");
+				BOOT = getProperty("fi.dwo.boot0",ps);
 			}
  			
 			bootloader = context.installBundle(BOOT);
@@ -270,7 +284,7 @@ public class MicroServer {
 				Collection<BundleCapability> res = fw.findProviders(r);
 				for (BundleCapability bc:res) {
 					bc.getRevision().getBundle().uninstall();
-					installBoot(); return; // recurse
+					installBoot(ps); return; // recurse
 				}
 			}
 			throw e;
