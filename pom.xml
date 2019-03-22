@@ -63,18 +63,20 @@
       </plugin>
   	</plugins>
   </build>
-  <version>2.3.6-p1</version>
+  <version>2.3.6-p2</version>
   <profiles>
   	<profile>
   		<id>test</id>
   		<properties>
-  			<server.url>https://test.dwo.nl/</server.url>
+			<user>gcadmin</user>
+  			<server.url>https://test.dwo.nl/dwo/</server.url>
   		</properties>
   	</profile>
   	<profile>
   		<id>app</id>
   		<properties>
-   			<server.url>https://app.dwo.nl/</server.url>
+			<user>gcadmin</user>
+   			<server.url>https://app.dwo.nl/dwo/</server.url>
    		</properties>
   	</profile>
   </profiles>
