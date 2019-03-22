@@ -5,6 +5,7 @@ import java.net.URI;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -73,7 +74,7 @@ public class Maintenance {
     main.setURL(System.getProperty("maintenance.url",main.url));
     main.setUser(System.getProperty("maintenance.user", main.user));
     main.setPass(System.getProperty("maintenance.pass", main.pass));
-    main.setAmount(100);
+    main.setAmount(3);
 
     main.login();
     
@@ -97,8 +98,20 @@ public class Maintenance {
   private Stream<DomUser> getUsers() throws Dwo2Exception {
     return garbage.getUsers(amount, since).stream()
         .limit(getAmount().longValue())
+        .filter(this::isOldUser)
         .map(DomUserFullwLoginContext::getDomUserFull);
   }
+  
+  Date old = new Date(System.currentTimeMillis() - 1000L* 3600 * 24 * 265 * 2);
+  private boolean isOldUser(DomUserFullwLoginContext dom) {
+    Long register = dom.getDomLoginContext().getRegisterTimeStamp();
+    Long login    = dom.getDomLoginContext().getLastLoginTimeStamp();
+    Date from = register != null ? new Date(register.longValue()) : new Date(0);
+    Date last = login != null ? new Date(login.longValue()) : from;
+    LOG.info("user " + dom.getDomUserFull().getUniqueDisplayName() + " from " + from + " last " + last);
+    return last.before(old);
+  }
+  
   
   private Stream<DomLoginContext> getContexts() throws Dwo2Exception {
     return garbage.getContexts(amount).stream().limit(amount.longValue());

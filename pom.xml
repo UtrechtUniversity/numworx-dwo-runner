@@ -27,6 +27,7 @@
   <properties>
   	<maven.compiler.source>1.8</maven.compiler.source>
   	<maven.compiler.target>1.8</maven.compiler.target>
+  	<server.url>https://teuniz.dwo.nl/dwo</server.url>
   </properties>
   <build>
   	<plugins>
@@ -47,7 +48,7 @@
           <systemProperties>
             <systemProperty>
               <key>maintenance.url</key>
-              <value>https://teuniz.dwo.nl/dwo/</value>
+              <value>${server.url}</value>
             </systemProperty>
             <systemProperty>
               <key>maintenance.user</key>
@@ -63,4 +64,18 @@
   	</plugins>
   </build>
   <version>2.3.7-SNAPSHOT</version>
+  <profiles>
+  	<profile>
+  		<id>test</id>
+  		<properties>
+  			<server.url>https://test.dwo.nl/</server.url>
+  		</properties>
+  	</profile>
+  	<profile>
+  		<id>app</id>
+  		<properties>
+   			<server.url>https://app.dwo.nl/</server.url>
+   		</properties>
+  	</profile>
+  </profiles>
 </project>
