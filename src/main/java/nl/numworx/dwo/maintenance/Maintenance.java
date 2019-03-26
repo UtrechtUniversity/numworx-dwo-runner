@@ -74,10 +74,9 @@ public class Maintenance {
     main.setURL(System.getProperty("maintenance.url",main.url));
     main.setUser(System.getProperty("maintenance.user", main.user));
     main.setPass(System.getProperty("maintenance.pass", main.pass));
-    main.setAmount(3);
-
+    main.setAmount(100);
     main.login();
-    
+  
     long count = main.getUsers()       
         .map(main::removeUser)
         .filter(Boolean::booleanValue)
