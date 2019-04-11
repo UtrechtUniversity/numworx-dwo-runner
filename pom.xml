@@ -3,7 +3,7 @@
   <parent>
     <groupId>nl.uu.fi.dwo</groupId>
     <artifactId>DWO</artifactId>
-    <version>2.3.6</version>
+    <version>2.3.7</version>
     <relativePath>../DWO</relativePath>
   </parent>
   <groupId>nl.numworx.dwo.maintenance</groupId>
@@ -27,7 +27,7 @@
   <properties>
   	<maven.compiler.source>1.8</maven.compiler.source>
   	<maven.compiler.target>1.8</maven.compiler.target>
-  	<server.url>https://teuniz.dwo.nl/dwo</server.url>
+  	<server.url>https://teuniz.dwo.nl/dwo/</server.url>
   </properties>
   <build>
   	<plugins>
@@ -63,7 +63,7 @@
       </plugin>
   	</plugins>
   </build>
-  <version>2.3.6-p2</version>
+  <version>2.3.7</version>
   <profiles>
   	<profile>
   		<id>test</id>
