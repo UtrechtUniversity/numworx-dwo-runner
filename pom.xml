@@ -84,5 +84,11 @@
    			<server.url>https://app.dwo.nl/dwo/</server.url>
    		</properties>
   	</profile>
+  	<profile>
+  		<id>release</id>
+  		<properties>
+  			<exec.skip>true</exec.skip>
+  		</properties>
+  	</profile>
   </profiles>
 </project>
