@@ -18,6 +18,7 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredDwoAdminGarbageManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
@@ -89,11 +90,30 @@ public class Maintenance {
         .count();
     LOG.info("count removed contexts " + count);
 
+    count = main.getClassCourses()
+    		.map(main::removeClassCourse)
+    		.filter(Boolean::booleanValue)
+    		.count();
+    LOG.info("count removed classcourses " + count);
+    
 
     main.logout();
 
   }
 
+  private Stream<DomClassCourse> getClassCourses() throws Dwo2Exception {
+	return garbage.getClassCourses(amount).stream().limit(amount);
+  }
+
+  private Boolean removeClassCourse(DomClassCourse cc) {
+	  try {
+		  return garbage.removeClassCourse(cc);
+	  } catch (Dwo2Exception e) {
+	      LOG.log(Level.SEVERE, "remove ClassCourse " + cc.getId(), e);
+	      return Boolean.FALSE;
+	  }
+  }
+  
   private Stream<DomUser> getUsers() throws Dwo2Exception {
     return garbage.getUsers(amount, since).stream()
         .limit(getAmount().longValue())
