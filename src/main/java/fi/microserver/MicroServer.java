@@ -94,8 +94,8 @@ public class MicroServer {
 		map.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, 
 // Java 8,9 en 10, 11 alleen met een eigen java
 		  system
-				+ "org.osgi.service.cm;version=1.5"
-				+ ",org.osgi.service.log;version=1.3"
+//				+ ",org.osgi.service.cm;version=1.5"
+				+ "org.osgi.service.log;version=1.3"
 				+ ",org.osgi.service.event;version=1.3.1"
 				+ ",org.osgi.service.repository;version=1.0"
 //				+ ",aQute.bnd.osgi.resource;version=1.4.0"

@@ -1,10 +1,8 @@
 package fi.microserver;
 
 import java.io.IOException;
-import java.text.MessageFormat;
 import java.util.Dictionary;
 import java.util.Hashtable;
-import java.util.logging.Filter;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -17,8 +15,6 @@ import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.log.LogService;
 import org.osgi.util.tracker.ServiceTracker;
-
-import fi.microserver.JULHandler.LogReference;
 
 public class JULHandler extends Handler  {
 

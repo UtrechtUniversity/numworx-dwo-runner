@@ -12,8 +12,6 @@ import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import aQute.bnd.url.DefaultURLConnectionHandler;
-
 public class ZIP {
 
 
