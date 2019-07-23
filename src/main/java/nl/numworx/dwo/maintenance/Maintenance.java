@@ -96,6 +96,9 @@ public class Maintenance {
     		.count();
     LOG.info("count removed classcourses " + count);
     
+    
+    // classes with stale members.
+    
 
     main.logout();
 
