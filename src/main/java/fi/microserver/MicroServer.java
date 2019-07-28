@@ -89,7 +89,7 @@ public class MicroServer {
 						"com.apple.eawt,";
 		String version = System.getProperty("java.version", "0.0.0");
 		if ( Integer.parseInt(version.split("\\.")[0]) >= 9)
-			system = "netscape.javascript"; // vanaf 9 geen netscape automatisch (felix 5.6.10 defaults.properties)
+			system = "netscape.javascript,"; // vanaf 9 geen netscape automatisch (felix 5.6.10 defaults.properties)
 		
 		map.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, 
 // Java 8,9 en 10, 11 alleen met een eigen java
