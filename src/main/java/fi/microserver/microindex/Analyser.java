@@ -51,22 +51,22 @@ public class Analyser implements ResourceAnalyzer {
 			
 			
 		}
-		String path = manifest.getMainAttributes().getValue("Class-Path");
-		if(path != null && path.length() > 0) {
-			String[] jars = path.split(" ");
-			StringBuilder string = new StringBuilder();
-			for (String item : jars) {
-				if(!item.endsWith(".jar")) 
-					continue;
-				string.append("(url=").append(item).append(")");
-			}
-			Builder	builder = new Builder();
-			builder.setNamespace(Namespaces.NS_CONTENT);
-			if(jars.length > 1) string.insert(0, "(&").append(")");
-				builder.addDirective(Namespaces.DIRECTIVE_FILTER, string.toString());
-			if(jars.length > 0)
-				requirements.add(builder.buildRequirement());
-		}
+//		String path = manifest.getMainAttributes().getValue("Class-Path");
+//		if(path != null && path.length() > 0) {
+//			String[] jars = path.split(" ");
+//			StringBuilder string = new StringBuilder();
+//			for (String item : jars) {
+//				if(!item.endsWith(".jar")) 
+//					continue;
+//				string.append("(url=").append(item).append(")");
+//			}
+//			Builder	builder = new Builder();
+//			builder.setNamespace(Namespaces.NS_CONTENT);
+//			if(jars.length > 1) string.insert(0, "(&").append(")");
+//				builder.addDirective(Namespaces.DIRECTIVE_FILTER, string.toString());
+//			if(jars.length > 0)
+//				requirements.add(builder.buildRequirement());
+//		}
 		
 	}
 }
