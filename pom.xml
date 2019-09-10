@@ -205,6 +205,9 @@
 		<profile>
 			<id>linux</id>
 			<activation><os><family>unix</family><name>Linux</name></os></activation>
+			<properties>
+				<arch>linux64</arch>
+			</properties>
 		</profile>	
 		<profile>
 			<id>windows</id>
