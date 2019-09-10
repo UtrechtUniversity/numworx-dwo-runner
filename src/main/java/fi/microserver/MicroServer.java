@@ -90,6 +90,18 @@ public class MicroServer {
 		String version = System.getProperty("java.version", "0.0.0");
 		if ( Integer.parseInt(version.split("\\.")[0]) >= 9)
 			system = "netscape.javascript,"; // vanaf 9 geen netscape automatisch (felix 5.6.10 defaults.properties)
+	
+		String jxbrowser=",com.teamdev.jxbrowser.browser"
+		    + ",com.teamdev.jxbrowser.browser.callback"
+		    + ",com.teamdev.jxbrowser.browser.event"
+		    + ",com.teamdev.jxbrowser.callback"
+		    + ",com.teamdev.jxbrowser.engine"
+		    + ",com.teamdev.jxbrowser.event"
+		    + ",com.teamdev.jxbrowser.frame"
+		    + ",com.teamdev.jxbrowser.js"
+		    + ",com.teamdev.jxbrowser.navigation"
+		    + ",com.teamdev.jxbrowser.net"
+		    + ",com.teamdev.jxbrowser.view.swing";
 		
 		map.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, 
 // Java 8,9 en 10, 11 alleen met een eigen java
@@ -101,6 +113,7 @@ public class MicroServer {
 //				+ ",aQute.bnd.osgi.resource;version=1.4.0"
 //				+ ",aQute.bnd.osgi;version=2.3.0"
 				+ ",org.osgi.service.provisioning;version=1.2.0"
+				+ jxbrowser
 			);
 		Properties props = new Properties();
 		InputStream in = MicroServer.class.getResourceAsStream("resources/DWO.properties");
