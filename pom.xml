@@ -209,6 +209,9 @@
 		<profile>
 			<id>windows</id>
 			<activation><os><family>windows</family></os></activation>
+			<properties>
+				<arch>win64</arch>
+			</properties>
 			<build>
 				<plugins>
 	<plugin>
