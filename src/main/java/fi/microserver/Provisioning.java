@@ -1,10 +1,12 @@
 package fi.microserver;
 
 import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Properties;
 import java.util.zip.ZipInputStream;
+
 
 import org.osgi.framework.*;
 import org.osgi.service.provisioning.*;
@@ -19,6 +21,18 @@ public class Provisioning {
   static ProvisioningService install(BundleContext context) {
     ProvisioningServiceImpl s = new ProvisioningServiceImpl(context);
     s.start();
+    Object v = s.getInformation().get("fi.microserver.version");
+    String version = context.getProperty("fi.microserver.version");
+    if (!version.equals(v)) {
+      try {
+        String zip = context.getProperty(ProvisioningService.PROVISIONING_REFERENCE);
+        ZipInputStream zis = new ZipInputStream(new BufferedInputStream(new URL(zip).openStream()));
+        s.addInformation(zis);
+        zis.close();
+      } catch (IOException e) {
+      }
+    }
+    
     String uri = context.getProperty("fi.dwo.provisioning");
     if (uri != null) {
       try {
