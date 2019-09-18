@@ -47,7 +47,7 @@
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>fi.microserver.DWO</mainClass>
+							<mainClass>fi.microserver.Numworx</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
