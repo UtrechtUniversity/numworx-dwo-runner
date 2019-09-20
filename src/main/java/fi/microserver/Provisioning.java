@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Hashtable;
 import java.util.Properties;
 import java.util.zip.ZipInputStream;
 
@@ -34,10 +35,19 @@ public class Provisioning {
     }
     
     String uri = context.getProperty("fi.dwo.provisioning");
-    if (uri != null) {
+    v = s.getInformation().get("fi.dwo.provisioning");
+    Object vv = s.getInformation().get("fi.dwo.provisioning.version");
+    if (uri != null ) {
       try {
         URL url = new URL(uri);
         URLConnection uc = url.openConnection();
+        long l = uc.getLastModified();
+        String ll = String.valueOf(l);
+        if (ll.equals(vv) && uri.equals(v))
+        {
+          return s;
+        }
+        
         BufferedInputStream in = new BufferedInputStream(uc.getInputStream());
         in.mark(6);
         byte[] buf = new byte[6];
@@ -53,7 +63,10 @@ public class Provisioning {
           s.addInformation(new ZipInputStream(in));
         }
         in.close();
-
+        Hashtable<String, String> info = new Hashtable<>();
+        info.put("fi.dwo.provisioning", uri);
+        info.put("fi.dwo.provisioning.version", ll);
+        s.addInformation(info);
       } catch (Exception oops) {
 
       }
