@@ -139,8 +139,8 @@
 							uri="javafx:com.sun.javafx.tools.ant"
 							classpath="${java.home}/../lib/ant-javafx.jar" />
 						<fx:application id="fi.microserver"
-							name="DWO-docent" 
-							mainClass="fi.microserver.DWO" 
+							name="Numworx-Author" 
+							mainClass="fi.microserver.Numworx" 
 							version="${project.version}" 
 							toolkit="swing" />
 						<fx:resources id="appRes">
@@ -149,7 +149,7 @@
 						</fx:resources>
 						<fx:deploy width="800" height="600"
 					        outdir="target/deploy" embedJNLP="true"
-					        outfile="DWO-docent"
+					        outfile="Numworx-Author"
 							nativeBundles='dmg'
 							signBundle='false'
 						>
@@ -159,9 +159,9 @@
 					        <fx:application refId="fi.microserver"/>					 
 					        <fx:resources refid="appRes"/>						 
 					        <fx:info 
-					        	title="DWO-docent"
+					        	title="Numworx-Author"
 					          	vendor="Numworx"
-					          	description="Start the DWO"
+					          	description="Start Numworx-Author"
 					         >
 						         <fx:association extension='dwo' mimetype="application/x-numworx-dwo-configuration" />
 						         <fx:icon href='package/macosx/DWO-docent.icns' />
@@ -190,7 +190,7 @@
             <configuration>
               <artifacts>
                 <artifact>
-                  <file>target/deploy/bundles/DWO-docent-${project.version}.dmg</file>
+                  <file>target/deploy/bundles/Numworx-Author-${project.version}.dmg</file>
                   <type>dmg</type>
                   <classifier>installer</classifier>
                 </artifact>
@@ -241,17 +241,18 @@
 							uri="javafx:com.sun.javafx.tools.ant"
 						/>
 						<fx:application id="fi.microserver"
-							name="DWO-docent" 
-							mainClass="fi.microserver.DWO" 
+							name="Numworx-Author" 
+							mainClass="fi.microserver.Numworx" 
 							version="${project.version}" 
 							toolkit="swing" />
 						<fx:resources id="appRes">
 						    <fx:fileset dir="target/dependency" includes="*.jar"/>
+						    <fx:fileset dir="target/dependency" includes="*.dwo"/>
 						    <fx:fileset dir="target" includes='${project.build.finalName}.jar' />
 						</fx:resources>
 						<fx:deploy width="800" height="600"
 					        outdir="target/deploy" embedJNLP="true"
-					        outfile="DWO-docent"
+					        outfile="Numworx-Author"
 							nativeBundles='exe'
 							signBundle='false'
 						>
@@ -261,9 +262,9 @@
 					        <fx:application refId="fi.microserver"/>					 
 					        <fx:resources refid="appRes"/>						 
 					        <fx:info 
-					        	title="DWO-docent"
+					        	title="Numworx-Author"
 					          	vendor="Numworx"
-					          	description="Start the DWO"
+					          	description="Start Numworx-Author"
 					         >
 						         <fx:association extension='dwo' mimetype="application/x-numworx-dwo-configuration"/>
 						         <fx:icon href='package/windows/DWO-docent.ico' />
@@ -292,7 +293,7 @@
             <configuration>
               <artifacts>
                 <artifact>
-                  <file>target/deploy/DWO-docent-${project.version}.exe</file>
+                  <file>target/deploy/Numworx-Author-${project.version}.exe</file>
                   <type>exe</type>
                   <classifier>installer</classifier>
                 </artifact>
@@ -318,7 +319,7 @@
 								<manifest>
 									<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
 									<addClasspath>false</addClasspath>
-									<mainClass>fi.microserver.DWO</mainClass>
+									<mainClass>fi.microserver.Numworx</mainClass>
 								</manifest>
 							</archive>
 							<descriptorRefs>
