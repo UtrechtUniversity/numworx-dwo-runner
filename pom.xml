@@ -95,12 +95,12 @@
 	<dependency>
 	    	<groupId>com.teamdev.jxbrowser</groupId>
 	    	<artifactId>jxbrowser-${arch}</artifactId>
-	    	<version>7.2</version>
+	    	<version>${jxbrowser.version}</version>
 		</dependency>
 	  	<dependency>
 	  		<groupId>com.teamdev.jxbrowser</groupId>
 	  		<artifactId>jxbrowser-swing</artifactId>
-	  		<version>7.2</version>
+	  		<version>${jxbrowser.version}</version>
 	  	</dependency>
 
 	</dependencies>
@@ -109,6 +109,7 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<fi.dwo.boot>http://cdn.dwo.nl/bundles/BootLoader-2.0.jar</fi.dwo.boot>
 		<arch>mac</arch>
+		<jxbrowser.version>7.2</jxbrowser.version>
 	</properties>
 	<parent>
 		<groupId>nl.uu.fi.dwo</groupId>

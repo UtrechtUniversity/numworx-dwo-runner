@@ -44,8 +44,6 @@ import org.osgi.service.provisioning.ProvisioningService;
 import org.osgi.service.repository.Repository;
 import org.xml.sax.InputSource;
 
-//import aQute.bnd.osgi.resource.CapReqBuilder;
-
 public class MicroServer {
 
 	private static Framework framework;
@@ -90,17 +88,23 @@ public class MicroServer {
 		String version = System.getProperty("java.version", "0.0.0");
 		if ( Integer.parseInt(version.split("\\.")[0]) >= 9)
 			system = "netscape.javascript,"; // vanaf 9 geen netscape automatisch (felix 5.6.10 defaults.properties)
-	
-		String jxbrowser=",com.teamdev.jxbrowser.browser"
-		    + ",com.teamdev.jxbrowser.browser.callback"
-		    + ",com.teamdev.jxbrowser.browser.event"
-		    + ",com.teamdev.jxbrowser.callback"
-		    + ",com.teamdev.jxbrowser.engine"
-		    + ",com.teamdev.jxbrowser.event"
-		    + ",com.teamdev.jxbrowser.frame"
-		    + ",com.teamdev.jxbrowser.js"
-		    + ",com.teamdev.jxbrowser.navigation"
-		    + ",com.teamdev.jxbrowser.net"
+		Properties props = new Properties();
+		InputStream in = MicroServer.class.getResourceAsStream("resources/DWO.properties");
+		props.load(in);
+		in.close();
+		String v = props.getProperty("com.teamdev.jxbrowser.version");
+		if (v == null) v = "";
+		else v = ";version=" + v;
+		String jxbrowser=",com.teamdev.jxbrowser.browser" + v
+		    + ",com.teamdev.jxbrowser.browser.callback" + v
+		    + ",com.teamdev.jxbrowser.browser.event" + v
+		    + ",com.teamdev.jxbrowser.callback" + v
+		    + ",com.teamdev.jxbrowser.engine" + v
+		    + ",com.teamdev.jxbrowser.event" + v
+		    + ",com.teamdev.jxbrowser.frame" + v
+		    + ",com.teamdev.jxbrowser.js" + v
+		    + ",com.teamdev.jxbrowser.navigation" + v
+		    + ",com.teamdev.jxbrowser.net" + v
 		    + ",com.teamdev.jxbrowser.view.swing";
 		
 		map.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, 
@@ -115,10 +119,6 @@ public class MicroServer {
 				+ ",org.osgi.service.provisioning;version=1.2.0"
 				+ jxbrowser
 			);
-		Properties props = new Properties();
-		InputStream in = MicroServer.class.getResourceAsStream("resources/DWO.properties");
-		props.load(in);
-		in.close();
 		map.putAll((Map)props);
 		String target = props.getProperty("fi.dwo.target", "DWO-docent");
 		map.put(Constants.FRAMEWORK_STORAGE, dir + File.separator + target + "-cache");
