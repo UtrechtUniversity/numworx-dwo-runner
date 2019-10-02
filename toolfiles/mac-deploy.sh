@@ -3,11 +3,12 @@ cd ..
 set -e
 set -x
 rm -rf deploy
-jh=$(/usr/libexec/java_home -v 1.8)
+jh=$(/usr/libexec/java_home -v 1.8.0_201)
 export JAVA_HOME=$jh
-name=DWO-docent
-disk=DWO-setup
-build="-srcfiles output/jar/dwo_runner.jar"
+name=NumworxAuthor-TEST
+disk=Author-TEST-setup
+build=$(for i in DWO.properties target/*.jar target/dependency/*.jar; do /bin/echo -n " -srcfiles " $i; done)
+
 $jh/bin/javapackager -deploy \
 	-BappVersion=2.0 \
 	-Bruntime="$jh/../../" \
