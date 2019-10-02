@@ -4,6 +4,7 @@
   <artifactId>dwo_runner</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <build>
+  	<finalName>dwo_runner</finalName>
     <sourceDirectory>src</sourceDirectory>
     <resources>
       <resource>
@@ -47,6 +48,7 @@
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
+							<useUniqueVersions>false</useUniqueVersions>
 							<mainClass>fi.dwo_runner.DWO_runner</mainClass>
 						</manifest>
 					</archive>
@@ -60,16 +62,16 @@
   		<artifactId>jxbrowser-swing</artifactId>
   		<version>7.2</version>
   	</dependency>
-  	<dependency>
-  		<groupId>nl.numworx.swingbrowser</groupId>
-  		<artifactId>swingbrowser-api</artifactId>
-  		<version>0.0.1-SNAPSHOT</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>nl.numworx.swingbrowser</groupId>
-  		<artifactId>swingbrowser-jxb</artifactId>
-  		<version>0.0.1-SNAPSHOT</version>
-  	</dependency>
+<!--   	<dependency> -->
+<!--   		<groupId>nl.numworx.swingbrowser</groupId> -->
+<!--   		<artifactId>swingbrowser-api</artifactId> -->
+<!--   		<version>0.0.1-SNAPSHOT</version> -->
+<!--   	</dependency> -->
+<!--   	<dependency> -->
+<!--   		<groupId>nl.numworx.swingbrowser</groupId> -->
+<!--   		<artifactId>swingbrowser-jfx</artifactId> -->
+<!--   		<version>0.0.1-SNAPSHOT</version> -->
+<!--   	</dependency> -->
   	<dependency>
   		<groupId>com.teamdev.jxbrowser</groupId>
   		<artifactId>jxbrowser</artifactId>
@@ -119,5 +121,33 @@
 				</dependency>	
 			</dependencies>
 		</profile>	
+    <profile>
+    	<id>jfx</id>
+    	<dependencies>
+    		<dependency>
+				<groupId>nl.numworx.swingbrowser</groupId>
+				<artifactId>swingbrowser-jfx</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+  		</dependencies>  	
+    </profile>
+  	<profile>
+  		<id>jxb</id>
+  		<dependencies>
+			<dependency>
+				<groupId>nl.numworx.swingbrowser</groupId>
+				<artifactId>swingbrowser-jxb</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+				<exclusions>
+					<exclusion>
+						<groupId>com.teamdev.jxbrowser</groupId>
+						<artifactId>
+							jxbrowser-cross-platform
+						</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+  		</dependencies>
+  	</profile>
 	</profiles>
 </project>
