@@ -62,16 +62,6 @@
   		<artifactId>jxbrowser-swing</artifactId>
   		<version>7.2</version>
   	</dependency>
-<!--   	<dependency> -->
-<!--   		<groupId>nl.numworx.swingbrowser</groupId> -->
-<!--   		<artifactId>swingbrowser-api</artifactId> -->
-<!--   		<version>0.0.1-SNAPSHOT</version> -->
-<!--   	</dependency> -->
-<!--   	<dependency> -->
-<!--   		<groupId>nl.numworx.swingbrowser</groupId> -->
-<!--   		<artifactId>swingbrowser-jfx</artifactId> -->
-<!--   		<version>0.0.1-SNAPSHOT</version> -->
-<!--   	</dependency> -->
   	<dependency>
   		<groupId>com.teamdev.jxbrowser</groupId>
   		<artifactId>jxbrowser</artifactId>
