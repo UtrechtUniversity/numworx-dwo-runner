@@ -44,6 +44,8 @@ import org.osgi.service.provisioning.ProvisioningService;
 import org.osgi.service.repository.Repository;
 import org.xml.sax.InputSource;
 
+import it.sauronsoftware.junique.JUnique;
+
 public class MicroServer {
 
 	private static Framework framework;
@@ -57,7 +59,9 @@ public class MicroServer {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void main(String[] args) throws Exception {
 	    System.setProperty("apple.eawt.quitStrategy", "CLOSE_ALL_WINDOWS");
-
+// org.osgi.framework.security=osgi java.security.policy=all.polic
+	    System.setProperty("java.security.policy","all.policy");
+	    
 		Preferences pref = Preferences.userRoot().node("fi/microserver");
 		String uuid = pref.get("uuid", null);
 		String clean = pref.get(Constants.FRAMEWORK_STORAGE_CLEAN, "");
@@ -121,6 +125,8 @@ public class MicroServer {
 			);
 		map.putAll((Map)props);
 		String target = props.getProperty("fi.dwo.target", "DWO-docent");
+		JUnique.acquireLock(target);
+		
 		map.put(Constants.FRAMEWORK_STORAGE, dir + File.separator + target + "-cache");
 		
 		if("true".equals(props.getProperty("fi.dwo.properties")))

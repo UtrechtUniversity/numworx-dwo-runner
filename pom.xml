@@ -90,7 +90,11 @@
 	  		<artifactId>jxbrowser-swing</artifactId>
 	  		<version>${jxbrowser.version}</version>
 	  	</dependency>
-
+		<dependency>
+		    <groupId>it.sauronsoftware</groupId>
+		    <artifactId>junique</artifactId>
+		    <version>1.0.4</version>
+		</dependency>
 	</dependencies>
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
@@ -98,6 +102,7 @@
 		<fi.dwo.boot>http://cdn.dwo.nl/bundles/BootLoader-2.0.jar</fi.dwo.boot>
 		<arch>mac</arch>
 		<jxbrowser.version>7.2</jxbrowser.version>
+		<security>osgi</security>
 	</properties>
 	<parent>
 		<groupId>nl.uu.fi.dwo</groupId>
