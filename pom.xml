@@ -22,7 +22,24 @@
 			</resource>
 		</resources>
 		<plugins>
-			<plugin>
+<plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <id>parse-version</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>parse-version</goal>
+            </goals>
+            <configuration>
+            	<propertyPrefix>version</propertyPrefix>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>    
+  			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
 				<version>2.10</version>
@@ -52,7 +69,29 @@
 					</archive>
 				</configuration>
 			</plugin>
-	</plugins>
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <id>copy-resources</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${basedir}/target/dependency</outputDirectory>
+              <resources>          
+                <resource>
+                  <directory>src/main/dwo</directory>
+                  <include>numworx.dwo</include>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>              
+            </configuration>            
+          </execution>
+        </executions>
+      </plugin>	</plugins>
 	</build>
 	<dependencies>
 		<dependency>
@@ -102,7 +141,7 @@
 		<fi.dwo.boot>http://cdn.dwo.nl/bundles/BootLoader-2.0.jar</fi.dwo.boot>
 		<arch>mac</arch>
 		<jxbrowser.version>7.2</jxbrowser.version>
-		<security>osgi</security>
+		<security>###</security>
 	</properties>
 	<parent>
 		<groupId>nl.uu.fi.dwo</groupId>
@@ -133,7 +172,7 @@
 							uri="javafx:com.sun.javafx.tools.ant"
 							classpath="${java.home}/../lib/ant-javafx.jar" />
 						<fx:application id="fi.microserver"
-							name="Numworx-Author" 
+							name="Numworx-author" 
 							mainClass="fi.microserver.Numworx" 
 							version="${project.version}" 
 							toolkit="swing" />
@@ -143,7 +182,7 @@
 						</fx:resources>
 						<fx:deploy width="800" height="600"
 					        outdir="target/deploy" embedJNLP="true"
-					        outfile="Numworx-Author"
+					        outfile="Numworx-author"
 							nativeBundles='dmg'
 							signBundle='false'
 						>
@@ -153,12 +192,12 @@
 					        <fx:application refId="fi.microserver"/>					 
 					        <fx:resources refid="appRes"/>						 
 					        <fx:info 
-					        	title="Numworx-Author"
+					        	title="Numworx-author"
 					          	vendor="Numworx"
-					          	description="Start Numworx-Author"
+					          	description="Start Numworx-author"
 					         >
 						         <fx:association extension='dwo' mimetype="application/x-numworx-dwo-configuration" />
-						         <fx:icon href='package/macosx/DWO-docent.icns' />
+						         <fx:icon href='package/macosx/Numworx-author.icns' />
 					         </fx:info>
 <!-- 					         <fx:bundleArgument arg='icon' value='package/macosx/DWO-docent-volume.icns' /> -->
 					      </fx:deploy>
