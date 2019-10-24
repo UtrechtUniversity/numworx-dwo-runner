@@ -18,7 +18,7 @@ import org.osgi.util.tracker.ServiceTracker;
 import fi.dwo.bootloader.LoaderBuilder.Update;
 import fi.dwo.dwoloader.DwoLoader;
 
-public class DwoLoaderImpl implements DwoLoader, ManagedService {
+public class DwoLoaderImpl implements DwoLoader, ManagedService, AutoCloseable {
 
 	private final LogService log;
 	private final BundleContext context;
