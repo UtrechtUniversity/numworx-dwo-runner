@@ -7,11 +7,7 @@ import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Dictionary;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -19,30 +15,18 @@ import java.util.ServiceLoader;
 import java.util.UUID;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
+
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
-import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.BundleException;
 import org.osgi.framework.Constants;
 import org.osgi.framework.FrameworkEvent;
-import org.osgi.framework.ServiceRegistration;
 import org.osgi.framework.launch.Framework;
 import org.osgi.framework.launch.FrameworkFactory;
-import org.osgi.framework.wiring.BundleCapability;
-import org.osgi.framework.wiring.FrameworkWiring;
-import org.osgi.resource.Capability;
-import org.osgi.resource.Requirement;
-import org.osgi.resource.Resource;
-import org.osgi.service.event.Event;
-import org.osgi.service.event.EventConstants;
-import org.osgi.service.event.EventHandler;
 import org.osgi.service.provisioning.ProvisioningService;
-import org.osgi.service.repository.Repository;
-import org.xml.sax.InputSource;
 
 import it.sauronsoftware.junique.JUnique;
 
@@ -50,16 +34,13 @@ public class MicroServer {
 
 	private static Framework framework;
 	private static BundleContext context;
-	private static ServiceRegistration<EventHandler> registration;
 	// Whether Windows/Mac
 	static boolean isWindows = (System.getProperty("os.name").indexOf("Windows") >= 0);
 	static boolean isMac = (System.getProperty("os.name").indexOf("Mac OS X") >= 0);
-	private static ServiceRegistration<Repository> reposRegistration;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void main(String[] args) throws Exception {
 	    System.setProperty("apple.eawt.quitStrategy", "CLOSE_ALL_WINDOWS");
-// org.osgi.framework.security=osgi java.security.policy=all.polic
 	    System.setProperty("java.security.policy","all.policy");
 	    
 		Preferences pref = Preferences.userRoot().node("fi/microserver");
@@ -73,7 +54,6 @@ public class MicroServer {
 			} catch (Exception e) {
 			}
 		}
-		String increment = pref.get("increment", "");
 		List<String> arglist = new ArrayList<String>(Arrays.asList(args));
 		FrameworkFactory factory = ServiceLoader.load(FrameworkFactory.class).iterator().next();
 		Map<String, String> map = new HashMap<String,String>();
@@ -114,13 +94,7 @@ public class MicroServer {
 		map.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, 
 // Java 8,9 en 10, 11 alleen met een eigen java
 		  system
-//				+ ",org.osgi.service.cm;version=1.5"
-				+ "org.osgi.service.log;version=1.3"
-				+ ",org.osgi.service.event;version=1.3.1"
-				+ ",org.osgi.service.repository;version=1.0"
-//				+ ",aQute.bnd.osgi.resource;version=1.4.0"
-//				+ ",aQute.bnd.osgi;version=2.3.0"
-				+ ",org.osgi.service.provisioning;version=1.2.0"
+				+ "org.osgi.service.provisioning;version=1.2.0"
 				+ jxbrowser
 			);
 		map.putAll((Map)props);
@@ -147,50 +121,13 @@ public class MicroServer {
 		framework.init();
 		context = framework.getBundleContext();
 		try {
-		    JULHandler.install(context);
-		    ProvisioningService ps = Provisioning.install(context);
-			installEvent();
-	        String u = getProperty("fi.dwo.repository", ps);
-	        RepoImpl repos = null;
-	        if(u != null) {
-	            try {
-	                InputSource input = new InputSource(u);
-	                repos = new RepoImpl(input);
-	                if(!increment.equals(repos.increment)) {
-	                    increment = repos.increment;
-	                    Properties p = new Properties(); 
-	                    p.setProperty("fi.dwo.update", "MAYBE");
-                        ps.addInformation(p);
-                    } else {
-	                    if(!"NEVER".equals(getProperty("fi.dwo.update",ps)))
-	                    {
-	                      map.put("fi.dwo.update", "NEVER"); // too late
-	                      Properties p = new Properties(); p.setProperty("fi.dwo.update", "NEVER");
-	                      ps.addInformation(p);
-	                    }
-	                }
-	            } catch (Exception e) {
-	                displayException(e);
-	                System.exit(1);
-	            }
-	        }
-	        repos.setContext(context);
-	        installRepository(ps,repos);
-			installBoot(ps);
+		    Provisioning.install(context);
 			int type;
 			do { 
 				framework.start();
-				try {
-					bootloader.start(Bundle.START_TRANSIENT);
-				} catch (BundleException e) {
-					bootloader.uninstall();
-					throw e;
-				}
 				FrameworkEvent event = framework.waitForStop(0);
 				type  = event.getType();
 			} while (type != FrameworkEvent.STOPPED);
-			pref.put("increment", increment);
-			pref.flush();
 			cleanOnExit(false);
 			java.util.logging.Logger.getLogger("").info("DWO exit");
 		} catch (InterruptedException e) {
@@ -202,25 +139,7 @@ public class MicroServer {
 		}	
 	}
 
-  private static String getProperty( String key, ProvisioningService ps) {
-    Object value = ps.getInformation().get(key);
-    if (value != null) return value.toString();
-    return context.getProperty(key);
-  }
-
-	private static void installRepository(ProvisioningService ps, RepoImpl repos2) throws Exception {
-		String u = getProperty("fi.dwo.repository",ps);
-		if(u == null) return;
-		RepoImpl repos = repos2;
-		Dictionary<String, Object> properties = new Hashtable<String, Object>();
-		properties.put(Repository.URL, u);
-		properties.put(Constants.SERVICE_PID, "fi.dwo.repository");
-		properties.put("repository.name", repos.name);
-		properties.put("repository.increment", Long.valueOf(repos.increment));
-		reposRegistration = context.registerService(Repository.class, repos, properties);	
-	}
-
-	private static void displayException(final Throwable t) {
+  private static void displayException(final Throwable t) {
 		try {
 			Runnable run = 
 			new Runnable() {
@@ -245,91 +164,6 @@ public class MicroServer {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-
-	private static final String STOP_EVENT = "fi/microserver/MicroServer/STOP";
-	//private static BundleActivator wrapActivator;
-	private static Bundle bootloader;
-	
-	private static void installEvent() {
-		EventHandler service;
-		Dictionary<String, Object> properties = new Hashtable<String, Object>();
-		properties.put(Constants.SERVICE_RANKING, Integer.MIN_VALUE);
-		properties.put(Constants.SERVICE_VENDOR, "fi.microserver.MicroServer");
-		properties.put(EventConstants.EVENT_TOPIC, STOP_EVENT);
-		service = new EventHandler() {
-
-			public void handleEvent(Event event) {
-				if(STOP_EVENT.equals(event.getTopic()))
-				{
-					Throwable t = (Throwable) event.getProperty(EventConstants.EXCEPTION);
-					if(t != null) displayException(t);
-					stop();
-				}
-			} };
-		registration = 
-		context.registerService(EventHandler.class, service, properties);
-		
-	}
-
-	static final String BOOTLOADER  = "fi.dwo.BootLoader";
-	private static void installBoot(ProvisioningService ps) throws BundleException {
-		String BOOT = getProperty("fi.dwo.boot",ps);
-		CapReqBuilder builder = new CapReqBuilder("osgi.identity");
-		builder.addDirective("filter", "(osgi.identity="+ BOOTLOADER +")");
-		Requirement r = builder.buildSyntheticRequirement();
-
-		try {
-			if (reposRegistration != null && BOOT == null) {
-				Repository repos = context.getService(reposRegistration.getReference());
-				Map<Requirement, Collection<Capability>> providers = repos.findProviders(Collections.singleton(r));
-				Collection<Capability> caps = providers.get(r);
-				context.ungetService(reposRegistration.getReference());repos = null;
-				for(Capability c: caps) {
-					Resource res = c.getResource();
-					List<Capability> list = res.getCapabilities("osgi.content");
-					for(Capability cc: list)
-						BOOT = cc.getAttributes().get("url").toString();
-				}
-			} else if (BOOT == null) {
-				BOOT = getProperty("fi.dwo.boot0",ps);
-			}
- 			
-			bootloader = context.installBundle(BOOT);
-		} catch (BundleException e) {
-			int type = e.getType();
-			if (type == BundleException.DUPLICATE_BUNDLE_ERROR) { // uninstall asap
-				FrameworkWiring fw = context.getBundle(0).adapt(FrameworkWiring.class);
-				Collection<BundleCapability> res = fw.findProviders(r);
-				for (BundleCapability bc:res) {
-					bc.getRevision().getBundle().uninstall();
-					installBoot(ps); return; // recurse
-				}
-			}
-			throw e;
-		}
-	}
-
-//	private static void installWrap() throws Exception {
-//		wrapActivator = new org.ops4j.pax.url.wrap.internal.Activator();
-//		wrapActivator.start(context);
-//	}
-
-	private static void stop() {
-			SwingUtilities.invokeLater(
-			new Runnable() {
-				public void run() {
-					try {
-						//wrapActivator.stop(context);
-						registration.unregister();
-						if(reposRegistration != null) // optional.
-							reposRegistration.unregister();
-						framework.stop();
-					} catch (Exception e) {
-						displayException(e);
-					}
-				}
-			});
 	}
 	
 	private static void cleanOnExit(boolean on) {

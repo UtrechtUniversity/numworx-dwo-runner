@@ -97,27 +97,12 @@
 		<dependency>
 			<groupId>fi.dwo</groupId>
 			<artifactId>ch.jm.osgi.provisioning</artifactId>
-			<version>0.9.0</version>
+			<version>0.9.1-SNAPSHOT</version>
 		</dependency>
-		<dependency>
-			<groupId>org.osgi</groupId>
-  			<artifactId>org.osgi.service.repository</artifactId>
-  			<version>1.0.0</version>
-  		</dependency>
 		<dependency>
 			<groupId>org.apache.felix</groupId>
 			<artifactId>org.apache.felix.framework</artifactId>
 			<version>5.6.12</version>
-		</dependency>
-		<dependency>
-			<groupId>org.osgi</groupId>
-			<artifactId>org.osgi.service.log</artifactId>
-			<version>1.3.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.osgi</groupId>
-			<artifactId>org.osgi.service.event</artifactId>
-			<version>1.3.1</version>
 		</dependency>
 	<dependency>
 	    	<groupId>com.teamdev.jxbrowser</groupId>
@@ -141,7 +126,7 @@
 		<fi.dwo.boot>http://cdn.dwo.nl/bundles/BootLoader-2.0.jar</fi.dwo.boot>
 		<arch>mac</arch>
 		<jxbrowser.version>7.2</jxbrowser.version>
-		<security>###</security>
+		<security>#</security>
 	</properties>
 	<parent>
 		<groupId>nl.uu.fi.dwo</groupId>
