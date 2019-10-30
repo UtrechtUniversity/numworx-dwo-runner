@@ -42,6 +42,7 @@ public class Activator implements BundleActivator, ServiceTrackerCustomizer<Cond
   ServiceTracker<ConditionalPermissionAdmin, ConditionalPermissionAdmin> tracker;
   BundleContext context;
   private StartBoot boot;
+  private JULHandler jul;
   private static final String LOCATION_PREFIX = "provisioning:";
 
   @Override
@@ -51,7 +52,7 @@ public class Activator implements BundleActivator, ServiceTrackerCustomizer<Cond
     tracker = new ServiceTracker<ConditionalPermissionAdmin, ConditionalPermissionAdmin>(context, ConditionalPermissionAdmin.class, this);
     tracker.open();
 
-    JULHandler.install(context);
+    jul = JULHandler.install(context);
     installEvent();
 // start all "provision" bundles except me.
     Bundle[] bundles = context.getBundles();
@@ -67,8 +68,8 @@ public class Activator implements BundleActivator, ServiceTrackerCustomizer<Cond
           if (loc.startsWith(LOCATION_PREFIX) && fragment == null
               && (state == Bundle.INSTALLED || state == Bundle.RESOLVED))
             try {
-            b.start();
-          } catch (Exception e) {
+              b.start();
+            } catch (Exception e) {
             LOG.log(Level.WARNING, "starting " + loc, e);
           }
         }
@@ -77,7 +78,7 @@ public class Activator implements BundleActivator, ServiceTrackerCustomizer<Cond
         } catch (Exception e) {
           LOG.log(Level.SEVERE, "starting bootloader", e);
           displayException(e);
-          stop();
+          System.exit(3);
         }
 
       }
@@ -90,7 +91,7 @@ public class Activator implements BundleActivator, ServiceTrackerCustomizer<Cond
   public void stop(BundleContext context) throws Exception {
     boot.stop();
     tracker.close();
-    JULHandler.uninstall(context);
+    jul.uninstall();
   }
 
   private void displayException(final Throwable t) {
@@ -225,7 +226,10 @@ public class Activator implements BundleActivator, ServiceTrackerCustomizer<Cond
             if(STOP_EVENT.equals(event.getTopic()))
             {
                 Throwable t = (Throwable) event.getProperty(EventConstants.EXCEPTION);
-                if(t != null) displayException(t);
+                if(t != null) {
+                  displayException(t);
+                  System.exit(1); // Harde stop
+                }
                 stop();
             }
         } };
@@ -244,6 +248,7 @@ public class Activator implements BundleActivator, ServiceTrackerCustomizer<Cond
                 context.getBundle(0L).stop();
             } catch (Exception e) {
                 displayException(e);
+                System.exit(2);
             }
         }
     });

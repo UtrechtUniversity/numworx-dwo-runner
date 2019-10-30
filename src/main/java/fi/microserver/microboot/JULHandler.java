@@ -18,7 +18,7 @@ import org.osgi.util.tracker.ServiceTracker;
 
 public class JULHandler extends Handler  {
 
-  static class LogReference<T> implements ServiceReference<T> {
+  static class LogReference implements ServiceReference<Object> {
 
     final LogRecord record;
     final Bundle bundle;
@@ -79,21 +79,22 @@ public class JULHandler extends Handler  {
     }
   }
 
-  final private BundleContext context;
   private ServiceTracker<LogService, LogService> tracker;
   private SecurityManagerEx securityManager = new SecurityManagerEx();
-
+  private Handler[] orgs; // original handlers.
   
-  static void uninstall(BundleContext context) {
+  void uninstall() {
     Logger root = Logger.getLogger("");
     Handler[] old = root.getHandlers();
     if (old != null) for (Handler o : old)
       root.removeHandler(o);
     root.setFilter(null);
+    if (orgs != null) 
+      for( Handler o: orgs) {root.addHandler(o);}
    
   }
   
-  static void install(BundleContext context) throws SecurityException, IOException {
+  static JULHandler install(BundleContext context) throws SecurityException, IOException {
     // String properties =
     // "handlers= "
     // + JULHandler.class.getName()
@@ -106,9 +107,12 @@ public class JULHandler extends Handler  {
     Handler[] old = root.getHandlers();
     if (old != null) for (Handler o : old)
       root.removeHandler(o);
-    root.addHandler(new JULHandler(context));
+    JULHandler jul = new JULHandler(context);
+    root.addHandler(jul);
+    jul.orgs = old;
     root.setLevel(Level.INFO); // anders NPE in wiskOpdr .... toString();
     root.setFilter(JULHandler::classFilter);
+    return jul;
   }
 
   static boolean classFilter(LogRecord record) {
@@ -118,9 +122,8 @@ public class JULHandler extends Handler  {
   }
   
   JULHandler(BundleContext context) {
-    this.context = context;
-    this.tracker = new ServiceTracker<LogService, LogService>(context, LogService.class, null);
-    this.tracker.open();
+    tracker = new ServiceTracker<LogService, LogService>(context, LogService.class, null);
+    tracker.open();
     setFormatter(new SimpleFormatter());
     setFilter(JULHandler::classFilter);
   }
