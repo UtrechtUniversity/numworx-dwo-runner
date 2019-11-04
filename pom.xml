@@ -5,6 +5,10 @@
   <version>0.0.2-SNAPSHOT</version>
   <name>UnPack200</name>
   <description>StreamHandler voor pack200 jars</description>
+	<properties>
+		<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
+		<osgi.qualifier>${maven.build.timestamp}</osgi.qualifier>
+	</properties>
   <dependencies>
   	<dependency>
   		<groupId>org.osgi</groupId>
@@ -22,6 +26,7 @@
         <extensions>true</extensions>
         <configuration>
           <instructions>
+				<_snapshot>${osgi.qualifier}</_snapshot>
 				<Bundle-Activator>fi.dwo.unpack200.Activator</Bundle-Activator>
 				<Private-Package>fi.dwo.unpack200</Private-Package>
 				<Export-Package></Export-Package>
