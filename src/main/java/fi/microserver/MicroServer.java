@@ -24,11 +24,14 @@ import javax.swing.SwingUtilities;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
 import org.osgi.framework.FrameworkEvent;
+import org.osgi.framework.ServiceReference;
 import org.osgi.framework.launch.Framework;
 import org.osgi.framework.launch.FrameworkFactory;
 import org.osgi.service.provisioning.ProvisioningService;
 
+import it.sauronsoftware.junique.AlreadyLockedException;
 import it.sauronsoftware.junique.JUnique;
+import it.sauronsoftware.junique.MessageHandler;
 
 public class MicroServer {
 
@@ -95,11 +98,18 @@ public class MicroServer {
 // Java 8,9 en 10, 11 alleen met een eigen java
 		  system
 				+ "org.osgi.service.provisioning;version=1.2.0"
+				+ ",it.sauronsoftware.junique;version=1.0.4"
 				+ jxbrowser
 			);
 		map.putAll((Map)props);
 		String target = props.getProperty("fi.dwo.target", "DWO-docent");
-		JUnique.acquireLock(target);
+
+		try {
+          JUnique.acquireLock(target, MicroServer::handleMessage);
+        } catch (AlreadyLockedException e1) {
+          JUnique.sendMessage(target, Arrays.toString(args));
+          throw e1;
+        }
 		
 		map.put(Constants.FRAMEWORK_STORAGE, dir + File.separator + target + "-cache");
 		
@@ -178,5 +188,20 @@ public class MicroServer {
 		}
 		
 	}
-	
+
+	private static String handleMessage(String message) {
+	  if (context != null) {
+	    ServiceReference<MessageHandler> ref = context.getServiceReference(MessageHandler.class);
+	    if (ref != null) {
+	      MessageHandler handler = context.getService(ref);
+	      if (handler != null) {
+	        try { 
+	          message = handler.handle(message);
+	        } catch(Throwable t) {}
+	      }
+          context.ungetService(ref);
+	    }
+	  }
+	  return message;
+	}
 }
