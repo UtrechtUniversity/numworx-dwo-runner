@@ -26,6 +26,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
+import org.osgi.framework.Version;
 import org.osgi.service.condpermadmin.ConditionalPermissionAdmin;
 import org.osgi.service.condpermadmin.ConditionalPermissionInfo;
 import org.osgi.service.condpermadmin.ConditionalPermissionUpdate;
@@ -47,8 +48,15 @@ public class Activator implements BundleActivator, ServiceTrackerCustomizer<Cond
 
   @Override
   public void start(BundleContext context) throws Exception {
-
+// VERSION CHECK
+    String v = context.getProperty("fi.microserver.version");
+    Version v1 = new Version(v);
+    Version v2 = new Version("0.0.6");
+    if (v1.compareTo(v2) < 0)
+      return; 
+      
     this.context = context;
+    
     tracker = new ServiceTracker<ConditionalPermissionAdmin, ConditionalPermissionAdmin>(context, ConditionalPermissionAdmin.class, this);
     tracker.open();
 
@@ -89,6 +97,7 @@ public class Activator implements BundleActivator, ServiceTrackerCustomizer<Cond
 
   @Override
   public void stop(BundleContext context) throws Exception {
+    if(this.context == null) return;
     boot.stop();
     tracker.close();
     jul.uninstall();

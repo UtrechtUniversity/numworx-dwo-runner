@@ -88,6 +88,7 @@ class StartBoot {
     Preferences pref = Preferences.userRoot().node("fi/microserver");
     increment = pref.get("increment", "");
     ServiceReference<ProvisioningService> ref = context.getServiceReference(ProvisioningService.class);
+    if (ref == null) return;
     ProvisioningService ps = context.getService(ref);
     String u = getProperty("fi.dwo.repository", ps);
     RepoImpl repos;
@@ -116,6 +117,7 @@ class StartBoot {
   
   
   void stop() {
+    if (reposRegistration == null) return;
     reposRegistration.unregister(); reposRegistration = null;
     Preferences pref = Preferences.userRoot().node("fi/microserver");
     pref.put("increment", increment);
