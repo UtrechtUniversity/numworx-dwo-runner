@@ -26,6 +26,113 @@
   <build>
    <finalName>${project.artifactId}</finalName>
   <plugins>
+<plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <id>parse-version</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>parse-version</goal>
+            </goals>
+            <configuration>
+            	<propertyPrefix>version</propertyPrefix>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>    
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>provision</id>
+						<goals><goal>copy-resources</goal></goals>
+						<phase>package</phase>
+						<configuration>
+							<outputDirectory>target/provision</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/main/provision</directory>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+   			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.10</version>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<includeScope>runtime</includeScope>
+						</configuration>
+					</execution>
+					<execution>
+						<id>provision-dependencies</id>
+						<phase>process-resources</phase>
+						<goals><goal>copy</goal></goals>
+						<configuration>
+  							<outputDirectory>target/provision</outputDirectory>
+  							<stripVersion>true</stripVersion>
+							<artifactItems>
+								<artifactItem>
+									<groupId>nl.numworx.swingbrowser</groupId>
+									<version>0.0.2-SNAPSHOT</version>
+  									<overWrite>true</overWrite>
+									<artifactId>swingbrowser-api</artifactId>
+								</artifactItem>
+								<artifactItem>
+									<groupId>nl.numworx.swingbrowser</groupId>
+									<version>0.0.2-SNAPSHOT</version>
+									<artifactId>swingbrowser-jxb</artifactId>
+  									<overWrite>true</overWrite>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.osgi</groupId>
+									<artifactId>org.osgi.service.log</artifactId>
+									<version>1.3.0</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.osgi</groupId>
+									<artifactId>org.osgi.service.cm</artifactId>
+									<version>1.5.0</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.osgi</groupId>
+									<artifactId>org.osgi.service.event</artifactId>
+									<version>1.3.1</version>
+								</artifactItem>
+								<artifactItem>
+								  <groupId>org.osgi</groupId>
+								  <artifactId>org.osgi.service.repository</artifactId>
+								  <version>1.0.0</version>
+								</artifactItem>
+								<artifactItem>
+  									<groupId>fi.microserver</groupId>
+  									<artifactId>MicroBoot</artifactId>
+  									<version>0.0.6-SNAPSHOT</version>
+  									<overWrite>true</overWrite>
+								</artifactItem>
+								<artifactItem>
+								    <groupId>org.apache.felix</groupId>
+									<artifactId>org.apache.felix.framework.security</artifactId>
+									<version>2.6.1</version>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
   	  <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
@@ -39,6 +146,23 @@
           </instructions>
         </configuration>
       </plugin>
+ 		<plugin>
+			<artifactId>maven-assembly-plugin</artifactId>
+        	<configuration>
+          		<descriptors>
+					<descriptor>src/main/assembly.xml</descriptor>					
+          		</descriptors>
+        	</configuration>
+            <executions>
+          		<execution>
+            		<id>make-assembly</id>
+            		<phase>package</phase>
+            		<goals>
+              			<goal>single</goal>
+            		</goals>
+          		</execution>
+        	</executions>  		
+  		</plugin>
   </plugins>
   </build>  
   <properties>
