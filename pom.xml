@@ -22,6 +22,9 @@
 			</resource>
 		</resources>
 		<plugins>
+
+
+
 <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
@@ -50,13 +53,31 @@
 						<goals>
 							<goal>copy-dependencies</goal>
 						</goals>
+						<configuration>
+							<includeScope>runtime</includeScope>
+						</configuration>
+					</execution>
+					<execution>
+						<id>provision-copy</id>
+						<phase>process-resources</phase>
+						<goals><goal>copy</goal></goals>
+						<configuration>
+							<outputDirectory>target/classes</outputDirectory>
+							<artifactItems>
+								<artifactItem>
+									<artifactId>MicroBoot</artifactId>
+									<groupId>${project.groupId}</groupId>
+									<version>${project.version}</version>
+									<type>zip</type>
+									<classifier>null</classifier>
+									<destFileName>null.zip</destFileName>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
 					</execution>
 				</executions>
-				<configuration>
-					<includeScope>runtime</includeScope>
-				</configuration>
 			</plugin>
-			<plugin>
+ 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>2.4</version>
@@ -86,6 +107,10 @@
                   <directory>src/main/dwo</directory>
                   <include>numworx.dwo</include>
                   <filtering>true</filtering>
+                </resource>
+                <resource>
+                	<directory>.</directory>
+                	<include>all.policy</include>
                 </resource>
               </resources>              
             </configuration>            
@@ -125,7 +150,7 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<fi.dwo.boot>http://cdn.dwo.nl/bundles/BootLoader-2.0.jar</fi.dwo.boot>
 		<arch>mac</arch>
-		<jxbrowser.version>7.2</jxbrowser.version>
+		<jxbrowser.version>7.3</jxbrowser.version>
 		<security>#</security>
 	</properties>
 	<parent>

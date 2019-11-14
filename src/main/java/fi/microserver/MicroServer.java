@@ -86,6 +86,7 @@ public class MicroServer {
 		    + ",com.teamdev.jxbrowser.browser.callback" + v
 		    + ",com.teamdev.jxbrowser.browser.event" + v
 		    + ",com.teamdev.jxbrowser.callback" + v
+		    + ",com.teamdev.jxbrowser.cookie" + v
 		    + ",com.teamdev.jxbrowser.engine" + v
 		    + ",com.teamdev.jxbrowser.event" + v
 		    + ",com.teamdev.jxbrowser.frame" + v
@@ -117,7 +118,7 @@ public class MicroServer {
 			map.put("fi.dwo.documentbase", MicroServer.class.getResource("resources/").toExternalForm());
 		else 
 			map.remove("fi.dwo.properties");
-		String null_zip = MicroServer.class.getResource("resources/null.zip").toExternalForm();
+		String null_zip = MicroServer.class.getResource("/null.zip").toExternalForm();
         map.put(ProvisioningService.PROVISIONING_REFERENCE, null_zip);
 		if (!arglist.isEmpty()) {
 		  File f = new File(arglist.get(0));
