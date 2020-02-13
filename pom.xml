@@ -117,7 +117,7 @@
     		<dependency>
 				<groupId>nl.numworx.swingbrowser</groupId>
 				<artifactId>swingbrowser-jfx</artifactId>
-				<version>0.0.1-SNAPSHOT</version>
+				<version>0.0.2</version>
 			</dependency>
   		</dependencies>  	
     </profile>
@@ -127,7 +127,7 @@
 			<dependency>
 				<groupId>nl.numworx.swingbrowser</groupId>
 				<artifactId>swingbrowser-jxb</artifactId>
-				<version>0.0.1-SNAPSHOT</version>
+				<version>0.0.2</version>
 				<exclusions>
 					<exclusion>
 						<groupId>com.teamdev.jxbrowser</groupId>
