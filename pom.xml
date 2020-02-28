@@ -127,7 +127,7 @@
 		<dependency>
 			<groupId>org.apache.felix</groupId>
 			<artifactId>org.apache.felix.framework</artifactId>
-			<version>5.6.12</version>
+			<version>6.0.3</version>
 		</dependency>
 	<dependency>
 	    	<groupId>com.teamdev.jxbrowser</groupId>
@@ -146,8 +146,8 @@
 		</dependency>
 	</dependencies>
 	<properties>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
 		<fi.dwo.boot>http://cdn.dwo.nl/bundles/BootLoader-2.0.jar</fi.dwo.boot>
 		<arch>mac</arch>
 		<jxbrowser.version>7.5</jxbrowser.version>
@@ -173,7 +173,7 @@
 		<version>1.8</version>
 		<executions>
 			<execution>
-				<phase>verify</phase>
+				<phase>none</phase>
 				<configuration>
 					<target
 						xmlns:fx="javafx:com.sun.javafx.tools.ant">
@@ -226,7 +226,7 @@
         <executions>
           <execution>
             <id>attach-artifacts</id>
-            <phase>package</phase>
+            <phase>none</phase>
             <goals>
               <goal>attach-artifact</goal>
             </goals>

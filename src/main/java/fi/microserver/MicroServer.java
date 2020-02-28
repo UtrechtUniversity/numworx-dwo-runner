@@ -73,7 +73,12 @@ public class MicroServer {
 		String system = "javafx.application,javafx.beans.property,javafx.beans.value,javafx.collections,javafx.concurrent,javafx.embed.swing,javafx.event,javafx.scene,javafx.scene.control,javafx.scene.web,javafx.util,javax.swing,javax.swing.border,netscape.javascript," + 
 						"com.apple.eawt,";
 		String version = System.getProperty("java.version", "0.0.0");
-		if ( Integer.parseInt(version.split("\\.")[0]) >= 9)
+		
+		int javaVersion = Integer.parseInt(version.split("\\.")[0]);
+		if ( javaVersion >= 11)
+			system = "";
+		else
+		if ( javaVersion >= 9)
 			system = "netscape.javascript,"; // vanaf 9 geen netscape automatisch (felix 5.6.10 defaults.properties)
 		Properties props = new Properties();
 		InputStream in = MicroServer.class.getResourceAsStream("resources/DWO.properties");
