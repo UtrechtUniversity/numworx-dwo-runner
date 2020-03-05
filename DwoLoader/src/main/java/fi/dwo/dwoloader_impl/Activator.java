@@ -3,8 +3,6 @@ package fi.dwo.dwoloader_impl;
 import java.net.URI;
 import java.util.Dictionary;
 import java.util.Hashtable;
-import java.util.Properties;
-
 import org.apache.felix.bundlerepository.Repository;
 import org.apache.felix.bundlerepository.RepositoryAdmin;
 import org.osgi.framework.BundleActivator;
@@ -18,7 +16,6 @@ import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
 import fi.dwo.bootloader.LoaderBuilder.Update;
 import fi.dwo.dwoloader.DwoLoader;
-import fi.dwo.dwoloader_impl.Activator.DwoLoaderDummy;
 
 public class Activator implements BundleActivator {
 	
