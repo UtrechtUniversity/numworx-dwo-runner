@@ -87,13 +87,13 @@
 							<artifactItems>
 								<artifactItem>
 									<groupId>nl.numworx.swingbrowser</groupId>
-									<version>0.0.2-SNAPSHOT</version>
+									<version>0.0.2</version>
   									<overWrite>true</overWrite>
 									<artifactId>swingbrowser-api</artifactId>
 								</artifactItem>
 								<artifactItem>
 									<groupId>nl.numworx.swingbrowser</groupId>
-									<version>0.0.2-SNAPSHOT</version>
+									<version>0.0.2</version>
 									<artifactId>swingbrowser-jxb</artifactId>
   									<overWrite>true</overWrite>
 								</artifactItem>
