@@ -118,12 +118,6 @@
 								  <version>1.0.0</version>
 								</artifactItem>
 								<artifactItem>
-  									<groupId>fi.microserver</groupId>
-  									<artifactId>MicroBoot</artifactId>
-  									<version>0.0.6-SNAPSHOT</version>
-  									<overWrite>true</overWrite>
-								</artifactItem>
-								<artifactItem>
 								    <groupId>org.apache.felix</groupId>
 									<artifactId>org.apache.felix.framework.security</artifactId>
 									<version>2.6.1</version>
