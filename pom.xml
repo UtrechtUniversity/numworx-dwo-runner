@@ -33,6 +33,11 @@
           </instructions>
         </configuration>
       </plugin>
+      <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>2.5.3</version>
+      </plugin>
   	</plugins>  
   </build>
   <packaging>bundle</packaging>
@@ -41,4 +46,7 @@
   	<artifactId>DWO.master.pom</artifactId>
   	<version>1.1</version>
   </parent>
+  <scm>
+  	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.projects/unpack200/trunk</developerConnection>
+  </scm>
 </project>
