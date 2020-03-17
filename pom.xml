@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>fi.dwo</groupId>
   <artifactId>unpack200</artifactId>
-  <version>0.0.2-SNAPSHOT</version>
+  <version>0.0.2</version>
   <name>UnPack200</name>
   <description>StreamHandler voor pack200 jars</description>
 	<properties>
@@ -29,7 +29,7 @@
 				<_snapshot>${osgi.qualifier}</_snapshot>
 				<Bundle-Activator>fi.dwo.unpack200.Activator</Bundle-Activator>
 				<Private-Package>fi.dwo.unpack200</Private-Package>
-				<Export-Package></Export-Package>
+				<Export-Package />
           </instructions>
         </configuration>
       </plugin>
@@ -47,6 +47,6 @@
   	<version>1.1</version>
   </parent>
   <scm>
-  	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.projects/unpack200/trunk</developerConnection>
+  	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.projects/unpack200/tags/unpack200-0.0.2</developerConnection>
   </scm>
 </project>
