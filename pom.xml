@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>fi.dwo</groupId>
   <artifactId>unpack200</artifactId>
-  <version>0.0.2</version>
+  <version>0.0.3-SNAPSHOT</version>
   <name>UnPack200</name>
   <description>StreamHandler voor pack200 jars</description>
 	<properties>
@@ -47,6 +47,6 @@
   	<version>1.1</version>
   </parent>
   <scm>
-  	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.projects/unpack200/tags/unpack200-0.0.2</developerConnection>
+  	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.projects/unpack200/trunk</developerConnection>
   </scm>
 </project>
