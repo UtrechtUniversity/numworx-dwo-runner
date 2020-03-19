@@ -43,6 +43,11 @@
 					</instructions>
 				</configuration>
 			</plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
+            </plugin>
 		</plugins>
 	</build>
 	<distributionManagement>
@@ -52,4 +57,7 @@
 			<url>https://repos.dwo.nl/artifactory/libs-snapshot-local</url>
 		</repository>
 	</distributionManagement>
+	<scm>
+		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.projects/eawt/trunk</developerConnection>
+	</scm>
 </project>
