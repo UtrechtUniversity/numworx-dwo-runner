@@ -215,6 +215,21 @@
 		  <artifactId>numworxlf</artifactId>
 		  <version>2.4.0</version>
 		</dependency>
+		<dependency>
+			<groupId>nl.numworx</groupId>
+			<artifactId>org.eclipse.equinox.http</artifactId>
+			<version>1.0.500-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+    	  <groupId>nl.numworx.swingbrowser</groupId>
+    	  <version>0.0.3-SNAPSHOT</version>
+		  <artifactId>swingbrowser-ext</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.service.http</artifactId>
+			<version>1.2.1</version>
+		</dependency>
 	</dependencies>
 	<properties>
 		<s3>s3://test-dwo-nl</s3>
