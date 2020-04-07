@@ -95,7 +95,7 @@
             <url>https://repos.dwo.nl/artifactory/libs-snapshot-local</url>    
         </snapshotRepository>
   </distributionManagement>       
-  <version>2.0.6-SNAPSHOT</version>
+  <version>2.0.6</version>
   <properties>
 	<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
 	<osgi.qualifier>${maven.build.timestamp}</osgi.qualifier>
@@ -105,6 +105,6 @@
   </properties>
   <groupId>fi.dwo</groupId>
   <scm>
-  	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.projects/BootLoader/trunk</developerConnection>
+  	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.projects/BootLoader/tags/BootLoader-2.0.6</developerConnection>
   </scm>
 </project>
