@@ -1,0 +1,7 @@
+guestUser: false
+cmi.mode: normal
+#logoutURL:
+cookies: false
+profileExtension:
+userName:
+passWord:
