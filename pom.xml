@@ -3,6 +3,11 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>nl.uu.fi.dwo</groupId>
+    <artifactId>DWO.master.pom</artifactId>
+    <version>1.1</version>
+  </parent>
 	<groupId>fi.dwo</groupId>
 	<artifactId>fi.dwo.eawt</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
@@ -23,7 +28,7 @@
 		<dependency>
 			<groupId>fi.dwo</groupId>
 			<artifactId>BootLoader</artifactId>
-			<version>2.0.5-SNAPSHOT</version>
+			<version>2.0.6</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
@@ -60,4 +65,5 @@
 	<scm>
 		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.projects/eawt/trunk</developerConnection>
 	</scm>
+	<name>EAWT</name>
 </project>
