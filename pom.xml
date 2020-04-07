@@ -2,14 +2,13 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>nl.uu.fi.dwo</groupId>
-    <version>1.0</version>
+    <version>1.1</version>
     <artifactId>DWO.master.pom</artifactId>
   </parent>
   <artifactId>BootLoader</artifactId>
   <packaging>bundle</packaging>
   <name>Boot loader</name>
-  <dependencies>
-  
+  <dependencies> 
   	<dependency>
   		<groupId>org.osgi</groupId>
   		<artifactId>osgi.core</artifactId>
@@ -83,6 +82,11 @@
           </instructions>
         </configuration>
       </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
+            </plugin>            
   </plugins>
   </build>
   <distributionManagement>
@@ -100,4 +104,7 @@
   	<maven.compiler.target>1.8</maven.compiler.target>
   </properties>
   <groupId>fi.dwo</groupId>
+  <scm>
+  	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.projects/BootLoader/trunk</developerConnection>
+  </scm>
 </project>
