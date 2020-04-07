@@ -8,7 +8,7 @@
   </parent>
 	<groupId>fi.dwo</groupId>
 	<artifactId>fi.dwo.eawt</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<properties>
 		<maven.compiler.source>9</maven.compiler.source>
 		<maven.compiler.target>9</maven.compiler.target>
@@ -54,7 +54,7 @@
 		</plugins>
 	</build>
 	<scm>
-		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.projects/eawt/tags/fi.dwo.eawt-0.0.1</developerConnection>
+		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.projects/eawt/trunk</developerConnection>
 	</scm>
 	<name>EAWT</name>
 </project>
