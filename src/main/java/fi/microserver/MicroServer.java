@@ -87,7 +87,9 @@ public class MicroServer {
 		String v = props.getProperty("com.teamdev.jxbrowser.version");
 		if (v == null) v = "";
 		else v = ";version=" + v;
-		String jxbrowser=",com.teamdev.jxbrowser.browser" + v
+		String jxbrowser=
+			  ",com.teamdev.jxbrowser" + v
+			+ ",com.teamdev.jxbrowser.browser" + v
 		    + ",com.teamdev.jxbrowser.browser.callback" + v
 		    + ",com.teamdev.jxbrowser.browser.event" + v
 		    + ",com.teamdev.jxbrowser.callback" + v
