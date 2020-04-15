@@ -137,7 +137,7 @@
           <instructions>
 				<Bundle-Activator>fi.microserver.microboot.Activator</Bundle-Activator>
 				<Export-Package/>
-				<Private-Package>fi.microserver.microboot</Private-Package>
+				<Private-Package>fi.microserver.microboot,org.eclipse.concierge.service.log</Private-Package>
           </instructions>
         </configuration>
       </plugin>

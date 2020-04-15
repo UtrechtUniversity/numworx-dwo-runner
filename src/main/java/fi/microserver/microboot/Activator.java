@@ -20,6 +20,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
+import org.eclipse.concierge.service.log.LogServiceImpl;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
@@ -33,6 +34,9 @@ import org.osgi.service.condpermadmin.ConditionalPermissionUpdate;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
+import org.osgi.service.log.LogReaderService;
+import org.osgi.service.log.LogService;
+import org.osgi.service.provisioning.ProvisioningService;
 import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
@@ -56,7 +60,7 @@ public class Activator implements BundleActivator, ServiceTrackerCustomizer<Cond
       return; 
       
     this.context = context;
-    
+    startLog();
     tracker = new ServiceTracker<ConditionalPermissionAdmin, ConditionalPermissionAdmin>(context, ConditionalPermissionAdmin.class, this);
     tracker.open();
 
@@ -95,12 +99,47 @@ public class Activator implements BundleActivator, ServiceTrackerCustomizer<Cond
 
   }
 
-  @Override
+  private int getProperty(final String key, final int defaultVal, ProvisioningService ps) {
+      String val = null;
+      if (ps != null)
+    	  val = (String) ps.getInformation().get(key);
+      if (val == null)
+    	  val = context.getProperty(key);
+      return val != null ? Integer.parseInt(val) : defaultVal;
+  }
+
+  private boolean getProperty(final String key, final boolean defaultVal) {
+      final String val = context.getProperty(key);
+      return val != null ? Boolean.valueOf(val).booleanValue() : defaultVal;
+}
+
+  private void startLog() {
+	  ProvisioningService ps = null;
+	  ServiceReference<ProvisioningService> ref = context.getServiceReference(ProvisioningService.class);
+	  if (ref != null) {
+		  ps = context.getService(ref);
+	  }
+      int LOG_BUFFER_SIZE = getProperty("org.eclipse.concierge.log.buffersize",
+              10, ps);
+      int LOG_LEVEL = getProperty("org.eclipse.concierge.log.level",
+              LogService.LOG_DEBUG, ps);
+      if (ref != null) {
+    	  ps = null;
+    	  context.ungetService(ref);
+      }
+      boolean QUIET = !getProperty("fi.dwo.console", false);     
+      LogServiceImpl impl = new LogServiceImpl(LOG_BUFFER_SIZE, LOG_LEVEL, QUIET);
+      context.registerService(LogReaderService.class, impl, null);
+      context.registerService(LogService.class, impl.factory, null);
+}
+
+@Override
   public void stop(BundleContext context) throws Exception {
     if(this.context == null) return;
     boot.stop();
     tracker.close();
     jul.uninstall();
+    jul.close();
   }
 
   private void displayException(final Throwable t) {
@@ -248,12 +287,15 @@ public class Activator implements BundleActivator, ServiceTrackerCustomizer<Cond
 }
 
   void stop() {
+    if (registration != null) { 
+    	registration.unregister(); 
+    	registration = null;
+    }
     SwingUtilities.invokeLater(
     new Runnable() {
 
         public void run() {
             try {
-                registration.unregister();
                 context.getBundle(0L).stop();
             } catch (Exception e) {
                 displayException(e);
