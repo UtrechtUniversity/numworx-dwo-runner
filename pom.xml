@@ -194,7 +194,7 @@
 		<dependency>
 			<groupId>fi.dwo</groupId>
 			<artifactId>fi.dwo.eawt</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>0.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.osgi</groupId>
