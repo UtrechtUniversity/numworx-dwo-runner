@@ -2,22 +2,55 @@ package fi.dwo.dwoloader_impl;
 
 import java.net.URI;
 import java.util.Dictionary;
-
+import java.util.Hashtable;
 import org.apache.felix.bundlerepository.Repository;
 import org.apache.felix.bundlerepository.RepositoryAdmin;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
+import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.log.LogService;
 import org.osgi.service.provisioning.ProvisioningService;
 import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
+import fi.dwo.bootloader.LoaderBuilder.Update;
+import fi.dwo.dwoloader.DwoLoader;
+
 public class Activator implements BundleActivator {
 	
-	private class ReposAdmin implements ServiceTrackerCustomizer<RepositoryAdmin,DwoLoaderImpl> {
+	class DwoLoaderDummy implements AutoCloseable, DwoLoader {
+	  
+    private ServiceRegistration<DwoLoader> reg;
+    private RuntimeException re;
+    public DwoLoaderDummy(Exception e, BundleContext context) {
+      reg = context.registerService(DwoLoader.class, this, new Hashtable<String,Object>());
+//      if (e instanceof RuntimeException) {
+//        re = (RuntimeException) e;
+//      } else if (e != null) {
+//        re = new RuntimeException(e);
+//      }
+    }
+
+    @Override
+    public Update getUpdate() {
+      if (re != null) {
+        re.fillInStackTrace();
+        throw re;
+      }
+      return Update.MAYBE;
+    }
+
+    @Override
+    public void close() {
+      reg.unregister();
+    }
+
+  }
+
+  private class ReposAdmin implements ServiceTrackerCustomizer<RepositoryAdmin,AutoCloseable> {
 		
-		public DwoLoaderImpl addingService(ServiceReference<RepositoryAdmin> reference) {
+		public AutoCloseable addingService(ServiceReference<RepositoryAdmin> reference) {
 			RepositoryAdmin admin = context.getService(reference);
 			Repository rep = null;
 			DwoLoaderImpl impl = null;
@@ -27,35 +60,43 @@ public class Activator implements BundleActivator {
 				 impl = new DwoLoaderImpl(rep, logTracker.getService(), context);
 				 impl.open();
 			} catch (Exception e) {
-			    
 			      LogService s = logTracker.getService();
 	              if (s != null) {
 	                s.log(reference, LogService.LOG_ERROR, index, e);
 	              }
+	              return new DwoLoaderDummy(e, context);
+	              
 			    }
 			
 			return impl;
 		}
 
-		public void modifiedService(ServiceReference<RepositoryAdmin> reference, DwoLoaderImpl service) {
+		public void modifiedService(ServiceReference<RepositoryAdmin> reference, AutoCloseable service) {
 		}
 
-		public void removedService(ServiceReference<RepositoryAdmin> reference, DwoLoaderImpl service) {
-			service.close();
+		public void removedService(ServiceReference<RepositoryAdmin> reference, AutoCloseable service) {
+			try {
+        service.close();
+      } catch (Exception e) {
+        LogService s = logTracker.getService();
+        if (s != null) {
+          s.log(reference, LogService.LOG_WARNING, index, e);
+        }
+      }
 		}
 		
 	}
 	
 	private ServiceTracker<LogService,LogService> logTracker;
-	private ServiceTracker<RepositoryAdmin,DwoLoaderImpl> reposTracker;
+	private ServiceTracker<RepositoryAdmin,AutoCloseable> reposTracker;
 	private BundleContext context;
 	private String index;
 	
 	public void start(BundleContext context) throws Exception {
 		this.context = context;
-		ServiceReference<ProvisioningService> ref = context.getServiceReference(org.osgi.service.provisioning.ProvisioningService.class);
+		ServiceReference<?> ref = context.getServiceReference("org.osgi.service.provisioning.ProvisioningService");
 		if (ref != null) {
-		  ProvisioningService service = context.getService(ref);
+		  ProvisioningService service = (ProvisioningService) context.getService(ref);
 		  Dictionary<?, ?> dict = service.getInformation();
 		  index = (String) dict.get("fi.dwo.dwojapplet.domain.DWO");
 		  context.ungetService(ref);
@@ -67,7 +108,7 @@ public class Activator implements BundleActivator {
 		else
 			index = URI.create(index).resolve("index.xml").toString();
 		
-		reposTracker  = new ServiceTracker<RepositoryAdmin, DwoLoaderImpl>(context,RepositoryAdmin.class, new ReposAdmin());
+		reposTracker  = new ServiceTracker<RepositoryAdmin, AutoCloseable>(context,RepositoryAdmin.class, new ReposAdmin());
 		logTracker = new ServiceTracker<LogService,LogService>(context, LogService.class, null);
 
 		logTracker.open();

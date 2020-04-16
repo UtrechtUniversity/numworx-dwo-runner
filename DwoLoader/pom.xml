@@ -1,11 +1,14 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>fi.dwo</groupId>
 	<artifactId>DwoLoader</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>DWO Loader</name>
 	<description>Load DWO via Resolver</description>
+	<properties>
+		<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
+		<osgi.qualifier>${maven.build.timestamp}</osgi.qualifier>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.osgi</groupId>
@@ -47,15 +50,34 @@
         <extensions>true</extensions>
         <configuration>
           <instructions>
+				<_snapshot>${osgi.qualifier}</_snapshot>
 				<Bundle-Activator>fi.dwo.dwoloader_impl.Activator</Bundle-Activator>
 				<Embed-Transitive>false</Embed-Transitive>
- 				<Embed-Dependency></Embed-Dependency>
+ 				<Embed-Dependency />
  				<Export-Package>!fi.dwo.dwoloader_impl</Export-Package>
  				<Private-Package>fi.dwo.dwoloader_impl</Private-Package>
+ 				<Import-Package>org.osgi.service.provisioning;resolution:=optional,*</Import-Package>
           </instructions>
         </configuration>
+      </plugin>
+	  <plugin>
+         	<groupId>external.atlassian.jgitflow</groupId>
+         	<artifactId>jgitflow-maven-plugin</artifactId>
+         	<version>1.0-m5.1</version>
       </plugin>
   </plugins>
 	</build>
 	<packaging>bundle</packaging>
+	<distributionManagement>
+		<snapshotRepository>
+			<id>snapshots</id>
+			<name>libs-snapshot</name>
+			<url>https://repos.dwo.nl/artifactory/libs-snapshot-local</url>
+		</snapshotRepository>
+        <repository>
+            <id>release</id>
+            <name>libs-release</name>
+            <url>https://repos.dwo.nl/artifactory/libs-release-local</url>    
+        </repository>
+	</distributionManagement>
 </project>
