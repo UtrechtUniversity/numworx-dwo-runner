@@ -69,10 +69,15 @@
 	</build>
 	<packaging>bundle</packaging>
 	<distributionManagement>
-		<repository>
+		<snapshotRepository>
 			<id>snapshots</id>
-			<!--<name>libs-snapshot</name> -->
+			<name>libs-snapshot</name>
 			<url>https://repos.dwo.nl/artifactory/libs-snapshot-local</url>
-		</repository>
+		</snapshotRepository>
+        <repository>
+            <id>release</id>
+            <name>libs-release</name>
+            <url>https://repos.dwo.nl/artifactory/libs-release-local</url>    
+        </repository>
 	</distributionManagement>
 </project>
