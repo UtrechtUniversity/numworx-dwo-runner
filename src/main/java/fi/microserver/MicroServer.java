@@ -21,6 +21,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
+import org.apache.felix.framework.Felix;
+import org.apache.felix.framework.Logger;
+import org.apache.felix.framework.util.FelixConstants;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
 import org.osgi.framework.FrameworkEvent;
@@ -28,6 +31,7 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.framework.launch.Framework;
 import org.osgi.framework.launch.FrameworkFactory;
 import org.osgi.service.provisioning.ProvisioningService;
+import org.osgi.util.tracker.ServiceTracker;
 
 import it.sauronsoftware.junique.AlreadyLockedException;
 import it.sauronsoftware.junique.JUnique;
@@ -135,9 +139,16 @@ public class MicroServer {
 		}
 		
 		cleanOnExit(true);
+		Logger logger = new Logger();
+
+		Map m = map;
+		m.put(FelixConstants.LOG_LOGGER_PROP, logger); // Must be Felix
+
 		framework = factory.newFramework(map);
 		framework.init();
 		context = framework.getBundleContext();
+		ServiceTracker tracker = new LoggerTracker(context,logger);
+		tracker.open();
 		try {
 		    Provisioning.install(context);
 			int type;
