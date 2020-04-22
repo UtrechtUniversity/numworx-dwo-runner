@@ -120,6 +120,14 @@
 			<groupId>fi.dwo</groupId>
 			<artifactId>ch.jm.osgi.provisioning</artifactId>
 			<version>0.9.1-SNAPSHOT</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.osgi</groupId>
+					<artifactId>
+						org.osgi.service.provisioning
+					</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.felix</groupId>
