@@ -76,6 +76,7 @@ public class Activator implements BundleActivator {
 
   private LogService LOG = new fi.dwo.bootloader.impl.Logger();
 	private LogTracker LOGt;
+	private LogReaderTracker LOGtt;
 	private ServiceTracker<DwoLoader, Update> dwoloader;
 	private Updater updater;
 
@@ -284,6 +285,8 @@ public class Activator implements BundleActivator {
 			ct.close();
 			ct = null;
 		}
+		if (LOGtt != null) 
+			LOGtt.close();
 		if(LOGt != null)
 			LOGt.close();
 	}
@@ -356,25 +359,27 @@ public class Activator implements BundleActivator {
 		}
 	}
 
-	private void installConsole(boolean start, LoaderBuilder builder)
-			throws BundleException, URISyntaxException {
+	private void installConsole(boolean start, LoaderBuilder builder) throws BundleException, URISyntaxException {
+		File std = null;
+		PrintStream print = null;
+		try {
+			std = context.getDataFile("DWO-docent.log");
+			FileOutputStream out = new FileOutputStream(std);
+			print = new PrintStream(out, true, "UTF-8");
+			LOGtt = new LogReaderTracker(context, print);
+			LOGtt.open();
+		} catch (Exception e) {
+			LOGt.log(LogService.LOG_WARNING, "redirect to " + std, e);
+		}
+
 		if (start)
 			builder.setLocation(CONSOLE).start("org.eclipse.concierge.shell");
-		else
-		{
-		  builder.setLocation(CONSOLE).stop("org.eclipse.concierge.shell");
-		  File std = null;
-		  try {
-            std = context.getDataFile("DWO-docent.log");
-            FileOutputStream out = new FileOutputStream(std);
-            PrintStream print = new PrintStream(out, true, "UTF-8");
-            System.setErr(print);
-            System.setOut(print);
-          } catch (Exception e) {
-            LOGt.log(LogService.LOG_WARNING, "redirect to " + std, e);
-          }
-		  
-		}
+		else {
+			builder.setLocation(CONSOLE).stop("org.eclipse.concierge.shell");
+			if (print != null) {
+				System.setErr(print);
+				System.setOut(print);
+		}}
 	}
 
 	private final static String WRAP = "org.ops4j.pax.url.wrap";
