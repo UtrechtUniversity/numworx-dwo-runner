@@ -60,12 +60,12 @@
   	<dependency>
   		<groupId>com.teamdev.jxbrowser</groupId>
   		<artifactId>jxbrowser-swing</artifactId>
-  		<version>7.5</version>
+  		<version>${jxb}</version>
   	</dependency>
   	<dependency>
   		<groupId>com.teamdev.jxbrowser</groupId>
   		<artifactId>jxbrowser</artifactId>
-  		<version>7.5</version>
+  		<version>${jxb}</version>
   	</dependency>
   </dependencies>
 	<profiles>
@@ -80,7 +80,7 @@
 				<dependency>
 					<groupId>com.teamdev.jxbrowser</groupId>
 					<artifactId>jxbrowser-mac</artifactId>
-					<version>7.5</version>
+					<version>${jxb}</version>
 				</dependency>
 			</dependencies>
 		</profile>
@@ -91,12 +91,12 @@
 				<dependency>
 					<groupId>com.teamdev.jxbrowser</groupId>
 					<artifactId>jxbrowser-win64</artifactId>
-					<version>7.5</version>
+					<version>${jxb}</version>
 				</dependency>
 				<dependency>
 					<groupId>com.teamdev.jxbrowser</groupId>
 					<artifactId>jxbrowser-win32</artifactId>
-					<version>7.5</version>
+					<version>${jxb}</version>
 				</dependency>
 			</dependencies>			
 		</profile>
@@ -107,7 +107,7 @@
 				<dependency>
 					<groupId>com.teamdev.jxbrowser</groupId>
 					<artifactId>jxbrowser-linux64</artifactId>
-					<version>7.5</version>
+					<version>${jxb}</version>
 				</dependency>	
 			</dependencies>
 		</profile>	
@@ -140,4 +140,7 @@
   		</dependencies>
   	</profile>
 	</profiles>
+	<properties>
+		<jxb>7.5</jxb>
+	</properties>
 </project>
