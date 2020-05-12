@@ -110,6 +110,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
                 <version>2.5.3</version>
+                <configuration>
+                    <tagBase>https://svn.science.uu.nl/repos/sci.velth101.projects/DWOJApplet-Starter/tags/</tagBase>
+                </configuration>            
             </plugin>            
 		</plugins>
 	</build>
