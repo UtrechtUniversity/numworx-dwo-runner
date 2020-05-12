@@ -35,8 +35,7 @@
 
 	<!-- update the https path for a different branch or tag! -->
 	<scm>
-		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.projects/DWOJApplet-Starter/tags/DWOJApplet-Starter-2.0.1</developerConnection>
-		<tag>HEAD</tag>
+		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.projects/DWOJApplet-Starter/trunk</developerConnection>
 	</scm>
 
 	<!-- dependencies -->
@@ -162,7 +161,7 @@
 			<version>1.2.0</version>
 		</dependency>
 	</dependencies>
-	<version>2.0.1</version>
+	<version>2.0.2-SNAPSHOT</version>
 	<groupId>fi.dwo</groupId>
 	<properties>
 		<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
