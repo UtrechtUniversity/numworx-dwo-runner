@@ -36,19 +36,11 @@
 
 	<!-- update the https path for a different branch or tag! -->
 	<scm>
-		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOJApplet/branches/osgi</developerConnection>
+		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.projects/DWOJApplet-Starter/trunk</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
 
 	<!-- dependencies -->
-
-	<distributionManagement>
-		<repository>
-			<id>snapshots</id>
-			<!--<name>libs-snapshot</name> -->
-			<url>https://repos.dwo.nl/artifactory/libs-snapshot-local</url>
-		</repository>
-	</distributionManagement>
 
 	<build>
 		<!-- order is relevant -->
@@ -114,6 +106,11 @@
 					</archive>
 				</configuration>
 			</plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
+            </plugin>            
 		</plugins>
 	</build>
 	<dependencies>
@@ -131,7 +128,7 @@
 		<dependency>
 			<groupId>fi.dwo</groupId>
 			<artifactId>BootLoader</artifactId>
-			<version>2.0.5-SNAPSHOT</version>
+			<version>2.0.6</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
