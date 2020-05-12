@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<!-- Adjust artifact, name and description for new projects -->
@@ -36,7 +35,7 @@
 
 	<!-- update the https path for a different branch or tag! -->
 	<scm>
-		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.projects/DWOJApplet-Starter/trunk</developerConnection>
+		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.projects/DWOJApplet-Starter/tags/DWOJApplet-Starter-2.0.1</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
 
@@ -163,7 +162,7 @@
 			<version>1.2.0</version>
 		</dependency>
 	</dependencies>
-	<version>2.0.1-SNAPSHOT</version>
+	<version>2.0.1</version>
 	<groupId>fi.dwo</groupId>
 	<properties>
 		<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
