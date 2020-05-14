@@ -15,13 +15,11 @@ import java.util.ServiceLoader;
 import java.util.UUID;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
-
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
-import org.apache.felix.framework.Felix;
 import org.apache.felix.framework.Logger;
 import org.apache.felix.framework.util.FelixConstants;
 import org.osgi.framework.BundleContext;
@@ -88,9 +86,12 @@ public class MicroServer {
 		InputStream in = MicroServer.class.getResourceAsStream("resources/DWO.properties");
 		props.load(in);
 		in.close();
-		String v = props.getProperty("com.teamdev.jxbrowser.version");
+		String v = props.getProperty("com.teamdev.jxbrowser.version", com.teamdev.jxbrowser.VersionInfo.version());
 		if (v == null) v = "";
 		else v = ";version=" + v;
+//		StringBuilder sb = new StringBuilder();
+//		Set<String> names = findPackageNames("com.teamdev.jxbrowser");
+		
 		String jxbrowser=
 			  ",com.teamdev.jxbrowser" + v
 			+ ",com.teamdev.jxbrowser.browser" + v
@@ -104,7 +105,12 @@ public class MicroServer {
 		    + ",com.teamdev.jxbrowser.js" + v
 		    + ",com.teamdev.jxbrowser.navigation" + v
 		    + ",com.teamdev.jxbrowser.net" + v
-		    + ",com.teamdev.jxbrowser.view.swing";
+		    + ",com.teamdev.jxbrowser.view.swing" + v
+		    + ",com.teamdev.jxbrowser.view.swing.callback" +v
+		    ;
+
+//		for(String name: names) sb.append(',').append(name).append(v);
+//		jxbrowser = sb.toString();
 		
 		map.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, 
 // Java 8,9 en 10, 11 alleen met een eigen java
@@ -223,4 +229,21 @@ public class MicroServer {
 	  }
 	  return message;
 	}
+	
+//	static public Set<String> findPackageNames(String prefix) {
+//		
+//     // DOES NOT WORK!		
+//		Package[] packages = Package.getPackages();
+//	 // DOES NOT WORK either
+//		packages = MicroServer.class.getClassLoader().getDefinedPackages();
+//	 // same 10 names	
+//		Object[] names = MicroServer.class.getClassLoader().getUnnamedModule().getPackages().toArray();
+//		return Arrays.asList(packages).stream()
+//	        .map(Package::getName)
+//	        .filter(
+//	        		n -> 
+//	        		n.startsWith(prefix) && !n.contains("internal")
+//	        )
+//	        .collect(Collectors.toCollection(TreeSet::new));
+//	}
 }
