@@ -8,8 +8,8 @@ rt=~/zulu-8.jre/
 export JAVA_HOME=$jh
 name=NumworxAuthor
 disk=NumworxAuthor-setup
-PROP=
-#PROP=DWO.properties
+#PROP=
+PROP=DWO.properties
 build=$(for i in ${PROP} target/*.jar target/dependency/*.jar; do /bin/echo -n " -srcfiles " $i; done)
 
 $jh/bin/javapackager -deploy \
