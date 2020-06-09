@@ -20,10 +20,10 @@
   </singleInstance>
   <classPath>
     <mainClass>fi.dwo_runner.DWO_runner</mainClass>
-    <cp>lib/jxbrowser-7.5.jar</cp>
-    <cp>lib/jxbrowser-swing-7.5.jar</cp>
-    <cp>lib/jxbrowser-win32-7.5.jar</cp>
-    <cp>lib/jxbrowser-win64-7.5.jar</cp>
+    <cp>lib/jxbrowser-7.8.jar</cp>
+    <cp>lib/jxbrowser-swing-7.8.jar</cp>
+    <cp>lib/jxbrowser-win32-7.8.jar</cp>
+    <cp>lib/jxbrowser-win64-7.8.jar</cp>
   </classPath>
   <jre>
     <path>jre</path>
