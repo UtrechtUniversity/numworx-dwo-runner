@@ -3,6 +3,12 @@
   <groupId>fi.dwo_runner</groupId>
   <artifactId>dwo_runner</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+ 	<repositories>	
+	  <repository>
+	    <id>com.teamdev</id>
+	    <url>http://maven.teamdev.com/repository/products</url>
+		</repository>
+	</repositories>
   <build>
   	<finalName>dwo_runner</finalName>
     <sourceDirectory>src</sourceDirectory>
@@ -141,6 +147,6 @@
   	</profile>
 	</profiles>
 	<properties>
-		<jxb>7.5</jxb>
+		<jxb>7.8</jxb>
 	</properties>
 </project>
