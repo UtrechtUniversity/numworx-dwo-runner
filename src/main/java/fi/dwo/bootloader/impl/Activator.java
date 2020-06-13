@@ -392,19 +392,18 @@ public class Activator implements BundleActivator {
 	}
 	
 	private void installSwingBrowser(LoaderBuilder builder) {
-	  if (noSwingBrowser()) try {
-        builder.setLocation("swingbrowser-jfx.jar").start("nl.numworx.swingbrowser.jfx");
+	  try {
+        builder.setLocation("swingbrowser-jxb.jar").start("nl.numworx.swingbrowser.jxb");
       } catch (Exception e) {
-        LOGt.log(LogService.LOG_ERROR, "swingbrowser jfx", e);
+        LOGt.log(LogService.LOG_ERROR, "swingbrowser jxb", e);
       }
+	  try {
+	    builder.setLocation("swingbrowser-jfx.jar").start("nl.numworx.swingbrowser.jfx");
+	  } catch (Exception e) {
+	        LOGt.log(LogService.LOG_WARNING, "swingbrowser jxb", e);
+	  }
 	}
-	
-	private boolean noSwingBrowser() {
-      String clazz = "nl.numworx.swingbrowser.api.SwingBrowserFactory";
-	  ServiceReference<?> result = context.getServiceReference(clazz);
-	  return result == null;
-	}
-	
+		
 	private void installUnpack200(LoaderBuilder builder) throws BundleException, URISyntaxException {
 	  if (noProtocol("pack200"))
 	      builder.setLocation(UNPACK200).start("fi.dwo.unpack200");
