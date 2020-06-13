@@ -250,6 +250,26 @@
 			</exclusions>
 		</dependency>
 		<dependency>
+			<groupId>nl.numworx.swingbrowser</groupId>
+			<version>0.0.2</version>
+			<artifactId>swingbrowser-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>nl.numworx.swingbrowser</groupId>
+			<version>0.0.4-SNAPSHOT</version>
+			<artifactId>swingbrowser-jxb</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>com.teamdev.jxbrowser</groupId>
+					<artifactId>jxbrowser-cross-platform</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.teamdev.jxbrowser</groupId>
+					<artifactId>jxbrowser-swing</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
     	  <groupId>nl.numworx.swingbrowser</groupId>
     	  <version>0.0.3</version>
 		  <artifactId>swingbrowser-ext</artifactId>
