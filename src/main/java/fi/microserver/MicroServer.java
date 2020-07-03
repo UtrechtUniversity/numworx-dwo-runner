@@ -1,7 +1,9 @@
 package fi.microserver;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
@@ -86,6 +88,19 @@ public class MicroServer {
 		InputStream in = MicroServer.class.getResourceAsStream("resources/DWO.properties");
 		props.load(in);
 		in.close();
+		
+		in = MicroServer.class.getResourceAsStream("/MANIFEST.MF");
+		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+		StringBuilder builder = new StringBuilder();
+		String line;
+		do { line = reader.readLine();
+		} while(!line.startsWith("Export-Package:"));
+		do { line = reader.readLine();
+			if (line.startsWith(" ")) builder.append(line.trim());
+		} while(line.startsWith(" "));
+		reader.close();
+		line = builder.toString();
+		
 		String v = props.getProperty("com.teamdev.jxbrowser.version", com.teamdev.jxbrowser.VersionInfo.version());
 		if (v == null) v = "";
 		else v = ";version=" + v;
@@ -115,9 +130,10 @@ public class MicroServer {
 		map.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, 
 // Java 8,9 en 10, 11 alleen met een eigen java
 		  system
-				+ "org.osgi.service.provisioning;version=1.2.0"
-				+ ",it.sauronsoftware.junique;version=1.0.4"
-				+ jxbrowser
+//				+ "org.osgi.service.provisioning;version=1.2.0"
+//				+ ",it.sauronsoftware.junique;version=1.0.4"
+//				+ jxbrowser
+		  + line
 			);
 		map.putAll((Map)props);
 		String target = props.getProperty("fi.dwo.target", "DWO-docent");
