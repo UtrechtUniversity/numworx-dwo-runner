@@ -133,7 +133,7 @@
 			<dependency>
 				<groupId>nl.numworx.swingbrowser</groupId>
 				<artifactId>swingbrowser-jxb</artifactId>
-				<version>0.0.3-SNAPSHOT</version>
+				<version>0.0.5</version>
 				<exclusions>
 					<exclusion>
 						<groupId>com.teamdev.jxbrowser</groupId>
@@ -147,6 +147,6 @@
   	</profile>
 	</profiles>
 	<properties>
-		<jxb>7.8</jxb>
+		<jxb>7.9</jxb>
 	</properties>
 </project>
