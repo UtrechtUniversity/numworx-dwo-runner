@@ -2,14 +2,14 @@
 cd ..
 set -e
 set -x
-rm -rf deploy
+rm -rf target/deploy
 jh=/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home
 rt=~/zulu-8.jre/
 export JAVA_HOME=$jh
-name=NumworxAuthor
-disk=NumworxAuthor-setup
-#PROP=
-PROP=DWO.properties
+name="Numworx Author UU"
+disk=NumworxAuthor-UU-setup
+PROP=
+#PROP=DWO.properties
 build=$(for i in ${PROP} target/*.jar target/dependency/*.jar; do /bin/echo -n " -srcfiles " $i; done)
 
 $jh/bin/javapackager -deploy \
@@ -19,13 +19,14 @@ $jh/bin/javapackager -deploy \
 	-BjvmOptions=-Xmx1024m \
 	-nosign \
 	-native dmg \
-	-name $name \
-	-title $name \
+	-name "$name" \
+	-title "$name" \
 	-vendor Numworx \
-	-description "Start Numworx Author" \
+	-description "Numworx Author UU" \
 	-height 600 -width 800 \
 	-appclass fi.dwo_runner.DWO_runner \
 	$build \
-	-outdir deploy \
+	-outdir target/deploy \
 	-outfile $disk \
+	-Bidentifier="nl.numworx.author.uu" \
 	-verbose
