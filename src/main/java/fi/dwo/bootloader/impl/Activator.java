@@ -74,7 +74,6 @@ public class Activator implements BundleActivator {
 
   }
 
-  private LogService LOG = new fi.dwo.bootloader.impl.Logger();
 	private LogTracker LOGt;
 	private LogReaderTracker LOGtt;
 	private ServiceTracker<DwoLoader, Update> dwoloader;
@@ -118,7 +117,6 @@ public class Activator implements BundleActivator {
 		this.context = context;
 		Dictionary<String, Object> properties = new Hashtable<String, Object>();
 		properties.put(Constants.SERVICE_RANKING, Integer.MIN_VALUE);
-		context.registerService(LogService.class, LOG, properties);
 		LOGt = new LogTracker(context);
 		LOGt.open();
 		config = new Config(context, LOGt);
@@ -314,7 +312,7 @@ public class Activator implements BundleActivator {
 			builder.setLocation(dwojapplet_starter).setUpdate(update).start("fi.dwo.dwojapplet");
 			return u; }).then(null, u -> {
 	           builder.setUpdate(update);
-	           LOG.log(LogService.LOG_ERROR, "installing DWO", u.getFailure());
+	           LOGt.log(LogService.LOG_ERROR, "installing DWO", u.getFailure());
 	           fatalError(u.getFailure());
 			}
 			);  

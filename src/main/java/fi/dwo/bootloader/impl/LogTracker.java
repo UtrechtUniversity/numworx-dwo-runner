@@ -14,23 +14,27 @@ class LogTracker extends ServiceTracker<LogService, LogService>
 
 	@Override
 	public void log(int level, String message) {
-		getService().log(level, message);
+		service().log(level, message);
+	}
+
+	public LogService service() {
+		return getService();
 	}
 
 	@Override
 	public void log(int level, String message, Throwable exception) {
-		getService().log(level, message, exception);
+		service().log(level, message, exception);
 	}
 
 	@Override
 	public void log(ServiceReference sr, int level, String message) {
-		getService().log(sr, level, message);
+		service().log(sr, level, message);
 	}
 
 	@Override
 	public void log(ServiceReference sr, int level, String message,
 			Throwable exception) {
-		getService().log(sr, level, message, exception);
+		service().log(sr, level, message, exception);
 	}
 
 }
