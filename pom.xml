@@ -4,10 +4,14 @@
   <artifactId>dwo_runner</artifactId>
   <version>0.0.1-SNAPSHOT</version>
  	<repositories>	
+	<repository>
+	  <id>com.teamdev</id>
+	  <url>https://europe-maven.pkg.dev/jxbrowser/releases</url>
+	</repository>
 	  <repository>
-	    <id>com.teamdev</id>
+	    <id>com.teamdev-old</id>
 	    <url>http://maven.teamdev.com/repository/products</url>
-		</repository>
+	  </repository>
 	</repositories>
   <build>
   	<finalName>dwo_runner</finalName>
@@ -147,6 +151,6 @@
   	</profile>
 	</profiles>
 	<properties>
-		<jxb>7.9</jxb>
+		<jxb>7.10</jxb>
 	</properties>
 </project>
