@@ -184,6 +184,11 @@
 	    	<version>${jxbrowser.version}</version>
 		</dependency>
 		<dependency>
+		    <groupId>com.teamdev.jxbrowser</groupId>
+		    <artifactId>jxbrowser-swing</artifactId>
+		    <version>${jxbrowser.version}</version>
+		</dependency>
+		<dependency>
 		    <groupId>it.sauronsoftware</groupId>
 		    <artifactId>junique</artifactId>
 		    <version>1.0.4</version>
