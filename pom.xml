@@ -124,6 +124,7 @@
 				<configuration>
 					<archive>
 						<manifest>
+							<useUniqueVersions>false</useUniqueVersions>
 							<addClasspath>true</addClasspath>
 							<mainClass>fi.microserver.Numworx</mainClass>
 						</manifest>
