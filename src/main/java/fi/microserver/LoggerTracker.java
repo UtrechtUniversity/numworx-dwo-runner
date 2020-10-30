@@ -10,25 +10,33 @@ import org.osgi.util.tracker.ServiceTrackerCustomizer;
 class LoggerTracker extends ServiceTracker {
 
 	private Logger logger;
+	@SuppressWarnings("rawtypes")
+	private ServiceReference current;
 
 	public LoggerTracker(BundleContext context, Logger logger) {
 		super(context, "org.osgi.service.log.LogService", null);
 		this.logger = logger;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Object addingService(ServiceReference reference) {
 		Object service = super.addingService(reference);
-		logger.setLogger(service);
-		logger.setLogLevel(4);
+		if (current == null) {
+			current = reference;
+			logger.setLogger(service);
+			logger.setLogLevel(1);
+		} else {
+			// implement ranking
+		}		
 		return service;
 	}
 
 	@Override
 	public void removedService(ServiceReference reference, Object service) {
-		logger.setLogger(null);
-		logger.setLogLevel(1);
 		super.removedService(reference, service);
+		logger.setLogger(getService());
+		logger.setLogLevel(1);
 	}
 
 
