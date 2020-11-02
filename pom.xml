@@ -1,10 +1,9 @@
 <?xml version='1.0' ?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 <groupId>fi.dwo</groupId>
 <artifactId>ch.jm.osgi.provisioning</artifactId>
-<version>0.9.1-SNAPSHOT</version>
+<version>0.9.1</version>
 	<dependencies>
 		<dependency>
 			<groupId>org.osgi</groupId>
@@ -29,7 +28,7 @@
           <instructions>
 				<Bundle-Activator>ch.jm.osgi.provisioning.Activator</Bundle-Activator>
 				<Embed-Transitive>false</Embed-Transitive>
- 				<Embed-Dependency></Embed-Dependency>
+ 				<Embed-Dependency />
  				<Export-Package>org.osgi.service.provisioning</Export-Package>
  				<Private-Package>ch.jm.osgi.provisioning</Private-Package>
           </instructions>
@@ -49,6 +48,6 @@
 		<version>1.1</version>
 	</parent>
 	<scm>
-		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.projects/ch.jm.osgi.provisioning/trunk</developerConnection>
+		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.projects/ch.jm.osgi.provisioning/tags/ch.jm.osgi.provisioning-0.9.1</developerConnection>
 	</scm>
 </project>
