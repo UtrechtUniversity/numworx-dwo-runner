@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 <groupId>fi.dwo</groupId>
 <artifactId>ch.jm.osgi.provisioning</artifactId>
-<version>0.9.1</version>
+<version>0.9.2-SNAPSHOT</version>
 	<dependencies>
 		<dependency>
 			<groupId>org.osgi</groupId>
@@ -48,6 +48,6 @@
 		<version>1.1</version>
 	</parent>
 	<scm>
-		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.projects/ch.jm.osgi.provisioning/tags/ch.jm.osgi.provisioning-0.9.1</developerConnection>
+		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.projects/ch.jm.osgi.provisioning/trunk</developerConnection>
 	</scm>
 </project>
