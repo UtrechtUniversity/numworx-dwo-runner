@@ -90,7 +90,7 @@ public class Maintenance {
         .count();
     LOG.info("count removed contexts " + count);
 
-    count = main.getClassCourses(1000)
+    count = main.getClassCourses(500)
     		.map(main::removeClassCourse)
     		.filter(Boolean::booleanValue)
     		.count();
