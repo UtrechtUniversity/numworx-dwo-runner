@@ -90,7 +90,7 @@ public class Maintenance {
         .count();
     LOG.info("count removed contexts " + count);
 
-    count = main.getClassCourses()
+    count = main.getClassCourses(1000)
     		.map(main::removeClassCourse)
     		.filter(Boolean::booleanValue)
     		.count();
@@ -101,7 +101,7 @@ public class Maintenance {
 
   }
 
-  private Stream<DomClassCourse> getClassCourses() throws Dwo2Exception {
+  private Stream<DomClassCourse> getClassCourses(Integer amount) throws Dwo2Exception {
 	return garbage.getClassCourses(amount).stream().limit(amount);
   }
 
