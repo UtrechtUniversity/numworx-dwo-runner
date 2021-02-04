@@ -65,8 +65,8 @@ for(int m = 0; m < 12; m++ ) {
 		SearchRequest searchRequest = new SearchRequest("logstash-*"); 
 		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder(); 
 		QueryBuilder query = new ExistsQueryBuilder("user_id");
-		Date fromdate = new Date(2020-1900,m,1,0,0,0);
-		Date todate   = new Date(2020-1900,m+1,1,0,0,0);
+		Date fromdate = new Date(2021-1900,m,1,0,0,0);
+		Date todate   = new Date(2021-1900,m+1,1,0,0,0);
 		QueryBuilder start = new RangeQueryBuilder("@timestamp").from(fromdate, true).to(todate, false);
 		searchSourceBuilder.query(new BoolQueryBuilder().must(query)
 				.must(start)
