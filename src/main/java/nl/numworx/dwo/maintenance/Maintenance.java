@@ -1,10 +1,7 @@
 package nl.numworx.dwo.maintenance;
 
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,6 +10,7 @@ import java.util.stream.Stream;
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import fi.dwo.commons.system.MD5;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.LoginManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminSchoolManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountLoginsManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredDwoAdminGarbageManager;
@@ -21,6 +19,7 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
@@ -97,6 +96,13 @@ public class Maintenance {
     LOG.info("count removed classcourses " + count);
     
     
+    count = main.getSchools(10)
+          .map(main::removeSchool)
+          .filter(Boolean::booleanValue)
+          .count();
+    LOG.info("count removed schools " + count);
+    
+    
     // classes with stale members.
     
 
@@ -122,6 +128,23 @@ public class Maintenance {
         .limit(getAmount().longValue())
         .filter(this::isOldUser)
         .map(DomUserFullwLoginContext::getDomUserFull);
+  }
+  
+  private Stream<DomSchool4DwoAdmin> getSchools(int amount) throws Dwo2Exception {
+    return garbage.getSchools(amount, null).stream();
+  }
+  
+  private Boolean removeSchool(DomSchool4DwoAdmin school) {
+    Date NOW = new Date();
+    if (school.getExpire() != null && NOW.after(school.getExpire())) {
+      try {
+        LOG.info("remove school " + school.getSchoolLogin());
+        return new SecureDwoAdminSchoolManager().removeSchool(school);
+      } catch (Exception e) {
+        LOG.log(Level.WARNING, "removeSchool failed", e);
+      }
+    }
+    return Boolean.FALSE;
   }
   
   Date old = new Date(System.currentTimeMillis() - 1000L* 3600 * 24 * 265 * 2);
