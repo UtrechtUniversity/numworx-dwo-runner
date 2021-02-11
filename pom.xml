@@ -3,7 +3,7 @@
   <parent>
     <groupId>nl.uu.fi.dwo</groupId>
     <artifactId>DWO</artifactId>
-    <version>2.4.14-SNAPSHOT</version>
+    <version>2.4.14</version>
     <relativePath>../DWO</relativePath>
   </parent>
   <groupId>nl.numworx.dwo.maintenance</groupId>
@@ -90,4 +90,5 @@
   		</properties>
   	</profile>
   </profiles>
+  <version>2.4.14-SNAPSHOT</version>
 </project>
