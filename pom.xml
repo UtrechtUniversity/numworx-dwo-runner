@@ -9,10 +9,6 @@
 	  <id>com.teamdev</id>
 	  <url>https://europe-maven.pkg.dev/jxbrowser/releases</url>
 	</repository>
-	  <repository>
-	    <id>com.teamdev-old</id>
-	    <url>http://maven.teamdev.com/repository/products</url>
-	  </repository>
 	</repositories>
 	<build>
 		<resources>
@@ -199,7 +195,7 @@
 		<maven.compiler.target>11</maven.compiler.target>
 		<fi.dwo.boot>http://cdn.dwo.nl/bundles/BootLoader-2.0.jar</fi.dwo.boot>
 		<arch>mac</arch>
-		<jxbrowser.version>7.10</jxbrowser.version>
+		<jxbrowser.version>7.13</jxbrowser.version>
 		<security>#</security>
 	</properties>
 	<parent>
