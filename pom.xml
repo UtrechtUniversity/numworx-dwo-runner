@@ -73,12 +73,7 @@
   		<artifactId>jxbrowser</artifactId>
   		<version>${jxb}</version>
   	</dependency>
-  	<dependency>
-  		<groupId>com.teamdev.jxbrowser</groupId>
-  		<artifactId>jxbrowser-cross-platform</artifactId>
-  		<version>${jxb}</version>
-  	</dependency>
-  </dependencies>
+   </dependencies>
 	<profiles>
 		<profile>
 			<id>mac</id>
