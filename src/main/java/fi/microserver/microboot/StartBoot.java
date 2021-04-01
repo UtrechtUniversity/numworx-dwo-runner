@@ -21,6 +21,7 @@ import org.osgi.framework.wiring.FrameworkWiring;
 import org.osgi.resource.Capability;
 import org.osgi.resource.Requirement;
 import org.osgi.resource.Resource;
+import org.osgi.service.cm.ManagedServiceFactory;
 import org.osgi.service.provisioning.ProvisioningService;
 import org.osgi.service.repository.Repository;
 import org.xml.sax.InputSource;
@@ -29,6 +30,7 @@ class StartBoot {
 
   final BundleContext context;
   private ServiceRegistration<Repository> reposRegistration;
+  private ServiceRegistration<ManagedServiceFactory> factoryRegistration;
   
   StartBoot(BundleContext context) {
     this.context = context;
@@ -48,6 +50,11 @@ class StartBoot {
     properties.put("repository.increment", Long.valueOf(repos.increment));
     reposRegistration = context.registerService(Repository.class, repos, properties);   
 }
+  
+  private void installFactory() throws Exception {
+	  factoryRegistration = new RepoFactory(context).getRegistration();
+  }
+  
   static final String BOOTLOADER  = "fi.dwo.BootLoader";
 
   private  Bundle installBoot(String BOOT) throws BundleException {
@@ -111,6 +118,7 @@ class StartBoot {
     repos.setContext(context);
 
     installRepository(u,repos);
+    installFactory();
     Bundle boot = installBoot(BOOT);
     boot.start(Bundle.START_TRANSIENT);
   }
@@ -119,6 +127,7 @@ class StartBoot {
   void stop() {
     if (reposRegistration == null) return;
     reposRegistration.unregister(); reposRegistration = null;
+    factoryRegistration.unregister();
     Preferences pref = Preferences.userRoot().node("fi/microserver");
     pref.put("increment", increment);
     try {
