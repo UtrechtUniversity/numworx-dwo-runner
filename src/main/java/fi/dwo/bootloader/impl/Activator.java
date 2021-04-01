@@ -155,7 +155,6 @@ public class Activator implements BundleActivator {
 	private String UNPACK200 = "unpack200-0.0.1.jar";
 	private String SLF4J = "slf4j-jdk14-1.7.21.jar";
 	private String DWO_LOADER = "DwoLoader-0.0.1.jar";
-	private String BUNDLE_REPOSITORY = "org.apache.bundlerepository-2.0.10.jar";
 
 	private BundleContext context;
 
@@ -198,11 +197,6 @@ public class Activator implements BundleActivator {
 	}
 
 	private void installDwoLoader(LoaderBuilder builder) throws BundleException, URISyntaxException {
-      try {
-        builder.setLocation(BUNDLE_REPOSITORY).start("org.apache.felix.bundlerepository");
-      } catch (Exception e1) {
-        LOGt.log(LogService.LOG_WARNING, "bundlerepository bug",e1);
-      }
       builder.setLocation(DWO_LOADER).start("fi.dwo.DwoLoader");
       updater = new Updater();
       dwoloader = new ServiceTracker<>(context, DwoLoader.class, updater);

@@ -8,6 +8,29 @@ import org.osgi.util.tracker.ServiceTracker;
 class LogTracker extends ServiceTracker<LogService, LogService>
 		implements LogService {
 
+	private static class DummyService implements LogService  {
+
+		@Override
+		public void log(int level, String message) {
+		}
+
+		@Override
+		public void log(int level, String message, Throwable exception) {
+		}
+
+		@Override
+		public void log(ServiceReference sr, int level, String message) {
+		}
+
+		@Override
+		public void log(ServiceReference sr, int level, String message, Throwable exception) {
+		}
+		
+	}
+
+	private static final LogService DUMMYSERVICE = new DummyService();
+ 	
+	
 	public LogTracker(BundleContext context) {
 		super(context, "org.osgi.service.log.LogService", null);
 	}
@@ -18,7 +41,9 @@ class LogTracker extends ServiceTracker<LogService, LogService>
 	}
 
 	public LogService service() {
-		return getService();
+		LogService service = getService();
+		if (service == null) return DUMMYSERVICE;
+		return service;
 	}
 
 	@Override

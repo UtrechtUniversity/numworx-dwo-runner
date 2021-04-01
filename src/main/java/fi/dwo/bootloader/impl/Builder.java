@@ -94,7 +94,7 @@ public class Builder implements LoaderBuilder {
 
     @Override
     public Map<String, Object> getAttributes() {
-      return Collections.EMPTY_MAP;
+      return Collections.emptyMap();
     }
 
     @Override
@@ -325,23 +325,23 @@ public class Builder implements LoaderBuilder {
 		return rc;
 	}
 
-	private URI fromRepository(String symbolicname, URI location) {
-		Repository[] repos = parent.repository.getServices(new Repository[1]);
-		if (repos[0] == null)
-			return location;
-		// in een 1.1 Repository weer anders
-		Requirement r = getRequirement(symbolicname);
-		Map<Requirement, Collection<Capability>> providers = repos[0]
-				.findProviders(Collections.singleton(r));
-		Collection<Capability> caps = providers.get(r);
-		for (Capability c : caps) {
-			Resource res = c.getResource();
-			List<Capability> list = res.getCapabilities("osgi.content");
-			for (Capability cc : list)
-				location = URI.create(cc.getAttributes().get("url").toString());
-		}
-		return location;
-	}
+//	private URI fromRepository(String symbolicname, URI location) {
+//		Repository[] repos = parent.repository.getServices(new Repository[1]);
+//		if (repos[0] == null)
+//			return location;
+//		// in een 1.1 Repository weer anders
+//		Requirement r = getRequirement(symbolicname);
+//		Map<Requirement, Collection<Capability>> providers = repos[0]
+//				.findProviders(Collections.singleton(r));
+//		Collection<Capability> caps = providers.get(r);
+//		for (Capability c : caps) {
+//			Resource res = c.getResource();
+//			List<Capability> list = res.getCapabilities("osgi.content");
+//			for (Capability cc : list)
+//				location = URI.create(cc.getAttributes().get("url").toString());
+//		}
+//		return location;
+//	}
 
 //	private Requirement getRequirement(String symbolicname) {
 //		CapReqBuilder builder = new CapReqBuilder(IdentityNamespace.IDENTITY_NAMESPACE);
