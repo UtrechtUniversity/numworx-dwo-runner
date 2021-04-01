@@ -147,6 +147,6 @@
   	</profile>
 	</profiles>
 	<properties>
-		<jxb>7.10</jxb>
+		<jxb>7.13</jxb>
 	</properties>
 </project>
