@@ -1,7 +1,6 @@
 package fi.dwo.bootloader.impl;
 
 import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.util.Enumeration;
 
 import org.osgi.framework.BundleContext;
