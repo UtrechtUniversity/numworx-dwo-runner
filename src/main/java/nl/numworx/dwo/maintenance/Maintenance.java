@@ -96,7 +96,7 @@ public class Maintenance {
     LOG.info("count removed classcourses " + count);
     
     
-    count = main.getSchools(10)
+    count = main.getSchools(100)
           .map(main::removeSchool)
           .filter(Boolean::booleanValue)
           .count();
