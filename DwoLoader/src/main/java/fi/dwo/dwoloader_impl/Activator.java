@@ -1,96 +1,29 @@
 package fi.dwo.dwoloader_impl;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.Dictionary;
 import java.util.Hashtable;
-import org.apache.felix.bundlerepository.Repository;
-import org.apache.felix.bundlerepository.RepositoryAdmin;
+
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
-import org.osgi.framework.ServiceRegistration;
+import org.osgi.service.cm.Configuration;
+import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.log.LogService;
 import org.osgi.service.provisioning.ProvisioningService;
 import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
-import fi.dwo.bootloader.LoaderBuilder.Update;
-import fi.dwo.dwoloader.DwoLoader;
-
-public class Activator implements BundleActivator {
+public class Activator implements BundleActivator, ServiceTrackerCustomizer<ConfigurationAdmin, AutoCloseable> {
 	
-	class DwoLoaderDummy implements AutoCloseable, DwoLoader {
-	  
-    private ServiceRegistration<DwoLoader> reg;
-    private RuntimeException re;
-    public DwoLoaderDummy(Exception e, BundleContext context) {
-      reg = context.registerService(DwoLoader.class, this, new Hashtable<String,Object>());
-//      if (e instanceof RuntimeException) {
-//        re = (RuntimeException) e;
-//      } else if (e != null) {
-//        re = new RuntimeException(e);
-//      }
-    }
-
-    @Override
-    public Update getUpdate() {
-      if (re != null) {
-        re.fillInStackTrace();
-        throw re;
-      }
-      return Update.MAYBE;
-    }
-
-    @Override
-    public void close() {
-      reg.unregister();
-    }
-
-  }
-
-  private class ReposAdmin implements ServiceTrackerCustomizer<RepositoryAdmin,AutoCloseable> {
-		
-		public AutoCloseable addingService(ServiceReference<RepositoryAdmin> reference) {
-			RepositoryAdmin admin = context.getService(reference);
-			Repository rep = null;
-			DwoLoaderImpl impl = null;
-			if (admin != null)
-			try {
-				 rep = admin.addRepository(index);
-				 impl = new DwoLoaderImpl(rep, logTracker.getService(), context);
-				 impl.open();
-			} catch (Exception e) {
-			      LogService s = logTracker.getService();
-	              if (s != null) {
-	                s.log(reference, LogService.LOG_ERROR, index, e);
-	              }
-	              return new DwoLoaderDummy(e, context);
-	              
-			    }
-			
-			return impl;
-		}
-
-		public void modifiedService(ServiceReference<RepositoryAdmin> reference, AutoCloseable service) {
-		}
-
-		public void removedService(ServiceReference<RepositoryAdmin> reference, AutoCloseable service) {
-			try {
-        service.close();
-      } catch (Exception e) {
-        LogService s = logTracker.getService();
-        if (s != null) {
-          s.log(reference, LogService.LOG_WARNING, index, e);
-        }
-      }
-		}
-		
-	}
-	
+	final static String REPO_PID = "org.knopflerfish.repository.xml.MSF";
 	private ServiceTracker<LogService,LogService> logTracker;
-	private ServiceTracker<RepositoryAdmin,AutoCloseable> reposTracker;
-	private BundleContext context;
+	private ServiceTracker<Object, AutoCloseable> reposTracker, repos2Tracker;
+	private ServiceTracker<ConfigurationAdmin, AutoCloseable> cmTracker;
 	private String index;
+	private BundleContext context;
 	
 	public void start(BundleContext context) throws Exception {
 		this.context = context;
@@ -108,17 +41,56 @@ public class Activator implements BundleActivator {
 		else
 			index = URI.create(index).resolve("index.xml").toString();
 		
-		reposTracker  = new ServiceTracker<RepositoryAdmin, AutoCloseable>(context,RepositoryAdmin.class, new ReposAdmin());
 		logTracker = new ServiceTracker<LogService,LogService>(context, LogService.class, null);
-
+		reposTracker  = new ServiceTracker<Object, AutoCloseable>(context,"org.apache.felix.bundlerepository.RepositoryAdmin", new ReposAdmin(context, index, logTracker));
+		repos2Tracker = new ServiceTracker<Object, AutoCloseable>(context, "org.knopflerfish.service.repository.XmlBackedRepositoryFactory", new Repos2Admin(context, index, logTracker));
+		cmTracker = new ServiceTracker<ConfigurationAdmin, AutoCloseable>(context, ConfigurationAdmin.class, this);
 		logTracker.open();
 		reposTracker.open();
+		repos2Tracker.open();
+		cmTracker.open();
 	}
 
 	public void stop(BundleContext context) throws Exception {
 		reposTracker.close();
 		logTracker.close();
+		cmTracker.close();
+		repos2Tracker.close();
 		index = null;
+	}
+
+	@Override
+	public AutoCloseable addingService(ServiceReference<ConfigurationAdmin> reference) {
+		ConfigurationAdmin cm = context.getService(reference);
+		try {
+			Configuration[] cfgs = cm.listConfigurations("(service.factoryPid=\"" + REPO_PID + "\")");
+			if (cfgs == null || cfgs.length == 0) {
+				Configuration cfg = cm.createFactoryConfiguration(REPO_PID);
+				Dictionary<String, String> properties = new Hashtable<>();
+				properties.put("url", index);
+				cfg.update(properties);
+			}
+			return new DwoLoaderDummy(null, context);
+		} catch (IOException e) {
+			return new DwoLoaderDummy(e, context);
+		} catch (InvalidSyntaxException e) {
+			return new DwoLoaderDummy(e, context);
+		}
+	}
+
+	@Override
+	public void modifiedService(ServiceReference<ConfigurationAdmin> reference, AutoCloseable service) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void removedService(ServiceReference<ConfigurationAdmin> reference, AutoCloseable service) {
+		try {
+			service.close();
+		} catch (Exception e) {
+		}
+		
 	}
 
 }
