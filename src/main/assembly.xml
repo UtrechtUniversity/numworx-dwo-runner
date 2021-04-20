@@ -12,6 +12,13 @@
         <include>**/*.*</include>
       </includes>
     </fileSet>
+     <fileSet>
+    	<directory>target/dependency</directory>
+    	<outputDirectory>.</outputDirectory>
+      <includes>
+        <include>**/*.*</include>
+      </includes>
+    </fileSet>
     <fileSet>
     	<directory>target</directory>
     	<outputDirectory>.</outputDirectory>

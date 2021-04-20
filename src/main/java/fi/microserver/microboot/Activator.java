@@ -55,7 +55,7 @@ public class Activator implements BundleActivator, ServiceTrackerCustomizer<Cond
 // VERSION CHECK
     String v = context.getProperty("fi.microserver.version");
     Version v1 = new Version(v);
-    Version v2 = new Version("0.0.6");
+    Version v2 = new Version("0.0.7");
     if (v1.compareTo(v2) < 0)
       return; 
       

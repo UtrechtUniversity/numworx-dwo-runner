@@ -2,35 +2,28 @@ package fi.microserver.microboot;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Dictionary;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
-import java.util.prefs.BackingStoreException;
-import java.util.prefs.Preferences;
 
+import org.knopflerfish.service.repository.XmlBackedRepositoryFactory;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
-import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
-import org.osgi.framework.ServiceRegistration;
 import org.osgi.framework.wiring.BundleCapability;
 import org.osgi.framework.wiring.FrameworkWiring;
 import org.osgi.resource.Capability;
 import org.osgi.resource.Requirement;
 import org.osgi.resource.Resource;
-import org.osgi.service.cm.ManagedServiceFactory;
 import org.osgi.service.provisioning.ProvisioningService;
 import org.osgi.service.repository.Repository;
-import org.xml.sax.InputSource;
+import org.osgi.service.repository.RequirementBuilder;
+import org.osgi.util.tracker.ServiceTracker;
 
 class StartBoot {
 
   final BundleContext context;
-  private ServiceRegistration<Repository> reposRegistration;
-  private ServiceRegistration<ManagedServiceFactory> factoryRegistration;
+  private ServiceReference<Repository> reposRegistration;
   
   StartBoot(BundleContext context) {
     this.context = context;
@@ -42,31 +35,19 @@ class StartBoot {
     return context.getProperty(key);
   }
 
-  private void installRepository(String u, RepoImpl repos) throws Exception {
-    Dictionary<String, Object> properties = new Hashtable<String, Object>();
-    properties.put(Repository.URL, u);
-    properties.put(Constants.SERVICE_PID, "fi.dwo.repository");
-    properties.put("repository.name", repos.name);
-    properties.put("repository.increment", Long.valueOf(repos.increment));
-    reposRegistration = context.registerService(Repository.class, repos, properties);   
-}
-  
-  private void installFactory() throws Exception {
-	  factoryRegistration = new RepoFactory(context).getRegistration();
-  }
-  
   static final String BOOTLOADER  = "fi.dwo.BootLoader";
 
   private  Bundle installBoot(String BOOT) throws BundleException {
-    CapReqBuilder builder = new CapReqBuilder("osgi.identity");
+    Repository repos = context.getService(reposRegistration);
+    RequirementBuilder builder;
+    builder = repos.newRequirementBuilder("osgi.identity");
     builder.addDirective("filter", "(osgi.identity="+ BOOTLOADER +")");
-    Requirement r = builder.buildSyntheticRequirement();
+    Requirement r = builder.build();
     try {
         if (BOOT == null) {
-            Repository repos = context.getService(reposRegistration.getReference());
             Map<Requirement, Collection<Capability>> providers = repos.findProviders(Collections.singleton(r));
             Collection<Capability> caps = providers.get(r);
-            context.ungetService(reposRegistration.getReference());repos = null;
+            context.ungetService(reposRegistration);repos = null;
             for(Capability c: caps) {
                 Resource res = c.getResource();
                 List<Capability> list = res.getCapabilities("osgi.content");
@@ -89,50 +70,25 @@ class StartBoot {
     }
 }
 
-  String increment;
-
   void start() throws Exception {
-    Preferences pref = Preferences.userRoot().node("fi/microserver");
-    increment = pref.get("increment", "");
     ServiceReference<ProvisioningService> ref = context.getServiceReference(ProvisioningService.class);
     if (ref == null) return;
-    ProvisioningService ps = context.getService(ref);
-    String u = getProperty("fi.dwo.repository", ps);
-    RepoImpl repos;
-    InputSource input = new InputSource(u);
-    repos = new RepoImpl(input);
-    if(!increment.equals(repos.increment)) {
-        increment = repos.increment;
-        Properties p = new Properties(); 
-        p.setProperty("fi.dwo.update", "MAYBE");
-        ps.addInformation(p);
-    } else {
-        if(!"NEVER".equals(getProperty("fi.dwo.update",ps)))
-        {
-          Properties p = new Properties(); p.setProperty("fi.dwo.update", "NEVER");
-          ps.addInformation(p);
-        }
-    }
-    String BOOT = getProperty("fi.dwo.boot", ps);
-    context.ungetService(ref);
-    repos.setContext(context);
+    ServiceTracker<XmlBackedRepositoryFactory, XmlBackedRepositoryFactory> factory = new ServiceTracker<>(context, XmlBackedRepositoryFactory.class, null);
+    factory.open();
 
-    installRepository(u,repos);
-    installFactory();
+    ProvisioningService ps = context.getService(ref);
+    XmlBackedRepositoryFactory service = factory.waitForService(1000);
+    String u = getProperty("fi.dwo.repository", ps);
+
+ 	reposRegistration = service.create(u, null, this);
+
+ 	String BOOT = getProperty("fi.dwo.boot", ps);
+    context.ungetService(ref);
     Bundle boot = installBoot(BOOT);
     boot.start(Bundle.START_TRANSIENT);
   }
   
   
   void stop() {
-    if (reposRegistration == null) return;
-    reposRegistration.unregister(); reposRegistration = null;
-    factoryRegistration.unregister();
-    Preferences pref = Preferences.userRoot().node("fi/microserver");
-    pref.put("increment", increment);
-    try {
-      pref.flush();
-    } catch (BackingStoreException e) {
-    }
   }
 }
