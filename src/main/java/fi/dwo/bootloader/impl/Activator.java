@@ -154,7 +154,7 @@ public class Activator implements BundleActivator {
 	private String PAX_URL_WRAP = "pax-url-wrap-2.4.7.jar";
 	private String UNPACK200 = "unpack200-0.0.1.jar";
 	private String SLF4J = "slf4j-jdk14-1.7.21.jar";
-	private String DWO_LOADER = "DwoLoader-0.0.1.jar";
+	private String DWO_LOADER = "DwoLoader-0.0.2-SNAPSHOT.jar";
 
 	private BundleContext context;
 
@@ -197,24 +197,31 @@ public class Activator implements BundleActivator {
 	}
 
 	private void installDwoLoader(LoaderBuilder builder) throws BundleException, URISyntaxException {
-      builder.setLocation(DWO_LOADER).start("fi.dwo.DwoLoader");
-      updater = new Updater();
-      dwoloader = new ServiceTracker<>(context, DwoLoader.class, updater);
-      dwoloader.open();
+      try {
+		builder.setLocation(DWO_LOADER).start("fi.dwo.DwoLoader");
+		  updater = new Updater();
+		  dwoloader = new ServiceTracker<>(context, DwoLoader.class, updater);
+		  dwoloader.open();
 // after 0.0.5 never null
-      if (null == context.getProperty(Constants.FRAMEWORK_STORAGE_CLEAN))
-        new Thread() {
+		  if (null == context.getProperty(Constants.FRAMEWORK_STORAGE_CLEAN))
+		    new Thread() {
 
-          @Override
-          public void run() {
-            try {
-              Thread.sleep(1000L);
-            } catch (InterruptedException e) {
-            }
-            updater.defer.resolve(Update.MAYBE);
-          }
-        
-      } .start();
+		      @Override
+		      public void run() {
+		        try {
+		          Thread.sleep(1000L);
+		        } catch (InterruptedException e) {
+		        }
+		        updater.defer.resolve(Update.MAYBE);
+		      }
+		    
+		  } .start();
+	} catch (BundleException e) {
+		e.printStackTrace();
+	} catch (URISyntaxException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
         
   }
 

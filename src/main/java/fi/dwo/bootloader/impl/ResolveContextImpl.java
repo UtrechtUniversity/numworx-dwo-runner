@@ -23,7 +23,7 @@ import org.osgi.service.repository.Repository;
 import org.osgi.service.resolver.HostedCapability;
 import org.osgi.service.resolver.ResolveContext;
 
-class ResolveContextImpl extends ResolveContext implements Repository {
+class ResolveContextImpl extends ResolveContext /*implements Repository*/ {
 
 	Repository repository[];
 	BundleContext context;
@@ -108,4 +108,19 @@ class ResolveContextImpl extends ResolveContext implements Repository {
 			wirings.put(res, r);
 		}
 	}
+
+//	public Promise<Collection<Resource>> findProviders(RequirementExpression expression) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+//
+//	public ExpressionCombiner getExpressionCombiner() {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+//
+//	public RequirementBuilder newRequirementBuilder(String namespace) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 }
