@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -151,7 +152,8 @@ public class MicroServer {
 			map.put("fi.dwo.documentbase", MicroServer.class.getResource("resources/").toExternalForm());
 		else 
 			map.remove("fi.dwo.properties");
-		String null_zip = MicroServer.class.getResource("/null.zip").toExternalForm();
+		URL resource = MicroServer.class.getResource("/null.zip");
+		String null_zip = resource == null ? "https://cdn.dwo.nl/bundles/null.zip" : resource.toExternalForm();
         map.put(ProvisioningService.PROVISIONING_REFERENCE, null_zip);
 		if (!arglist.isEmpty()) {
 		  File f = new File(arglist.get(0));

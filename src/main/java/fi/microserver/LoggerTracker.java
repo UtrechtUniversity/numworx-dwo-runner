@@ -2,10 +2,8 @@ package fi.microserver;
 
 import org.apache.felix.framework.Logger;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.Filter;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
-import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
 class LoggerTracker extends ServiceTracker {
 
