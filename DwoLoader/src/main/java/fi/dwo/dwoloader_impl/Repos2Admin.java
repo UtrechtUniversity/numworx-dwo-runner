@@ -13,22 +13,26 @@ public class Repos2Admin implements ServiceTrackerCustomizer<Object,AutoCloseabl
 	private BundleContext context;
 	private String index;
 	private ServiceTracker<LogService, LogService> logTracker;
+	private ServiceTracker<Object, AutoCloseable> reposTracker;
 
-	public Repos2Admin(BundleContext context, String index, ServiceTracker<LogService, LogService> logTracker) {
+	public Repos2Admin(BundleContext context, String index, ServiceTracker<LogService, LogService> logTracker, ServiceTracker<Object,AutoCloseable> reposTracker) {
 		this.context = context;
 		this.index = index;
 		this.logTracker = logTracker;
+		this.reposTracker = reposTracker;
 	}
 
 	@Override
 	public AutoCloseable addingService(ServiceReference<Object> reference) {
+		reposTracker.close();
 		XmlBackedRepositoryFactory factory = (XmlBackedRepositoryFactory) context.getService(reference);
 		ServiceReference<Repository> rep = null;
-		DwoLoaderDummy impl = null;
+		AutoCloseable impl = null;
 		if (factory != null)
 		try {
 			 rep = factory.create(index, null, null);
-			 impl = new DwoLoaderDummy(null, context);
+			 // compare  version in repo and version in framework
+			 impl = new Dwo2LoaderImpl(context, rep);
 		} catch (Exception e) {
 		      LogService s = logTracker.getService();
               if (s != null) {
@@ -50,7 +54,10 @@ public class Repos2Admin implements ServiceTrackerCustomizer<Object,AutoCloseabl
 
 	@Override
 	public void removedService(ServiceReference<Object> reference, AutoCloseable service) {
-		// TODO Auto-generated method stub
+		try {
+			service.close();
+		} catch (Exception e) {
+		}
 		
 	}
 

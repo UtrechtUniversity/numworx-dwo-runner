@@ -48,7 +48,10 @@ class ReposAdmin implements ServiceTrackerCustomizer<Object,AutoCloseable> {
 
 	public void removedService(ServiceReference<Object> reference, AutoCloseable service) {
 		try {
-    service.close();
+	    service.close();
+		RepositoryAdmin admin = (RepositoryAdmin) context.getService(reference);
+		admin.removeRepository(index);
+		context.ungetService(reference);
   } catch (Exception e) {
     LogService s = logTracker.getService();
     if (s != null) {

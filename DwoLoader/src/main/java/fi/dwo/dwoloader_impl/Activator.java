@@ -21,7 +21,7 @@ public class Activator implements BundleActivator, ServiceTrackerCustomizer<Conf
 	final static String REPO_PID = "org.knopflerfish.repository.xml.MSF";
 	private ServiceTracker<LogService,LogService> logTracker;
 	private ServiceTracker<Object, AutoCloseable> reposTracker, repos2Tracker;
-	private ServiceTracker<ConfigurationAdmin, AutoCloseable> cmTracker;
+	//private ServiceTracker<ConfigurationAdmin, AutoCloseable> cmTracker;
 	private String index;
 	private BundleContext context;
 	
@@ -43,18 +43,18 @@ public class Activator implements BundleActivator, ServiceTrackerCustomizer<Conf
 		
 		logTracker = new ServiceTracker<LogService,LogService>(context, LogService.class, null);
 		reposTracker  = new ServiceTracker<Object, AutoCloseable>(context,"org.apache.felix.bundlerepository.RepositoryAdmin", new ReposAdmin(context, index, logTracker));
-		repos2Tracker = new ServiceTracker<Object, AutoCloseable>(context, "org.knopflerfish.service.repository.XmlBackedRepositoryFactory", new Repos2Admin(context, index, logTracker));
-		cmTracker = new ServiceTracker<ConfigurationAdmin, AutoCloseable>(context, ConfigurationAdmin.class, this);
+		repos2Tracker = new ServiceTracker<Object, AutoCloseable>(context, "org.knopflerfish.service.repository.XmlBackedRepositoryFactory", new Repos2Admin(context, index, logTracker, reposTracker));
+		//cmTracker = new ServiceTracker<ConfigurationAdmin, AutoCloseable>(context, ConfigurationAdmin.class, this);
 		logTracker.open();
 		reposTracker.open();
 		repos2Tracker.open();
-		cmTracker.open();
+		//cmTracker.open();
 	}
 
 	public void stop(BundleContext context) throws Exception {
 		reposTracker.close();
 		logTracker.close();
-		cmTracker.close();
+		//cmTracker.close();
 		repos2Tracker.close();
 		index = null;
 	}
