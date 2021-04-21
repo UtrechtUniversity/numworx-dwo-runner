@@ -6,14 +6,16 @@ import java.util.Map;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
+import org.osgi.framework.ServiceReference;
 import org.osgi.service.repository.Repository;
 import org.osgi.service.resolver.Resolver;
 import org.osgi.util.tracker.ServiceTracker;
+import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
 import fi.dwo.bootloader.LoaderBuilder;
 import fi.dwo.bootloader.LoaderBuilderFactory;
 
-public class Factory implements LoaderBuilderFactory {
+public class Factory implements LoaderBuilderFactory, ServiceTrackerCustomizer<Repository, Repository> {
 
 	private BundleContext context;
 	Map<String, Bundle> bundles;
@@ -36,7 +38,7 @@ public class Factory implements LoaderBuilderFactory {
 		symbolicTracker.open();
 		
 		resolver = new ServiceTracker<Resolver, Resolver>(context, Resolver.class, null);
-		repository = new ServiceTracker<Repository, Repository>(context, Repository.class, null);
+		repository = new ServiceTracker<Repository, Repository>(context, Repository.class, this);
 		resolver.open();
 		repository.open();
 	}
@@ -80,6 +82,24 @@ public class Factory implements LoaderBuilderFactory {
 		if (bundles.isEmpty())
 			return null;
 		return bundles.iterator().next();
+	}
+
+	@Override
+	public Repository addingService(ServiceReference<Repository> reference) {
+		Object repo = context.getService(reference);
+		if (repo instanceof Repository) return (Repository) repo;
+		context.ungetService(reference);
+		return null;
+	}
+
+	@Override
+	public void modifiedService(ServiceReference<Repository> reference, Repository service) {
+	}
+
+	@Override
+	public void removedService(ServiceReference<Repository> reference, Repository service) {
+		context.ungetService(reference);
+		
 	}
 
 }
