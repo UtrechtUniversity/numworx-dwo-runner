@@ -127,7 +127,7 @@ public class Activator implements BundleActivator {
 		properties.put("fi.dwo.bundles", bundles);
 		ServiceRegistration<?> registration;
 		registration = context.registerService(
-				LoaderBuilderFactory.class.getName(), new FactoryFactory(),
+				LoaderBuilderFactory.class.getName(), new FactoryFactory(context),
 				properties);
 		boot(registration.getReference());
 	}

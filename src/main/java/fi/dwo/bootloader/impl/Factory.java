@@ -25,7 +25,7 @@ public class Factory implements LoaderBuilderFactory, ServiceTrackerCustomizer<R
 	ServiceTracker<Resolver, Resolver> resolver;
 	ServiceTracker<Repository, Repository> repository;
 	
-	public Factory(BundleContext context, String base) {
+	public Factory(BundleContext context, Bundle bundle, String base) {
 		this.context = context;
 		this.base = base;
 		bundles = new Hashtable<String, Bundle>();
