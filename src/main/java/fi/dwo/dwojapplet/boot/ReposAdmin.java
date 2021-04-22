@@ -7,7 +7,7 @@ import org.osgi.service.log.LogService;
 import org.osgi.util.tracker.ServiceTracker;
 
 class ReposAdmin extends
-		ServiceTracker<RepositoryAdmin, RepositoryAdmin> {
+		ServiceTracker<RepositoryAdmin, RepositoryAdmin> implements RepAdmin {
 	private String repository;
 	private LogService LOG;
 
@@ -46,6 +46,7 @@ class ReposAdmin extends
 		return repository;
 	}
 
+	@Override
 	public void setRepository(String repository) {
 		if(repository != null && repository.equals(getRepository())) return;
 		RepositoryAdmin admin = getService();

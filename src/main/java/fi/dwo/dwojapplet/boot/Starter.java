@@ -31,6 +31,7 @@ import org.osgi.framework.BundleException;
 import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
+import org.osgi.framework.Version;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationException;
 import org.osgi.service.cm.ManagedService;
@@ -54,7 +55,7 @@ public class Starter implements BundleActivator {
 	private Object factory;
 	private Dictionary<String,?> dict;
 	private Map<String, String> parameters = new Hashtable<String,String>();
-	private ReposAdmin reposAdmin;
+	private RepAdmin reposAdmin;
 	
 	class ConfigHandler implements ManagedService
 	{
@@ -211,7 +212,7 @@ public class Starter implements BundleActivator {
 		log = new LogTracker(context);
 		log.open();
 		try {
-			reposAdmin = new ReposAdmin(context, log);
+			reposAdmin = createRepAdmin(context);
             reposAdmin.open();
 			reposAdmin.setRepository(getProperty(context, "fi.dwo.jarindex"));
 		} catch(Throwable t) {
@@ -237,7 +238,7 @@ public class Starter implements BundleActivator {
 		String language = getProperty(context,"fi.dwo.language");
 		if(language == null) language = Locale.getDefault().getLanguage();
 		if(codebase == null) codebase = "https://app.dwo.nl/dwo/";
-		if(profile == null) profile = "1";
+		if(profile == null) profile = "77";
 		
 		parameters.put("language", language);
         parameters.put("profile", profile);
@@ -251,6 +252,17 @@ public class Starter implements BundleActivator {
         ref1 = context.registerService(ManagedService.class, manager, props);
         
 		//runDWO(context);
+	}
+
+	Version ZEVEN = new Version("0.0.7");
+	private RepAdmin createRepAdmin(BundleContext context) {
+		String version = getProperty(context, "fi.microserver.version");
+		if (version != null) {
+			Version v = new Version(version);
+			if (v.compareTo(ZEVEN)>=0)
+				return new Repos2Admin(context, log);
+		}
+		return new ReposAdmin(context, log);
 	}
 
   public String getProperty(BundleContext context, String key) {
