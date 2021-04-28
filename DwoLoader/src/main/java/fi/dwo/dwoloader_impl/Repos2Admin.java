@@ -13,18 +13,15 @@ public class Repos2Admin implements ServiceTrackerCustomizer<Object,AutoCloseabl
 	private BundleContext context;
 	private String index;
 	private ServiceTracker<LogService, LogService> logTracker;
-	private ServiceTracker<Object, AutoCloseable> reposTracker;
 
-	public Repos2Admin(BundleContext context, String index, ServiceTracker<LogService, LogService> logTracker, ServiceTracker<Object,AutoCloseable> reposTracker) {
+	public Repos2Admin(BundleContext context, String index, ServiceTracker<LogService, LogService> logTracker) {
 		this.context = context;
 		this.index = index;
 		this.logTracker = logTracker;
-		this.reposTracker = reposTracker;
 	}
 
 	@Override
 	public AutoCloseable addingService(ServiceReference<Object> reference) {
-		reposTracker.close();
 		XmlBackedRepositoryFactory factory = (XmlBackedRepositoryFactory) context.getService(reference);
 		ServiceReference<Repository> rep = null;
 		AutoCloseable impl = null;

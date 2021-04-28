@@ -2,11 +2,9 @@ package fi.dwo.dwoloader_impl;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -30,54 +28,41 @@ public class Dwo2LoaderImpl implements DwoLoader, AutoCloseable {
 	private static final String OSGI_IDENTITY = "osgi.identity";
 	ServiceReference<Repository> rep;
 	BundleContext context;
-	private Promise<List<Capability>> promise;
-	ServiceRegistration<DwoLoader> sr;
+	private Promise<Map<String, Version>> promise;
+	volatile ServiceRegistration<DwoLoader> sr;
+	volatile boolean closed;
 	
 	Dwo2LoaderImpl(BundleContext context, ServiceReference<Repository> srep) {
 		this.context = context;
 		this.rep = srep;
+		this.closed = false;
 
 		Repository rep = context.getService(this.rep);
-		RequirementExpression req = rep.newRequirementBuilder(OSGI_IDENTITY).addDirective("filter", "(type=osgi.bundle)").buildExpression();
-		RequirementExpression req2 = rep.newRequirementBuilder(OSGI_IDENTITY).addDirective("filter", "(type=osgi.fragment)").buildExpression();
-		req = rep.getExpressionCombiner().or(req, req2);
-		
-		org.osgi.util.function.Function<? super Collection<Resource>, ? extends List<Capability>> arg0;
-		arg0 = new org.osgi.util.function.Function<Collection<Resource>, List<Capability>>() {
-
-			@Override
-			public List<Capability> apply(Collection<Resource> arg0) {
-				return toCap(arg0);
-			}
-			
-		};
-		promise = rep.findProviders(req).map(arg0);
+		RequirementExpression req = rep.newRequirementBuilder(OSGI_IDENTITY).addDirective("filter", "(|(type=osgi.bundle)(type=osgi.fragment))").buildExpression();		
+		promise = rep.findProviders(req).map(this::toCap);
 		rep = null;
-		context.ungetService(this.rep);		
-		sr = context.registerService(DwoLoader.class, this, null);
+		promise.onResolve( () -> {
+			context.ungetService(this.rep);
+			register();
+		});		
 	
+	}
+
+	private synchronized void register() {
+		if (!closed) sr = context.registerService(DwoLoader.class, this, null);
 	}
 
 	Capability toCap(Resource r) {
 		List<Capability> caps = r.getCapabilities(OSGI_IDENTITY);
-		return caps.stream().filter(new Predicate<Capability>() {
-			@Override
-			public boolean test(Capability cap) {
-				return cap.getAttributes().containsKey("version");
-			}
-		}).findAny().get();
+		return caps.get(0);
 	}
 	
-	List<Capability> toCap(Collection<Resource> rr) {
-		Function<Resource, Capability> function = new Function<Resource, Capability>() {
-													@Override
-													public Capability apply(Resource r) {
-															return toCap(r);
-													}
-												};
+	Map<String,Version> toCap(Collection<Resource> rr) {
 		Stream<Resource> stream = rr.stream();
-		Stream<Capability> map = stream.map(function);
-		Collector<Capability, ?, List<Capability>> list = Collectors.toList();
+		Stream<Capability> map = stream.map(this::toCap);		
+		Function<Capability, String> keyMapper = cap -> (String) cap.getAttributes().get(OSGI_IDENTITY);
+		Function<Capability, Version> valueMapper = cap -> (Version) cap.getAttributes().get("version");
+		Collector<Capability, ?, Map<String,Version>> list = Collectors.toMap(keyMapper, valueMapper);
 		return map.collect(list);
 	}
 	
@@ -87,18 +72,15 @@ public class Dwo2LoaderImpl implements DwoLoader, AutoCloseable {
 	public Update getUpdate() {
 		Update result = Update.NEVER;
 		Bundle[] bs = context.getBundles();
-		Map<String,Version> bmap = new HashMap<>();
-		for( Bundle b: bs) {
-			bmap.put(b.getSymbolicName(), b.getVersion());
-		}
 		try {
-			for(Capability cap : promise.getValue()) {
-				String sym = (String) cap.getAttributes().get(OSGI_IDENTITY);
-				Version v   = (Version) cap.getAttributes().get("version");
-				Version found = bmap.getOrDefault(sym, v);
-				if ( ! found.equals(v) ) {
-					result =  Update.MAYBE;
-					break;
+			for( Bundle b: bs) {
+				String key = b.getSymbolicName();
+				if (promise.getValue().containsKey(key))
+				{
+					if (b.getVersion().equals(promise.getValue().get(key))) {
+						result = Update.MAYBE;
+						break;
+					}
 				}
 			}
 		} catch (InvocationTargetException e) {
@@ -111,8 +93,10 @@ public class Dwo2LoaderImpl implements DwoLoader, AutoCloseable {
 	}
 
 	@Override
-	public void close() throws Exception {
-		sr.unregister();
+	public synchronized void close() throws Exception {
+		closed = true;
+		if (sr != null) sr.unregister();
+		sr = null;
 	}
 
 }
