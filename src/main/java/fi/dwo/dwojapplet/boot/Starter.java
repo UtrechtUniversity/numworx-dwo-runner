@@ -96,6 +96,9 @@ public class Starter implements BundleActivator {
 								runDWO(context);
 						} catch (MalformedURLException e) {
 							log.log(LogService.LOG_ERROR, "runDWO", e);
+						} catch (RuntimeException oops) {
+							log.log(LogService.LOG_ERROR, "runtime exception in runDWO", oops);
+							throw oops;
 						}
 					}
 				});
