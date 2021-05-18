@@ -172,6 +172,10 @@ public class Activator implements BundleActivator {
 		installSLF4J(builder);
 		installConsole("true".equals(config.getProperty("fi.dwo.console")),
 				builder);
+		
+		installJXBrowser(builder);
+		
+		
 		installEventAdmin(builder);
 		installCM(builder);
 		installWrap(builder, factory);
@@ -235,6 +239,36 @@ public class Activator implements BundleActivator {
       LOGt.log(LogService.LOG_WARNING, "eawt", e);
     }
   }
+  
+  private void installJXBrowser(LoaderBuilder builder) {
+	  try {
+		  builder.setLocation("non-existent");
+		  builder.start("com.teamdev.jxbrowser.mac");
+	  } catch (Exception e) {
+	      LOGt.log(LogService.LOG_WARNING, "jxbrowser.mac", e);		  
+	  }
+	  try {
+		  builder.setLocation("non-existent");
+		  builder.start("com.teamdev.jxbrowser.linux");
+	  } catch (Exception e) {
+	      LOGt.log(LogService.LOG_WARNING, "jxbrowser.linux", e);		  
+	  }
+	  try {
+		  builder.setLocation("non-existent");
+		  builder.start("com.teamdev.jxbrowser.windows");
+	  } catch (Exception e) {
+	      LOGt.log(LogService.LOG_WARNING, "jxbrowser.windows", e);		  
+	  }
+	  try {
+		  builder.setLocation("non-existent");
+		  builder.start("com.teamdev.jxbrowser.swing");
+	  } catch (Exception e) {
+	      LOGt.log(LogService.LOG_WARNING, "jxbrowser.swing", e);		  
+	  }
+	  
+  }
+  
+  
 
   private Promise<Config> checkVersion(final Promise<Config> p)
 			throws Exception {
@@ -399,7 +433,7 @@ public class Activator implements BundleActivator {
 	  try {
 	    builder.setLocation("swingbrowser-jfx.jar").start("nl.numworx.swingbrowser.jfx");
 	  } catch (Exception e) {
-	        LOGt.log(LogService.LOG_WARNING, "swingbrowser jxb", e);
+	        LOGt.log(LogService.LOG_WARNING, "swingbrowser jfx", e);
 	  }
 	}
 		

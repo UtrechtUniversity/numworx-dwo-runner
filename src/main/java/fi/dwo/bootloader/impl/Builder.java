@@ -25,6 +25,8 @@ import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.Version;
 import org.osgi.framework.namespace.IdentityNamespace;
+import org.osgi.framework.namespace.NativeNamespace;
+import org.osgi.framework.namespace.PackageNamespace;
 import org.osgi.framework.wiring.BundleCapability;
 import org.osgi.framework.wiring.BundleRevision;
 import org.osgi.framework.wiring.FrameworkWiring;
@@ -150,6 +152,13 @@ public class Builder implements LoaderBuilder {
 			resolve(bundles);
 		} catch (ResolutionException e1) {
 			log(LogService.LOG_WARNING, "fromResolver", e1);
+			Collection<Requirement> set = e1.getUnresolvedRequirements();
+			for (Requirement r: set) {
+				if (NativeNamespace.NATIVE_NAMESPACE.equals(r.getNamespace()))
+						return Collections.emptyList();
+				if (PackageNamespace.PACKAGE_NAMESPACE.equals(r.getNamespace()))
+					throw new BundleException(e1.getLocalizedMessage(), BundleException.RESOLVE_ERROR, e1);
+			}
 		} catch (BundleException e2) {
 			log(LogService.LOG_WARNING, "installBundle", e2);
 		}
