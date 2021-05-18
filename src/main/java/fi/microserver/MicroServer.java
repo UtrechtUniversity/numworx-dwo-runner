@@ -81,7 +81,7 @@ public class MicroServer {
 		
 		int javaVersion = Integer.parseInt(version.split("\\.")[0]);
 		if ( javaVersion >= 11)
-			system = "";
+			system = "sun.misc,";
 		else
 		if ( javaVersion >= 9)
 			system = "netscape.javascript,"; // vanaf 9 geen netscape automatisch (felix 5.6.10 defaults.properties)
@@ -102,28 +102,28 @@ public class MicroServer {
 		reader.close();
 		line = builder.toString();
 		
-		String v = props.getProperty("com.teamdev.jxbrowser.version", com.teamdev.jxbrowser.VersionInfo.version());
-		if (v == null) v = "";
-		else v = ";version=" + v;
-//		StringBuilder sb = new StringBuilder();
-//		Set<String> names = findPackageNames("com.teamdev.jxbrowser");
-		
-		String jxbrowser=
-			  ",com.teamdev.jxbrowser" + v
-			+ ",com.teamdev.jxbrowser.browser" + v
-		    + ",com.teamdev.jxbrowser.browser.callback" + v
-		    + ",com.teamdev.jxbrowser.browser.event" + v
-		    + ",com.teamdev.jxbrowser.callback" + v
-		    + ",com.teamdev.jxbrowser.cookie" + v
-		    + ",com.teamdev.jxbrowser.engine" + v
-		    + ",com.teamdev.jxbrowser.event" + v
-		    + ",com.teamdev.jxbrowser.frame" + v
-		    + ",com.teamdev.jxbrowser.js" + v
-		    + ",com.teamdev.jxbrowser.navigation" + v
-		    + ",com.teamdev.jxbrowser.net" + v
-		    + ",com.teamdev.jxbrowser.view.swing" + v
-		    + ",com.teamdev.jxbrowser.view.swing.callback" +v
-		    ;
+//		String v = props.getProperty("com.teamdev.jxbrowser.version", com.teamdev.jxbrowser.VersionInfo.version());
+//		if (v == null) v = "";
+//		else v = ";version=" + v;
+////		StringBuilder sb = new StringBuilder();
+////		Set<String> names = findPackageNames("com.teamdev.jxbrowser");
+//		
+//		String jxbrowser=
+//			  ",com.teamdev.jxbrowser" + v
+//			+ ",com.teamdev.jxbrowser.browser" + v
+//		    + ",com.teamdev.jxbrowser.browser.callback" + v
+//		    + ",com.teamdev.jxbrowser.browser.event" + v
+//		    + ",com.teamdev.jxbrowser.callback" + v
+//		    + ",com.teamdev.jxbrowser.cookie" + v
+//		    + ",com.teamdev.jxbrowser.engine" + v
+//		    + ",com.teamdev.jxbrowser.event" + v
+//		    + ",com.teamdev.jxbrowser.frame" + v
+//		    + ",com.teamdev.jxbrowser.js" + v
+//		    + ",com.teamdev.jxbrowser.navigation" + v
+//		    + ",com.teamdev.jxbrowser.net" + v
+//		    + ",com.teamdev.jxbrowser.view.swing" + v
+//		    + ",com.teamdev.jxbrowser.view.swing.callback" +v
+//		    ;
 
 //		for(String name: names) sb.append(',').append(name).append(v);
 //		jxbrowser = sb.toString();
