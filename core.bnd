@@ -1,0 +1,7 @@
+-classpath: jxbrowser-7.13.jar
+Bundle-SymbolicName: com.teamdev.jxbrowser
+ver: 7.13
+-output: ${bsn}-${ver}.jar
+Bundle-Version: ${ver}
+Export-Package: *;version=${ver}
+Import-Package: com.teamdev.jxbrowser.*;version=${ver},javax.annotation;resolution:=optional,*

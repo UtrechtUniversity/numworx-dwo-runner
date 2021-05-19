@@ -1,0 +1,8 @@
+-classpath: jxbrowser-win64-7.13.jar
+Bundle-SymbolicName: com.teamdev.jxbrowser.windows
+ver: 7.13
+-output: ${bsn}-${ver}.jar
+Bundle-Version: ${ver}
+Fragment-Host: com.teamdev.jxbrowser;bundle-version=${ver}
+Private-Package: *
+Require-Capability: osgi.native;filter:="(&(osgi.native.osname~=win32)(osgi.native.processor~=x86-64))"
