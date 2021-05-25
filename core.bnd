@@ -5,3 +5,4 @@ ver: 7.13
 Bundle-Version: ${ver}
 Export-Package: *;version=${ver}
 Import-Package: com.teamdev.jxbrowser.*;version=${ver},javax.annotation;resolution:=optional,*
+Require-Capability: com.teamdev.jxbrowser;filter:="(platform=*)"

@@ -3,6 +3,7 @@ Bundle-SymbolicName: com.teamdev.jxbrowser.mac
 ver: 7.13
 -output: ${bsn}-${ver}.jar
 Bundle-Version: ${ver}
-Fragment-Host: com.teamdev.jxbrowser;bundle-version=${ver}
+Fragment-Host: com.teamdev.jxbrowser;bundle-version="[${ver},${ver}]"
 Private-Package: *
 Require-Capability: osgi.native;filter:="(&(osgi.native.osname~=macosx)(osgi.native.processor~=x86-64))"
+Provide-Capability: com.teamdev.jxbrowser;platform="mac"
