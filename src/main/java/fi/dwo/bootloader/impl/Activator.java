@@ -241,30 +241,30 @@ public class Activator implements BundleActivator {
   }
   
   private void installJXBrowser(LoaderBuilder builder) {
-	  try {
-		  builder.setLocation("non-existent");
-		  builder.start("com.teamdev.jxbrowser.mac");
-	  } catch (Exception e) {
-	      LOGt.log(LogService.LOG_WARNING, "jxbrowser.mac", e);		  
-	  }
-	  try {
-		  builder.setLocation("non-existent");
-		  builder.start("com.teamdev.jxbrowser.linux");
-	  } catch (Exception e) {
-	      LOGt.log(LogService.LOG_WARNING, "jxbrowser.linux", e);		  
-	  }
-	  try {
-		  builder.setLocation("non-existent");
-		  builder.start("com.teamdev.jxbrowser.windows");
-	  } catch (Exception e) {
-	      LOGt.log(LogService.LOG_WARNING, "jxbrowser.windows", e);		  
-	  }
-	  try {
-		  builder.setLocation("non-existent");
-		  builder.start("com.teamdev.jxbrowser.swing");
-	  } catch (Exception e) {
-	      LOGt.log(LogService.LOG_WARNING, "jxbrowser.swing", e);		  
-	  }
+//	  try {
+//		  builder.setLocation("non-existent");
+//		  builder.start("com.teamdev.jxbrowser.mac");
+//	  } catch (Exception e) {
+//	      LOGt.log(LogService.LOG_WARNING, "jxbrowser.mac", e);		  
+//	  }
+//	  try {
+//		  builder.setLocation("non-existent");
+//		  builder.start("com.teamdev.jxbrowser.linux");
+//	  } catch (Exception e) {
+//	      LOGt.log(LogService.LOG_WARNING, "jxbrowser.linux", e);		  
+//	  }
+//	  try {
+//		  builder.setLocation("non-existent");
+//		  builder.start("com.teamdev.jxbrowser.windows");
+//	  } catch (Exception e) {
+//	      LOGt.log(LogService.LOG_WARNING, "jxbrowser.windows", e);		  
+//	  }
+//	  try {
+//		  builder.setLocation("non-existent");
+//		  builder.start("com.teamdev.jxbrowser.swing");
+//	  } catch (Exception e) {
+//	      LOGt.log(LogService.LOG_WARNING, "jxbrowser.swing", e);		  
+//	  }
 	  
   }
   
