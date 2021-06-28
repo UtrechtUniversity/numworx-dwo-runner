@@ -430,11 +430,11 @@ public class Activator implements BundleActivator {
       } catch (Exception e) {
         LOGt.log(LogService.LOG_ERROR, "swingbrowser jxb", e);
       }
-	  try {
-	    builder.setLocation("swingbrowser-jfx.jar").start("nl.numworx.swingbrowser.jfx");
-	  } catch (Exception e) {
-	        LOGt.log(LogService.LOG_WARNING, "swingbrowser jfx", e);
-	  }
+//	  try {
+//	    builder.setLocation("swingbrowser-jfx.jar").start("nl.numworx.swingbrowser.jfx");
+//	  } catch (Exception e) {
+//	        LOGt.log(LogService.LOG_WARNING, "swingbrowser jfx", e);
+//	  }
 	}
 		
 	private void installUnpack200(LoaderBuilder builder) throws BundleException, URISyntaxException {
