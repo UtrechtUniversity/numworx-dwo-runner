@@ -1,11 +1,18 @@
 package fi.dwo_runner;
 
+import java.awt.HeadlessException;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.UnknownHostException;
+import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.util.Properties;
 import java.util.Vector;
+
+import javax.swing.JOptionPane;
+
 import java.lang.reflect.InvocationTargetException;
 
     /**
@@ -27,7 +34,7 @@ import java.lang.reflect.InvocationTargetException;
     	static private Properties parameters; 
 
     	
-    	private static void addArg(Vector v, String arg)
+    	private static void addArg(Vector<String> v, String arg)
     	{
     		if(arg != null)
     			v.add(arg);
@@ -53,7 +60,7 @@ import java.lang.reflect.InvocationTargetException;
     		InputStream in = DWO_runner.class.getResourceAsStream("resources/runner.properties");
     		parameters = new Properties();
     		parameters.load(in);
-    		Vector vargs = new Vector();
+    		Vector<String> vargs = new Vector<String>();
     		vargs.add (parameters.getProperty(JAR));
     		for (int i = 1; true; i++)
     		{
@@ -72,16 +79,29 @@ import java.lang.reflect.InvocationTargetException;
             try {
                 url = new URL(args[0]);
             } catch (MalformedURLException e) {
-                //fatal("Invalid URL: " + args[0]);
+                fatal("Invalid URL: " + args[0]);
             }
             // Create the class loader for the application jar file
-            JarClassLoader cl = new JarClassLoader(url);
+            @SuppressWarnings("resource")
+			JarClassLoader cl = new JarClassLoader(url);
             // Get the application's main class name
             String name = null;
             try {
                 name = cl.getMainClassName();
+            } catch (UnknownHostException e) {
+            	message("No internet, cannot find " + e.getMessage());
+            	e.printStackTrace();
+            	System.exit(1);
+            } catch (ConnectException e) {
+            	message("Cannot connect: " + e.getMessage());
+            	e.printStackTrace();
+            	System.exit(1);
+            } catch (FileNotFoundException e) {
+            	message("Unable to retrieve executable: " + e.getMessage());
+            	e.printStackTrace();
+            	System.exit(1);
             } catch (IOException e) {
-                System.err.println("I/O error while loading JAR file:");
+                message("I/O error while loading JAR file:" + e.toString());
                 e.printStackTrace();
                 System.exit(1);
             }
@@ -103,19 +123,25 @@ import java.lang.reflect.InvocationTargetException;
             } catch (NoSuchMethodException e) {
                 fatal("Class does not define a 'main' method: " + name);
             } catch (InvocationTargetException e) {
+            	message(e.getTargetException().toString());
                 e.getTargetException().printStackTrace();
                 System.exit(1);
             }
         }
 
         private static void fatal(String s) {
-            System.err.println(s);
+        	message(s);
+        	System.err.println(s);
             System.exit(1);
         }
 
-        private static void usage() {
-            fatal("Usage: java JarRunner url [args..]");
+        private static void message(Object m) {
+        	try {
+				JOptionPane.showMessageDialog(null, m, "Numworx Author", JOptionPane.ERROR_MESSAGE);
+			} catch (Exception e) {
+			}
         }
+        
     }
 
 
