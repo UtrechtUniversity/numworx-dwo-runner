@@ -2,11 +2,7 @@ package fi.microserver;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FilterOutputStream;
-import java.io.OutputStream;
-import java.io.Reader;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.zip.ZipEntry;

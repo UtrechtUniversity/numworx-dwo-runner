@@ -5,7 +5,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
 
-class LoggerTracker extends ServiceTracker {
+class LoggerTracker extends ServiceTracker<Object, Object> {
 
 	private Logger logger;
 	@SuppressWarnings("rawtypes")
@@ -16,9 +16,8 @@ class LoggerTracker extends ServiceTracker {
 		this.logger = logger;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public Object addingService(ServiceReference reference) {
+	public Object addingService(ServiceReference<Object> reference) {
 		Object service = super.addingService(reference);
 		if (current == null) {
 			current = reference;
@@ -31,7 +30,7 @@ class LoggerTracker extends ServiceTracker {
 	}
 
 	@Override
-	public void removedService(ServiceReference reference, Object service) {
+	public void removedService(ServiceReference<Object> reference, Object service) {
 		super.removedService(reference, service);
 		logger.setLogger(getService());
 		logger.setLogLevel(1);
