@@ -77,7 +77,7 @@ public class Dwo2LoaderImpl implements DwoLoader, AutoCloseable {
 				String key = b.getSymbolicName();
 				if (promise.getValue().containsKey(key))
 				{
-					if (b.getVersion().equals(promise.getValue().get(key))) {
+					if ( ! b.getVersion().equals(promise.getValue().get(key))) {
 						result = Update.MAYBE;
 						break;
 					}
