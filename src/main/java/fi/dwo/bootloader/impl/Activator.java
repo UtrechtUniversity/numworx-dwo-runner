@@ -149,7 +149,7 @@ public class Activator implements BundleActivator {
 	private String BUNDLES = "http://cdn.dwo.nl/bundles/";
 	private String DWOJAPPLET = "https://app.dwo.nl/dwo/DWOJApplet.jar";
 	private String CONSOLE = "org.eclipse.concierge.shell-5.0.0.20151029184259.jar";
-	private String EVENT_ADMIN = "org.apache.felix.eventadmin-1.4.8.jar";;
+	//private String EVENT_ADMIN = "org.apache.felix.eventadmin-1.4.8.jar";;
 	private String DWOJAPPLET_STARTER = "DWOJApplet-Starter-2.0.jar";
 	private String PAX_URL_WRAP = "pax-url-wrap-2.4.7.jar";
 	private String UNPACK200 = "unpack200-0.0.1.jar";
@@ -457,7 +457,7 @@ public class Activator implements BundleActivator {
 	
 	private void installEventAdmin(LoaderBuilder builder)
 			throws BundleException, URISyntaxException {
-		builder.setLocation(EVENT_ADMIN).start("org.apache.felix.eventadmin");
+		//builder.setLocation(EVENT_ADMIN).start("org.apache.felix.eventadmin");
 	}
 
 	private final static String CM = "org.apache.felix.configadmin-1.8.10.jar";
