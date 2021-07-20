@@ -77,7 +77,7 @@ class StartBoot {
     factory.open();
 
     ProvisioningService ps = context.getService(ref);
-    XmlBackedRepositoryFactory service = factory.waitForService(1000);
+    XmlBackedRepositoryFactory service = factory.waitForService(2000);
     String u = getProperty("fi.dwo.repository", ps);
 
  	reposRegistration = service.create(u, null, this);

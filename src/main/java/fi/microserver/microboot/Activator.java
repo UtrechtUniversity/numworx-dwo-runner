@@ -267,7 +267,7 @@ public class Activator implements BundleActivator, ServiceTrackerCustomizer<Cond
     Dictionary<String, Object> properties = new Hashtable<String, Object>();
     properties.put(Constants.SERVICE_RANKING, Integer.MIN_VALUE);
     properties.put(Constants.SERVICE_VENDOR, "fi.microserver.MicroServer");
-    properties.put(EventConstants.EVENT_TOPIC, STOP_EVENT);
+    properties.put(EventConstants.EVENT_TOPIC, new String[] { STOP_EVENT } );
     service = new EventHandler() {
 
         public void handleEvent(Event event) {
