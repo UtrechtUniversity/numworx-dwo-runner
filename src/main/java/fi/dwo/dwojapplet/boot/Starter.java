@@ -1,6 +1,5 @@
 package fi.dwo.dwojapplet.boot;
 
-import java.applet.Applet;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Frame;
@@ -200,7 +199,7 @@ public class Starter implements BundleActivator {
 		}
 	}
 	
-	private Applet dwo;
+	private DWO dwo;
 	private Frame frame;
 	private String codebase;
 	private String documentbase;
@@ -308,7 +307,7 @@ public class Starter implements BundleActivator {
         }
 		final URL u = new URL(codebase);
 		final URL d = documentbase == null ? null : new URL(documentbase);
-		Applet parent = new ParentOf(dwo);
+		ParentOf parent = new ParentOf(dwo);
         frame = new MainFrame(parent,  width, height) {
 
 			@Override
