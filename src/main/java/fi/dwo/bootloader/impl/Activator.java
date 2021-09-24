@@ -279,7 +279,7 @@ public class Activator implements BundleActivator {
 					(String) config.getProperty("fi.microserver.version"));
 		} catch (Exception e) {
 		}
-		myversion = new Version(0, 0, 5, ""); // VERSION 0.0.5 minimum
+		myversion = new Version(0, 0, 7, ""); // VERSION 0.0.7 minimum
 		if (myversion.compareTo(microserver) <= 0)
 			return p;
 		Long last = (Long) config.getProperty("fi.dwo.boot.last");
