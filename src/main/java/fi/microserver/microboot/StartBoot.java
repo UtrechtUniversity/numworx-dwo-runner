@@ -9,7 +9,9 @@ import org.knopflerfish.service.repository.XmlBackedRepositoryFactory;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
+import org.osgi.framework.ServiceFactory;
 import org.osgi.framework.ServiceReference;
+import org.osgi.framework.ServiceRegistration;
 import org.osgi.framework.wiring.BundleCapability;
 import org.osgi.framework.wiring.FrameworkWiring;
 import org.osgi.resource.Capability;
@@ -29,6 +31,20 @@ class StartBoot {
     this.context = context;
   }
 
+  @SuppressWarnings("rawtypes")
+  class LocationFactory implements ServiceFactory {
+
+	@Override
+	public Object getService(Bundle bundle, ServiceRegistration registration) {
+		return new LocationCommand(context, System.out);
+	}
+
+	@Override
+	public void ungetService(Bundle bundle, ServiceRegistration registration, Object service) {
+	}
+
+  }
+  
   private String getProperty( String key, ProvisioningService ps) {
     Object value = ps.getInformation().get(key);
     if (value != null) return value.toString();
@@ -73,6 +89,9 @@ class StartBoot {
   void start() throws Exception {
     ServiceReference<ProvisioningService> ref = context.getServiceReference(ProvisioningService.class);
     if (ref == null) return;
+    
+    context.registerService("org.eclipse.concierge.shell.commands.ShellCommandGroup", new LocationFactory(), null);
+    
     ServiceTracker<XmlBackedRepositoryFactory, XmlBackedRepositoryFactory> factory = new ServiceTracker<>(context, XmlBackedRepositoryFactory.class, null);
     factory.open();
 
