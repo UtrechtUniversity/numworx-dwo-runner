@@ -205,6 +205,21 @@
 	</parent>
 	<profiles>
 		<profile>
+			<id>jxbrowser</id>
+			<dependencies>
+				<dependency>
+				    <groupId>com.teamdev.jxbrowser</groupId>
+				   	<artifactId>jxbrowser-${arch}</artifactId>
+				   	<version>${jxbrowser.version}</version>
+				</dependency>
+				<dependency>
+				    <groupId>com.teamdev.jxbrowser</groupId>
+				    <artifactId>jxbrowser-swing</artifactId>
+				    <version>${jxbrowser.version}</version>
+				</dependency>
+			</dependencies>
+		</profile>
+		<profile>
 			<id>mac</id>
 			<activation><os><family>mac</family></os></activation>
 			<properties>
