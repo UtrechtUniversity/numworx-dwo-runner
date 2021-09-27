@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -24,6 +25,7 @@ import org.osgi.framework.BundleReference;
 import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.Version;
+import org.osgi.framework.namespace.BundleNamespace;
 import org.osgi.framework.namespace.IdentityNamespace;
 import org.osgi.framework.namespace.NativeNamespace;
 import org.osgi.framework.namespace.PackageNamespace;
@@ -49,6 +51,12 @@ public class Builder implements LoaderBuilder {
  
     private RequirementImpl(String symbolicname) {
       directives = Collections.singletonMap("filter", "(osgi.identity=" + symbolicname + ")");
+      namespace = IdentityNamespace.IDENTITY_NAMESPACE;
+    }
+    
+    private RequirementImpl(URI location) {
+    	directives = Collections.singletonMap("filter", "(url=" + location.toString() + ")");
+    	namespace = "osgi.content";
     }
 
     @Override
@@ -82,7 +90,7 @@ public class Builder implements LoaderBuilder {
       return result;
     }
 
-    String namespace = IdentityNamespace.IDENTITY_NAMESPACE;
+    final private String namespace;
  
     @Override
     public String getNamespace() {
@@ -448,19 +456,36 @@ public class Builder implements LoaderBuilder {
 		}
 	}
 
+	
+	
+	
 	private boolean isBundle(String main) {
-	   Repository[] repositories = parent.repository.getServices(EMPTY);
-	   if (repositories == null) repositories = EMPTY;
-	   ResolveContextImpl rc = new ResolveContextImpl(repositories, context);
 	   Requirement requirement = getRequirement(main);
-	   List<Capability> result = rc.findProviders(requirement);
-	   for(Capability cap: result) {
-		   Object type = cap.getAttributes().get(IdentityNamespace.CAPABILITY_TYPE_ATTRIBUTE);
-		   if (IdentityNamespace.TYPE_BUNDLE.equals(type))
-			   return true;
-	   }
-	   
-	   return false;
+	   return isBundleOrFragment(requirement, false).isPresent();
+	}
+	
+	private Optional<Resource> isBundle(URI location) {
+		Requirement requirement = new RequirementImpl(location);
+		return isBundleOrFragment(requirement, true);
+	}
+
+	private Optional<Resource> isBundleOrFragment(Requirement requirement, boolean fragment) {
+		Repository[] repositories = parent.repository.getServices(EMPTY);
+		   if (repositories == null) repositories = EMPTY;
+		   ResolveContextImpl rc = new ResolveContextImpl(repositories, context);
+		   List<Capability> result = rc.findProviders(requirement);
+		   for(Capability cap: result) {
+			   if (!cap.getNamespace().equals(IdentityNamespace.IDENTITY_NAMESPACE)) {
+				 cap = cap.getResource().getCapabilities(IdentityNamespace.IDENTITY_NAMESPACE).get(0);
+			   }
+			   Object type = cap.getAttributes().get(IdentityNamespace.CAPABILITY_TYPE_ATTRIBUTE);
+			   if (IdentityNamespace.TYPE_BUNDLE.equals(type))
+				   return Optional.of(cap.getResource());
+			   if (fragment && IdentityNamespace.TYPE_FRAGMENT.equals(type))
+				   return Optional.of(cap.getResource());
+		   }
+		   
+		   return Optional.empty();
 	}
 	
 	
@@ -579,12 +604,29 @@ public class Builder implements LoaderBuilder {
 															// changes, but
 															// symbolicname not,
 															// you err.
+// if bundle is started/resolved don't update 
+		if (b != null && b.getState() >= Bundle.RESOLVED)
+			return b;
+		
+		Optional<Resource> resource = isBundle(location);
+		
 		InputStream is = null;
 		if (b == null) {
-			if (wrap != null)
+			if (wrap != null && !resource.isPresent())
 				is = new URL(wrap).openStream();
 			b = context.installBundle(location.toString(), is);
 		} else {
+			Update update = this.update;
+			if (resource.isPresent()) {
+				wrap = null;
+// there is a claim that jarindex is up to date, which is not.
+				Version vb = b.getVersion();
+				Version vr = getBundleVersion(resource.get());
+				if (vr.equals(vb)) update = Update.NEVER;
+// no need for check last modified
+				else if(update == Update.MAYBE) update = Update.ALWAYS;
+			}
+			
 			switch (update) {
 			case MAYBE:
 				long mod = b.getLastModified();
