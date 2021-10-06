@@ -275,9 +275,35 @@
 			<artifactId>javax.annotation-api</artifactId>
 			<version>1.3.2</version>
 		</dependency>
+		<dependency>
+			<groupId>nl.numworx</groupId>
+			<artifactId>com.teamdev.jxbrowser</artifactId>
+			<version>${jxb}</version>
+		</dependency>
+		<dependency>
+			<groupId>nl.numworx</groupId>
+			<artifactId>com.teamdev.jxbrowser-swing</artifactId>
+			<version>${jxb}</version>
+		</dependency>
+		<dependency>
+			<groupId>nl.numworx</groupId>
+			<artifactId>com.teamdev.jxbrowser-mac</artifactId>
+			<version>${jxb}</version>
+		</dependency>
+		<dependency>
+			<groupId>nl.numworx</groupId>
+			<artifactId>com.teamdev.jxbrowser-linux64</artifactId>
+			<version>${jxb}</version>
+		</dependency>
+		<dependency>
+			<groupId>nl.numworx</groupId>
+			<artifactId>com.teamdev.jxbrowser-win64</artifactId>
+			<version>${jxb}</version>
+		</dependency>
 	</dependencies>
 	<properties>
 		<s3>s3://test-dwo-nl</s3>
+		<jxb>7.13</jxb>
 	</properties>
 	<profiles>
 		<profile>
