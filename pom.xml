@@ -145,6 +145,16 @@
 			</dependency>
   		</dependencies>
   	</profile>
+	<profile>
+		<id>java17</id>
+		<dependencies>
+			<dependency>
+	    		<groupId>javax.xml.bind</groupId>
+	    		<artifactId>jaxb-api-osgi</artifactId>
+	    		<version>2.2.7</version>
+			</dependency>
+		</dependencies>
+	</profile>
 	</profiles>
 	<properties>
 		<jxb>7.13</jxb>
