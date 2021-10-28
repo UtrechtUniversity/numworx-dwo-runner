@@ -1,6 +1,5 @@
 package fi.dwo_runner;
 
-import java.awt.HeadlessException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
