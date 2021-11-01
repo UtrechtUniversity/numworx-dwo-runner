@@ -151,8 +151,7 @@
 	        <dependency>
 	        	<groupId>fi.dwo</groupId>
 	        	<artifactId>fi.dwo.eawt</artifactId>
-	        	<version>0.0.2-SNAPSHOT</version>
-	        	<scope>provided</scope>
+	        	<version>0.0.2</version>
 	        </dependency>
 			<dependency>
 	    		<groupId>javax.xml.bind</groupId>
