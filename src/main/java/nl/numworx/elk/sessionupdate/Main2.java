@@ -38,7 +38,7 @@ import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 
-public class Main {
+public class Main2 {
 
 	static String basicDateTime = "yyyy-MM-dd'T'HH:mm:ss.SSS";
 	static SimpleDateFormat formatter = new SimpleDateFormat(basicDateTime);
@@ -63,26 +63,32 @@ public class Main {
 		RestHighLevelClient client = new RestHighLevelClient(
 		        RestClient.builder(
 		                new HttpHost("localhost", 9200, "http")));
-		
+
+		DeleteIndexRequest delete = new DeleteIndexRequest("session-*");
+		IndicesClient indices = client.indices();
+		AcknowledgedResponse response = indices.delete(delete, RequestOptions.DEFAULT);
+		System.out.println(response.isAcknowledged());
+		//putObject(client);		
+		System.exit(0);
 		/// SEARCH API
 
 		Map<String,UserRecord> lastTime = new TreeMap<>();
-for(int m = 8; m < 12; m++ ) {
-	
+for(int m = 9; m < 10; m++ ) {
+	for(int d=1; d < 31; d++) {
 		int from = 0;
 		long totalHits;
 		SearchRequest searchRequest = new SearchRequest("logstash-*"); 
 		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder(); 
 		QueryBuilder query = new ExistsQueryBuilder("user_id");
-		Date fromdate = new Date(2021-1900,m  ,1,0,0,0);
-		Date todate   = new Date(2021-1900,m+1,1,0,0,0);
+		Date fromdate = new Date(2021-1900,m,d,0,0,0);
+		Date todate   = new Date(2021-1900,m,d+1,0,0,0);
 		QueryBuilder start = new RangeQueryBuilder("@timestamp").from(fromdate, true).to(todate, false);
 		searchSourceBuilder.query(new BoolQueryBuilder().must(query)
 				.must(start)
 				); 
 		searchSourceBuilder.sort("@timestamp", SortOrder.ASC);
 		searchSourceBuilder.from(from);
-		searchSourceBuilder.size(1000);
+		searchSourceBuilder.size(10000);
 		searchRequest.source(searchSourceBuilder); 
 		searchRequest.scroll(TimeValue.timeValueMinutes(2L)); 
 		List<String> scrollIds = new ArrayList<>(20);
@@ -139,7 +145,7 @@ for(int m = 8; m < 12; m++ ) {
 		ClearScrollRequest clear = new ClearScrollRequest();
 		clear.setScrollIds(scrollIds);
 		client.clearScroll(clear, RequestOptions.DEFAULT);
-}
+}}
 		lastTime.values().forEach(item -> put(client, item));
 		
 		client.close();
@@ -151,11 +157,9 @@ for(int m = 8; m < 12; m++ ) {
 		
 		Map<String, Object> json = new TreeMap<>();
 		json.put("user_id", record.user_id);
-		int len = record.user_id.length();
-		String id = record.user_id.substring(len-2);
 		json.put("timestamp", record.timestamp);
 		json.put("duration", record.duration / 1000.0); // double in seconds
-		IndexRequest request = new IndexRequest("session-"+id, "_doc", record.user_id + Long.toString(record.timestamp.getTime()))
+		IndexRequest request = new IndexRequest("session-"+record.user_id, "doc", Long.toString(record.timestamp.getTime()))
 		        .source(json); 		
 		try {
 			IndexResponse indexResponse = client.index(request, RequestOptions.DEFAULT);
