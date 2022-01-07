@@ -5,4 +5,4 @@ fi.dwo.bundles: https://test-dwo-nl.s3.amazonaws.com/bundles/
 fi.dwo.repository: https://test-dwo-nl.s3.amazonaws.com/bundles/index.xml
 fi.dwo.jarindex: https://test-dwo-nl.s3.amazonaws.com/jars/index.xml
 
-fi.dwo.repository: file:///Users/peterboon/eclipse4.17-workspace/app-install/target/index.xml
+#fi.dwo.repository: file:///Users/peterboon/eclipse4.17-workspace/app-install/target/index.xml
