@@ -67,7 +67,7 @@ public class Main {
 		/// SEARCH API
 
 		Map<String,UserRecord> lastTime = new TreeMap<>();
-for(int m = 8; m < 12; m++ ) {
+for(int m = 0; m < 12; m++ ) {
 	
 		int from = 0;
 		long totalHits;
