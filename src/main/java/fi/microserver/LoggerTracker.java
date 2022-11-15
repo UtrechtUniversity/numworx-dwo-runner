@@ -1,19 +1,21 @@
 package fi.microserver;
 
-import org.apache.felix.framework.Logger;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
 
 class LoggerTracker extends ServiceTracker<Object, Object> {
 
-	private Logger logger;
+	private FelixLogger logger;
 	@SuppressWarnings("rawtypes")
 	private ServiceReference current;
+	private int level;
 
-	public LoggerTracker(BundleContext context, Logger logger) {
+	public LoggerTracker(BundleContext context, FelixLogger logger) {
 		super(context, "org.osgi.service.log.LogService", null);
 		this.logger = logger;
+		String level = context.getProperty("felix.log.level");
+		this.level = Integer.parseInt(level);
 	}
 
 	@Override
@@ -22,7 +24,8 @@ class LoggerTracker extends ServiceTracker<Object, Object> {
 		if (current == null) {
 			current = reference;
 			logger.setLogger(service);
-			logger.setLogLevel(1);
+			logger.setLogLevel(level);
+			logger.flush();
 		} else {
 			// implement ranking
 		}		
@@ -33,7 +36,8 @@ class LoggerTracker extends ServiceTracker<Object, Object> {
 	public void removedService(ServiceReference<Object> reference, Object service) {
 		super.removedService(reference, service);
 		logger.setLogger(getService());
-		logger.setLogLevel(1);
+		logger.setLogLevel(level);
+		logger.flush();
 	}
 
 

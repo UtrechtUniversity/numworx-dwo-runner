@@ -163,7 +163,7 @@ public class MicroServer {
 		}
 		
 		cleanOnExit(true);
-		Logger logger = new Logger();
+		FelixLogger logger = new FelixLogger();
 
 		Map m = map;
 		m.put(FelixConstants.LOG_LOGGER_PROP, logger); // Must be Felix
