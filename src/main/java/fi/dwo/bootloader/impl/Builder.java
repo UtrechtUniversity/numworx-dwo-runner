@@ -649,7 +649,9 @@ public class Builder implements LoaderBuilder {
 		if (fw != null)
 			fw.resolveBundles(list);
 		for (Bundle b : list) {
-			if (b.getHeaders().get(Constants.FRAGMENT_HOST) == null)
+			int type = b.adapt(BundleRevision.class).getTypes();
+			if ( (type & BundleRevision.TYPE_FRAGMENT) == 0)
+			//if (b.getHeaders().get(Constants.FRAGMENT_HOST) == null)
 				b.start(Bundle.START_TRANSIENT);
 		}
 	}
