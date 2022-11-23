@@ -277,6 +277,11 @@
 		</dependency>
 		<dependency>
 			<groupId>nl.numworx</groupId>
+			<artifactId>com.teamdev.jxbrowser-mac-arm</artifactId>
+			<version>${jxb}</version>
+		</dependency>
+		<dependency>
+			<groupId>nl.numworx</groupId>
 			<artifactId>com.teamdev.jxbrowser-linux64</artifactId>
 			<version>${jxb}</version>
 		</dependency>
@@ -288,7 +293,7 @@
 	</dependencies>
 	<properties>
 		<s3>s3://test-dwo-nl</s3>
-		<jxb>7.13</jxb>
+		<jxb>7.28.1</jxb>
 	</properties>
 	<profiles>
 		<profile>
