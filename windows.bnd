@@ -1,6 +1,6 @@
--classpath: jxbrowser-win64-7.13.jar
+ver: 7.28.1
+-classpath: jxbrowser-win64-${ver}.jar
 Bundle-SymbolicName: com.teamdev.jxbrowser.windows
-ver: 7.13
 -output: ${bsn}-${ver}.jar
 Bundle-Version: ${ver}
 Fragment-Host: com.teamdev.jxbrowser;bundle-version="[${ver},${ver}]"

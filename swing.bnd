@@ -1,6 +1,6 @@
--classpath: jxbrowser-swing-7.13.jar
+ver: 7.28.1
+-classpath: jxbrowser-swing-${ver}.jar
 Bundle-SymbolicName: com.teamdev.jxbrowser.swing
-ver: 7.13
 -output: ${bsn}-${ver}.jar
 Bundle-Version: ${ver}
 Export-Package: *;version=${ver}
