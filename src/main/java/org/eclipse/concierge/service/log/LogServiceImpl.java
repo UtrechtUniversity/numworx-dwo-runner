@@ -14,6 +14,8 @@
 
 package org.eclipse.concierge.service.log;
 
+import java.io.CharArrayWriter;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
@@ -392,7 +394,9 @@ public final class LogServiceImpl implements LogReaderService {
 			buffer.append(message);
 			if (exception != null) {
 				buffer.append("\n\tException: ");
-				buffer.append(exception.getMessage());
+				CharArrayWriter writer = new CharArrayWriter();
+				exception.printStackTrace(new PrintWriter(writer));
+				buffer.append(writer.toCharArray());
 			}
 			return buffer.toString();
 		}
