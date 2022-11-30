@@ -161,9 +161,8 @@
 				<Export-Package/>
 				<Private-Package>fi.microserver.microboot,org.eclipse.concierge.service.log</Private-Package>
 				<DynamicImport-Package>org.eclipse.concierge.shell.commands</DynamicImport-Package>
-
 <Provide-Capability> 
- osgi.service;objectClass:List&lt;String&gt;="org.osgi.service.log.LogService";uses:="org.osgi.service.log"
+ osgi.service;objectClass:List&lt;String&gt;="org.osgi.service.log.LogService,org.osgi.service.log.LogReaderService";uses:="org.osgi.service.log"
 </Provide-Capability>
 
           </instructions>
