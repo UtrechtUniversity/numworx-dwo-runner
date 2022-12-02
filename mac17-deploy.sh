@@ -1,4 +1,8 @@
-jh=$(/usr/libexec/java_home -v 17)
+jh="$1"
+if [ "$jh" = "" ]
+then
+	jh=$(/usr/libexec/java_home -v 17)
+fi
 JAVA_HOME=$jh $jh/bin/jpackage --help 
 
 
