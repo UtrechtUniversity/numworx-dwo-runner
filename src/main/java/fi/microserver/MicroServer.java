@@ -1,9 +1,7 @@
 package fi.microserver;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
@@ -23,7 +21,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
-import org.apache.felix.framework.Logger;
 import org.apache.felix.framework.util.FelixConstants;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
