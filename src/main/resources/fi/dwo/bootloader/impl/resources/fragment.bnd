@@ -1,2 +1,2 @@
-Export-Package=!*
-Private-Package=*
+Export-Package=*
+#Private-Package=*
