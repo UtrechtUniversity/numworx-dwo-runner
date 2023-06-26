@@ -1,0 +1,2 @@
+Bundle-SymbolicName=fi.aanzichtenraden.AanzichtenRaden
+Import-Package=fi.beans.mainframe,fi.beans.scorm,fi.beans.xmlrpc,fi.beans.wiskopdrbeans,javax.*
