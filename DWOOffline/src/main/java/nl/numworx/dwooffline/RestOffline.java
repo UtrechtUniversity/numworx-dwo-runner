@@ -12,7 +12,7 @@ public class RestOffline extends HttpServlet {
 
 	@Override
 	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		resp.sendError(400);
+		resp.setStatus(400);
 		resp.getWriter().write(ERROR);
 	}
 	
