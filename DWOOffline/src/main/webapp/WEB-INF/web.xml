@@ -3,8 +3,15 @@
 	      xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 	      http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	      version="2.5">
-  <display-name>DWO Offline</display-name>
-  
+  <display-name>Numworx Offline</display-name>
+  <servlet>
+  	<servlet-name>offline</servlet-name>
+  	<servlet-class>nl.numworx.dwooffline.RestOffline</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>offline</servlet-name>
+  	<url-pattern>/dwo/rest/*</url-pattern>
+  </servlet-mapping>
   <error-page>
     <error-code>404</error-code>
     <location>/index.html</location>
