@@ -1,0 +1,5 @@
+Bundle-SymbolicName = fi.popupurlapplet.PopUpURLApplet
+DynamicImport-Package = *
+Export-Package = fi.popupurlapplet
+Import-Package = javax.swing,netscape.javascript,fi.beans.mainframe,fi.beans.scorm,fi.beans.xmlrpc,!sun.applet
+

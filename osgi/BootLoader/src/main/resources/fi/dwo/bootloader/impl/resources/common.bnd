@@ -1,0 +1,4 @@
+Import-Package=fi.beans.mainframe,fi.beans.scorm,fi.beans.xmlrpc,fi.beans.wiskopdrbeans,*
+DynamicImport-Package=*
+Export-Package=!fi.beans.*,!meta-inf,*
+Private-Package=*
