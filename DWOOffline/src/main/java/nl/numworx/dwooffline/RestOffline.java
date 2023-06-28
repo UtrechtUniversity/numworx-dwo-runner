@@ -13,6 +13,7 @@ public class RestOffline extends HttpServlet {
 	@Override
 	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		resp.setStatus(400);
+		resp.setContentType("application/json");
 		resp.getWriter().write(ERROR);
 	}
 	
