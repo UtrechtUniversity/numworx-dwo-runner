@@ -285,6 +285,7 @@ public class Starter implements BundleActivator {
     return value;
   }
 
+	@SuppressWarnings("serial")
 	private void runDWO(BundleContext context) throws MalformedURLException {
 				
 		dwo = new DWO();
