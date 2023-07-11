@@ -1,18 +1,20 @@
 package fi.dwo.dwojapplet.boot;
 
-import java.applet.Applet;
-import java.applet.AppletStub;
 import java.awt.BorderLayout;
 
-@SuppressWarnings("serial")
-class ParentOf extends Applet implements AppletStub {
-	private Applet dwo;
+import fi.beans.mainframe.AppletContext;
+import fi.beans.mainframe.AppletStub;
+import fi.beans.mainframe.JApplet;
 
-	ParentOf(Applet dwo) {
+@SuppressWarnings("serial")
+class ParentOf extends JApplet implements AppletStub {
+	private final JApplet dwo;
+
+	ParentOf(JApplet dwo) {
 		this.dwo = dwo;
 		dwo.setStub(this);
-		setLayout(new BorderLayout());
-		add(dwo, BorderLayout.CENTER);
+		getContentPane().setLayout(new BorderLayout());
+		getContentPane().add(dwo, BorderLayout.CENTER);
 	}
 
 	public void init() {
@@ -40,6 +42,9 @@ class ParentOf extends Applet implements AppletStub {
 		
 	}
 
+	public AppletContext getAppletContext() {
+		return (AppletContext) super.getAppletContext();
+	}
 	
 	
 }
