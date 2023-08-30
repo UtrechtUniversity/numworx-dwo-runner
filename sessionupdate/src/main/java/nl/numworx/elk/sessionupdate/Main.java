@@ -10,10 +10,12 @@ import java.util.TimeZone;
 import java.util.TreeMap;
 
 import org.apache.http.HttpHost;
+import org.elasticsearch.action.ActionRequestBuilder;
 import org.elasticsearch.action.DocWriteResponse.Result;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteRequestBuilder;
+import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.ClearScrollRequest;
@@ -30,6 +32,7 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.ExistsQueryBuilder;
+import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.elasticsearch.rest.RestStatus;
@@ -57,6 +60,7 @@ public class Main {
 	}
 	
 	public static void main(String[] args) throws Exception {
+		int month = 7; // JULI
 		
 		formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
 
@@ -67,17 +71,19 @@ public class Main {
 		/// SEARCH API
 
 		Map<String,UserRecord> lastTime = new TreeMap<>();
-for(int m = 0; m < 12; m++ ) {
+for(int m = month-1; m < month; m++ )
+{
 	
 		int from = 0;
 		long totalHits;
-		SearchRequest searchRequest = new SearchRequest("logstash-*"); 
+		SearchRequest searchRequest = new SearchRequest("filebeat-*"); 
 		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder(); 
-		QueryBuilder query = new ExistsQueryBuilder("user_id");
+		QueryBuilder query = new MatchQueryBuilder("fileset.name", "access");
+		QueryBuilder exist = new ExistsQueryBuilder("url.original");
 		Date fromdate = new Date(2023-1900,m  ,1,0,0,0);
 		Date todate   = new Date(2023-1900,m+1,1,0,0,0);
 		QueryBuilder start = new RangeQueryBuilder("@timestamp").from(fromdate, true).to(todate, false);
-		searchSourceBuilder.query(new BoolQueryBuilder().must(query)
+		searchSourceBuilder.query(new BoolQueryBuilder().must(query).must(exist)
 				.must(start)
 				); 
 		searchSourceBuilder.sort("@timestamp", SortOrder.ASC);
@@ -104,7 +110,21 @@ for(int m = 0; m < 12; m++ ) {
 //			String id = hit.getId();
 //			float score = hit.getScore();
 			Map<String, Object> sourceAsMap = hit.getSourceAsMap();
-			String userid = (String) sourceAsMap.get("user_id");
+			String userid; //  = (String) sourceAsMap.get("url.original");
+			Map<String, Object> map = (Map<String,Object>) sourceAsMap.get("url");
+			if (map == null) {
+				System.out.println("no url for " + sourceAsMap);
+			}
+			userid = (String) map.get("original");
+			if (userid == null) {
+				System.out.println("no url.original" + sourceAsMap);
+			}
+			String[] split = userid.split("-",3);
+			if (split.length == 3 && "/dwo/rest/sec:1".equals(split[0])) {
+				userid = split[1];
+			} else {
+				continue;
+			}
 			String timestamp = (String) sourceAsMap.get("@timestamp");
 			timestamp = timestamp.substring(0,23);
 			Date t = formatter.parse(timestamp);
