@@ -35,7 +35,7 @@
 
 	<!-- update the https path for a different branch or tag! -->
 	<scm>
-		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.projects/DWOJApplet-Starter/trunk</developerConnection>
+		<developerConnection>scm:git:git@github.com:UtrechtUniversity/numworx-dwo-runner.git</developerConnection>
 	</scm>
 
 	<!-- dependencies -->
@@ -104,14 +104,28 @@
 					</archive>
 				</configuration>
 			</plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version>
-                <configuration>
-                    <tagBase>https://svn.science.uu.nl/repos/sci.velth101.projects/DWOJApplet-Starter/tags/</tagBase>
-                </configuration>            
-            </plugin>            
+    		<plugin>
+            	<groupId>external.atlassian.jgitflow</groupId>
+            	<artifactId>jgitflow-maven-plugin</artifactId>
+            	<version>1.0-m5.1</version>
+            	<configuration>
+                	<!-- see goals wiki page for configuration options -->
+                	<flowInitContext>
+             			<developBranchName>develop</developBranchName>  
+             			<masterBranchName>main</masterBranchName>    	
+                	</flowInitContext>
+                	<localOnly>false</localOnly>
+                	<allowSnapshots>false</allowSnapshots>
+                	<enableSshAgent>true</enableSshAgent>
+            	</configuration>
+			  <dependencies>
+			    <dependency>
+			      <groupId>com.jcraft</groupId>
+			      <artifactId>jsch</artifactId>
+			      <version>0.1.54</version>
+			    </dependency>
+			  </dependencies>
+			</plugin>
 		</plugins>
 	</build>
 	<dependencies>
