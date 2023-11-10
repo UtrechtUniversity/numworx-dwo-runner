@@ -290,6 +290,11 @@
 			<artifactId>com.teamdev.jxbrowser-win64</artifactId>
 			<version>${jxb}</version>
 		</dependency>
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+            <version>1.1.1</version>
+        </dependency>        
 	</dependencies>
 	<properties>
 		<s3>s3://test-dwo-nl</s3>
