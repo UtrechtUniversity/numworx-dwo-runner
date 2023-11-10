@@ -60,7 +60,7 @@ public class Main {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		int month = 7; // JULI
+		int month = 9; // SEPTEMBER
 		
 		formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
 
@@ -136,7 +136,7 @@ for(int m = month-1; m < month; m++ )
 			} else {
 				long diff = time - record.timestamp.getTime();
 				if (diff > 30*60*1000L) {
-					put(client, record);
+					put(client, record, m);
 					record.timestamp = t;
 					record.duration = 0;
 				} else {
@@ -160,19 +160,20 @@ for(int m = month-1; m < month; m++ )
 		clear.setScrollIds(scrollIds);
 		client.clearScroll(clear, RequestOptions.DEFAULT);
 }
-		lastTime.values().forEach(item -> put(client, item));
+		lastTime.values().forEach(item -> put(client, item, month));
 		
 		client.close();
+		System.exit(0); 
 	}
 
 	
 	
-	private static void put(RestHighLevelClient client, UserRecord record) {
+	private static void put(RestHighLevelClient client, UserRecord record, int m) {
 		
 		Map<String, Object> json = new TreeMap<>();
 		json.put("user_id", record.user_id);
 		int len = record.user_id.length();
-		String id = record.user_id.substring(len-2);
+		String id = m + "-" + record.user_id.substring(len-2);
 		json.put("timestamp", record.timestamp);
 		json.put("duration", record.duration / 1000.0); // double in seconds
 		IndexRequest request = new IndexRequest("session-"+id, "_doc", record.user_id + Long.toString(record.timestamp.getTime()))
