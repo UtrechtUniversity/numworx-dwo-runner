@@ -158,7 +158,7 @@
         <configuration>
           <instructions>
 				<Bundle-Activator>fi.microserver.microboot.Activator</Bundle-Activator>
-				<Export-Package/>
+				<Export-Package />
 				<Private-Package>fi.microserver.microboot,org.eclipse.concierge.service.log</Private-Package>
 				<DynamicImport-Package>org.eclipse.concierge.shell.commands</DynamicImport-Package>
 <Provide-Capability> 
