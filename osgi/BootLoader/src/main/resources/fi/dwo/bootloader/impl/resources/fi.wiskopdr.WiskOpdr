@@ -1,0 +1,3 @@
+Bundle-SymbolicName=fi.wiskopdr.WiskOpdr
+Import-Package=fi.beans.mainframe,fi.beans.scorm,fi.beans.xmlrpc,fi.beans.loader,fi.beans.ideas,javax.activation;resolution:=optional,javax.*,javafx.*,nl.numworx.swingbrowser.*,fi.beans.numworxlf, fi.balansfruit
+Export-Package=!uk.*,org.cbook.cbookif;version="1.0.2",*

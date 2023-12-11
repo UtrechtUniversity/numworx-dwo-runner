@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Main-Class: fi.dwo_runner.DWO_runner
+Trusted-Only: true
+Permissions: all-permissions
+Codebase: *.uu.nl *.fi.uu.nl dme.colorado.edu *.appspot.com *.dwo.nl *.noordhoff.nl *.schoolwise.nl *.epn.nl
+Application-Name: DWO_runner
+Caller-Allowable-Codebase: *.science.uu.nl *.fi.uu.nl dme.colorado.edu dwoapp.appspot.com *.dwo.nl *.noordhoff.nl *.schoolwise.nl *.epn.nl

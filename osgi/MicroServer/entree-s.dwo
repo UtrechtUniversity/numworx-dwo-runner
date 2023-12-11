@@ -1,0 +1,5 @@
+#DWOv1
+fi.dwo.dwojapplet.domain.DWO: https://entree-s.dwo.nl/dwo/DWOJApplet.jar
+fi.dwo.documentbase: https://entree-s.dwo.nl/dwo/
+fi.dwo.bundles: http://test-dwo-nl.s3.amazonaws.com/bundles/
+fi.dwo.repository: http://test-dwo-nl.s3.amazonaws.com/bundles/index.xml
