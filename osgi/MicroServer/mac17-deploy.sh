@@ -4,12 +4,13 @@ then
 	jh=$(/usr/libexec/java_home -v 17)
 fi
 JAVA_HOME=$jh $jh/bin/jpackage --help 
+VERSION=0.0.7
+MAIN=MicroServer-$VERSION.jar
+VERSION=1.0.7
 
-
-
-cp target/MicroServer*.jar target/dependency
+cp target/$MAIN target/dependency
 rm -rf target/deploy/*
 JAVA_HOME=$jh $jh/bin/jpackage  -t app-image -n NumworxAuthor -d target/deploy -i target/dependency \
-  --main-jar MicroServer-0.0.7-SNAPSHOT.jar --app-version 1.0.7 \
+  --main-jar $MAIN --app-version $VERSION \
   --java-options --add-exports=java.desktop/sun.awt.www.content.image=ALL-UNNAMED \
-  --verbose --vendor Numworx 
+  --verbose --vendor Numworx --resource-dir package/macosx
