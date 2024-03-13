@@ -60,7 +60,7 @@ public class Main {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		int month = 1; // JANUARI
+		int month = 2; // FEBRUARI
 		int year = 2024;
 		
 		formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
