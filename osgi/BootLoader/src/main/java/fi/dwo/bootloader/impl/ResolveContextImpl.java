@@ -39,9 +39,10 @@ class ResolveContextImpl extends ResolveContext /*implements Repository*/ {
 		return mandatory;
 	}
 
-	ResolveContextImpl(Repository[] repository, BundleContext context) {
+	ResolveContextImpl(Repository[] repository, BundleContext context, Map<Requirement, List<Capability>> cacheMap) {
 		this.repository = repository;
 		this.context = context;
+		this.cacheMap = cacheMap;
 		initWirings();
 		framework = context.getBundle(0).adapt(FrameworkWiring.class);
 	}
@@ -58,8 +59,16 @@ class ResolveContextImpl extends ResolveContext /*implements Repository*/ {
 		return framework.findProviders(requirement);
 	}
 
+	private Map<Requirement, List<Capability>> cacheMap = new HashMap<>();
+	
+	
 	@Override
 	public List<Capability> findProviders(Requirement requirement) {
+		List<Capability> cache = this.cacheMap.get(requirement);
+		if (cache != null) 
+			return cache;
+		
+		
 		ArrayList<Capability> list = new ArrayList<Capability>();
 		Set<Requirement> singleton = Collections.singleton(requirement);
 
@@ -73,6 +82,7 @@ class ResolveContextImpl extends ResolveContext /*implements Repository*/ {
         }
 		for(Repository r : repository)
 			list.addAll(r.findProviders(singleton).get(requirement));
+		if (!list.isEmpty()) cacheMap.put(requirement, list);
 		return list;
 	}
 

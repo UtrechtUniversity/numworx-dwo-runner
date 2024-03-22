@@ -151,7 +151,7 @@ public class Activator implements BundleActivator {
 	private String CONSOLE = "org.eclipse.concierge.shell-5.0.0.20151029184259.jar";
 	//private String EVENT_ADMIN = "org.apache.felix.eventadmin-1.4.8.jar";;
 	private String DWOJAPPLET_STARTER = "DWOJApplet-Starter-2.0.jar";
-	private String PAX_URL_WRAP = "pax-url-wrap-2.4.7.jar";
+	static  String PAX_URL_WRAP = "pax-url-wrap-2.4.7.jar";
 	private String UNPACK200 = "unpack200-0.0.1.jar";
 	private String SLF4J = "slf4j-jdk14-1.7.21.jar";
 	private String DWO_LOADER = "DwoLoader-0.0.2-SNAPSHOT.jar";
@@ -178,7 +178,7 @@ public class Activator implements BundleActivator {
 		
 		installEventAdmin(builder);
 		installCM(builder);
-		installWrap(builder, factory);
+		//installWrap(builder, factory);
 		installUnpack200(builder);
 
 		config.getPromise().then((p) -> ct.open(p.getValue()))
@@ -415,12 +415,12 @@ public class Activator implements BundleActivator {
 		}}
 	}
 
-	private final static String WRAP = "org.ops4j.pax.url.wrap";
+	final static String WRAP = "org.ops4j.pax.url.wrap";
 
 	private void installWrap(LoaderBuilder builder, LoaderBuilderFactory factory)
 			throws BundleException, URISyntaxException {
 		if(noProtocol("wrap"))
-			builder.setLocation(PAX_URL_WRAP).start(WRAP);
+			builder.setLocation(Activator.PAX_URL_WRAP).start(Activator.WRAP);
 		
 	}
 	

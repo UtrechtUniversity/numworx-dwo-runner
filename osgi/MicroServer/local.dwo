@@ -1,0 +1,11 @@
+#DWOv1
+fi.dwo.dwojapplet.domain.DWO: http://localhost:8080/dwo/DWOJApplet.jar
+fi.dwo.documentbase: http://localhost:8080/dwo/
+fi.dwo.codebase: http://localhost:8080/dwo/
+fi.dwo.bundles: https://test-dwo-nl.s3.amazonaws.com/bundles/
+fi.dwo.repository: https://test-dwo-nl.s3.amazonaws.com/bundles/index.xml
+fi.dwo.jarindex: https://test-dwo-nl.s3.amazonaws.com/jars/index.xml
+
+fi.dwo.repository: file:///Users/velth101/git/numworx-dwo-runner/osgi/app-install/target/index.xml
+fi.dwo.jarindex: http://localhost:8082/jars/index.xml
+fi.dwo.bundles: file:///Users/velth101/git/numworx-dwo-runner/osgi/app-install/target/

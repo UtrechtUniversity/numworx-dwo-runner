@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -23,6 +24,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
 import org.osgi.framework.BundleReference;
 import org.osgi.framework.Constants;
+import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.Version;
 import org.osgi.framework.namespace.IdentityNamespace;
@@ -42,6 +44,7 @@ import org.osgi.service.resolver.ResolveContext;
 import org.osgi.service.resolver.Resolver;
 
 import fi.dwo.bootloader.LoaderBuilder;
+import fi.dwo.bootloader.LoaderBuilderFactory;
 
 public class Builder implements LoaderBuilder {
 
@@ -238,7 +241,12 @@ public class Builder implements LoaderBuilder {
     		        bundle = update(url, bundle);
     		      } 
     		    } else
-                  bundle = context.installBundle(url);
+					try {
+						bundle = context.installBundle(url);
+					} catch (BundleException e) {
+						log(LogService.LOG_ERROR, "missing " + url, e);
+						continue;
+					}
      		} else {
      		  // check version here.
               Version vers = getBundleVersion(res);
@@ -260,10 +268,10 @@ public class Builder implements LoaderBuilder {
         in.close();
         return bundle;
       } catch (IOException e) {
-        log(LogService.LOG_WARNING, "update failed", e);
+        log(LogService.LOG_WARNING, "update failed " + url, e);
       } 
-      bundle.uninstall();
-      bundle = context.installBundle(url);
+//      bundle.uninstall();
+//      bundle = context.installBundle(url);
       return bundle;
   }
 
@@ -312,12 +320,13 @@ public class Builder implements LoaderBuilder {
 	}
 
 	final static private Repository[] EMPTY = new Repository[0];
+	Map<Requirement, List<Capability>> cacheMap = new HashMap<>();
 	private ResolveContextImpl fromResolver(String symbolicname)
 			throws ResolutionException {
 		Repository[] repos = parent.repository.getServices(EMPTY);
 		if (repos == null)
 			repos = EMPTY;
-		ResolveContextImpl rc = new ResolveContextImpl(repos, context);
+		ResolveContextImpl rc = new ResolveContextImpl(repos, context, cacheMap);
 		Requirement r = getRequirement(symbolicname);
 		List<Capability> caps = rc.findProviders(r);
 		Collections.sort(caps, new Comparator<Capability>() {
@@ -471,7 +480,7 @@ public class Builder implements LoaderBuilder {
 	private Optional<Resource> isBundleOrFragment(Requirement requirement, boolean fragment) {
 		Repository[] repositories = parent.repository.getServices(EMPTY);
 		   if (repositories == null) repositories = EMPTY;
-		   ResolveContextImpl rc = new ResolveContextImpl(repositories, context);
+		   ResolveContextImpl rc = new ResolveContextImpl(repositories, context, cacheMap);
 		   List<Capability> result = rc.findProviders(requirement);
 		   for(Capability cap: result) {
 			   if (!cap.getNamespace().equals(IdentityNamespace.IDENTITY_NAMESPACE)) {
@@ -487,15 +496,39 @@ public class Builder implements LoaderBuilder {
 		   return Optional.empty();
 	}
 	
-	
+	private boolean noProtocol(String protocol) {
+		String clazz = "org.osgi.service.url.URLStreamHandlerService";
+		String filter = "(url.handler.protocol="+ protocol + ")";
+		try {
+			ServiceReference<?>[] result = context.getAllServiceReferences(clazz, filter);
+			return result == null || result.length<1;
+		} catch (InvalidSyntaxException e) {
+			log(LogService.LOG_ERROR, "Should not happen: " + protocol, e);
+			return false;
+		}
+	}
+	private boolean hasWrap = false;
+	private void installWrap()
+			throws BundleException {
+		if (hasWrap) return;
+		synchronized(context) {
+			if(noProtocol("wrap"))
+			{   LoaderBuilder builder = parent.newInstance();
+				try {
+					builder.setLocation(Activator.PAX_URL_WRAP).start(Activator.WRAP);
+					hasWrap = true;
+				} catch (URISyntaxException e) {
+					log(LogService.LOG_ERROR, "should not happen", e);
+					throw new BundleException("ooops", e);
+				}
+			}
+		}
+	}
+
 	
 	public List<Bundle> startWrap(String main) throws BundleException {
 		// prolog
 
-		if (isBundle(main)) {
-			return start0(main);
-		}
-		
 		uninstall(main);
 		Set<URI> work = new HashSet<URI>();
 		Set<URI> done = new HashSet<URI>();
@@ -513,16 +546,19 @@ public class Builder implements LoaderBuilder {
 			URI jar = list.next();
 			list.remove();
 			if (done.add(jar)) {
-				String wrap = "wrap:" + jar + bnd;
+				String wrap;
+				if (isBundle(jar).isPresent()) {
+					wrap = null;
+				} else {
+					installWrap();
+					wrap = "wrap:" + jar + bnd;
+					if(!first)
+						wrap += "&Bundle-SymbolicName=" + jar.getPath().replace('/', '_');
+				}
 				Bundle b;
 				try {
-					log(LogService.LOG_DEBUG, wrap);
-					if (first)
-						b = istart(jar, wrap);
-					else {
-						wrap += "&Bundle-SymbolicName=" + jar.getPath().replace('/', '_');
-						b = istart(jar, wrap);
-					}
+					log(LogService.LOG_DEBUG, wrap != null ? wrap : jar.toString());
+					b = istart(jar, wrap);
 					first = false;
 					bundles.add(b);
 					parent.addBundle(b);
@@ -550,7 +586,7 @@ public class Builder implements LoaderBuilder {
 	private void extraResources(List<Bundle> bundles) throws BundleException {
       Repository[] repositories = parent.repository.getServices(EMPTY);
       if (repositories == null) repositories = EMPTY;
-      ResolveContextImpl rc = new ResolveContextImpl(repositories, context);   
+      ResolveContextImpl rc = new ResolveContextImpl(repositories, context, cacheMap);   
       rc.noFilter(); // allow resolved/installed bundles.
       bundles.forEach(b -> rc.getMandatoryResources().add(b.adapt(BundleRevision.class)));
       try {
