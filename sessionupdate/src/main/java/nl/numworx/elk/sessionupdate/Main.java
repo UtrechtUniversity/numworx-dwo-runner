@@ -60,7 +60,8 @@ public class Main {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		int month = 12; // DECEMBER
+		int month = 2; // FEBRUARI
+		int year = 2024;
 		
 		formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
 
@@ -80,8 +81,8 @@ for(int m = month-1; m < month; m++ )
 		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder(); 
 		QueryBuilder query = new MatchQueryBuilder("fileset.name", "access");
 		QueryBuilder exist = new ExistsQueryBuilder("url.original");
-		Date fromdate = new Date(2023-1900,m  ,1,0,0,0);
-		Date todate   = new Date(2023-1900,m+1,1,0,0,0);
+		Date fromdate = new Date(year-1900,m  ,1,0,0,0);
+		Date todate   = new Date(year-1900,m+1,1,0,0,0);
 		QueryBuilder start = new RangeQueryBuilder("@timestamp").from(fromdate, true).to(todate, false);
 		searchSourceBuilder.query(new BoolQueryBuilder().must(query).must(exist)
 				.must(start)
