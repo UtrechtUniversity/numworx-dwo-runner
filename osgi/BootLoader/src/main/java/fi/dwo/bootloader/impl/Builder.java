@@ -38,6 +38,7 @@ import org.osgi.resource.Requirement;
 import org.osgi.resource.Resource;
 import org.osgi.resource.Wire;
 import org.osgi.service.log.LogService;
+import org.osgi.service.repository.ContentNamespace;
 import org.osgi.service.repository.Repository;
 import org.osgi.service.resolver.ResolutionException;
 import org.osgi.service.resolver.ResolveContext;
@@ -476,6 +477,24 @@ public class Builder implements LoaderBuilder {
 		Requirement requirement = new RequirementImpl(location);
 		return isBundleOrFragment(requirement, true);
 	}
+	
+	static boolean noPack200 = true;
+	
+	private String hasPack200(Resource resource) {
+		if(noPack200) return null;
+		List<Capability> caps = resource.getCapabilities(ContentNamespace.CONTENT_NAMESPACE);
+		for (Capability cap: caps) {
+			Map<String, Object> map = cap.getAttributes();
+			if ("application/x-java-pack200".equals(map.get(ContentNamespace.CAPABILITY_MIME_ATTRIBUTE)))
+			{
+				Object url = map.get(ContentNamespace.CAPABILITY_URL_ATTRIBUTE);
+				if (url != null) {
+					return "pack200:"+url;
+				} else break;
+			}				
+		}
+		return null;
+	}
 
 	private Optional<Resource> isBundleOrFragment(Requirement requirement, boolean fragment) {
 		Repository[] repositories = parent.repository.getServices(EMPTY);
@@ -547,8 +566,9 @@ public class Builder implements LoaderBuilder {
 			list.remove();
 			if (done.add(jar)) {
 				String wrap;
-				if (isBundle(jar).isPresent()) {
-					wrap = null;
+				Optional<Resource> resource = isBundle(jar);
+				if (resource.isPresent()) {
+					wrap = hasPack200(resource.get());
 				} else {
 					installWrap();
 					wrap = "wrap:" + jar + bnd;
@@ -643,17 +663,16 @@ public class Builder implements LoaderBuilder {
 		if (b != null && b.getState() >= Bundle.RESOLVED)
 			return b;
 		
-		Optional<Resource> resource = isBundle(location);
 		
 		InputStream is = null;
 		if (b == null) {
-			if (wrap != null && !resource.isPresent())
+			if (wrap != null )
 				is = new URL(wrap).openStream();
 			b = context.installBundle(location.toString(), is);
 		} else {
+			Optional<Resource> resource = isBundle(location);
 			Update update = this.update;
 			if (resource.isPresent()) {
-				wrap = null;
 // there is a claim that jarindex is up to date, which is not.
 				Version vb = b.getVersion();
 				Version vr = getBundleVersion(resource.get());

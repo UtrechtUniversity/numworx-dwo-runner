@@ -437,9 +437,15 @@ public class Activator implements BundleActivator {
 //	  }
 	}
 		
+	// missing in java 14
+	@Deprecated
 	private void installUnpack200(LoaderBuilder builder) throws BundleException, URISyntaxException {
-	  if (noProtocol("pack200"))
-	      builder.setLocation(UNPACK200).start("fi.dwo.unpack200");
+		String version = System.getProperty("java.version", "0.0.0");		
+		int javaVersion = Integer.parseInt(version.split("\\.")[0]);
+		if (javaVersion < 14 && noProtocol("pack200"))
+			builder.setLocation(UNPACK200).start("fi.dwo.unpack200");
+	  	Builder.noPack200 = noProtocol("pack200");
+	  	if (Builder.noPack200) LOGt.log(LogService.LOG_WARNING, "no pack200: protocol");
 	}
 	
 	
