@@ -11,7 +11,7 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>MicroBoot</module>
-<!--    <module>unpack200</module>-->
+    	<module>unpack200</module>
 		<module>BootLoader</module>
 <!--	<module>DWOJApplet-Starter</module>-->
 <!--    <module>ch.jm.osgi.provisioning</module>-->

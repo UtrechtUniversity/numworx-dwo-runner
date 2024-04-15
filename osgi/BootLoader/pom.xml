@@ -4,6 +4,7 @@
     <groupId>nl.uu.fi.dwo</groupId>
     <version>1.1</version>
     <artifactId>DWO.master.pom</artifactId>
+    <relativePath/>
   </parent>
   <artifactId>BootLoader</artifactId>
   <packaging>bundle</packaging>
@@ -103,7 +104,4 @@
   	<maven.compiler.target>1.8</maven.compiler.target>
   </properties>
   <groupId>fi.dwo</groupId>
-  <scm>
-  	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.projects/BootLoader/trunk</developerConnection>
-  </scm>
 </project>
