@@ -1,6 +1,8 @@
 package nl.numworx.elk.sessionupdate;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -60,8 +62,10 @@ public class Main {
 	}
 	
 	public static void main(String[] args) throws Exception {
+try {
 		int month = Integer.parseInt(args[0]); // FEBRUARI=2 March=3
 		int year = 2024;
+		out = new PrintStream(new FileOutputStream("session-" + month + "-" + year + ".txt"));
 		
 		formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
 
@@ -119,6 +123,7 @@ for(int m = month-1; m < month; m++ )
 			userid = (String) map.get("original");
 			if (userid == null) {
 				System.out.println("no url.original" + sourceAsMap);
+				continue;
 			}
 			String[] split = userid.split("-",3);
 			if (split.length == 3 && "/dwo/rest/sec:1".equals(split[0])) {
@@ -137,6 +142,7 @@ for(int m = month-1; m < month; m++ )
 			} else {
 				long diff = time - record.timestamp.getTime();
 				if (diff > 30*60*1000L) {
+					
 					put(client, record, m);
 					record.timestamp = t;
 					record.duration = 0;
@@ -164,11 +170,16 @@ for(int m = month-1; m < month; m++ )
 		lastTime.values().forEach(item -> put(client, item, month));
 		
 		client.close();
+} catch(Exception oops) {
+	oops.printStackTrace();
+} finally {
+		out.flush();
 		System.exit(0); 
+}
 	}
+	
+	private static PrintStream out = System.out;
 
-	
-	
 	private static void put(RestHighLevelClient client, UserRecord record, int m) {
 		
 		Map<String, Object> json = new TreeMap<>();
@@ -177,6 +188,7 @@ for(int m = month-1; m < month; m++ )
 		String id = m + "-" + record.user_id.substring(len-2);
 		json.put("timestamp", record.timestamp);
 		json.put("duration", record.duration / 1000.0); // double in seconds
+		out.println(json);
 		IndexRequest request = new IndexRequest("session-"+id, "_doc", record.user_id + Long.toString(record.timestamp.getTime()))
 		        .source(json); 		
 		try {
