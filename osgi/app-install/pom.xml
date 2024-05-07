@@ -171,7 +171,7 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>fi.dwo.</groupId>
+			<groupId>fi.dwo</groupId>
 			<artifactId>unpack200</artifactId>
 			<version>0.0.3-SNAPSHOT</version>
 		</dependency>
