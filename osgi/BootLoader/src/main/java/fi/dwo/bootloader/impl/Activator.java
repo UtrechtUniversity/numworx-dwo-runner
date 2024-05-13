@@ -154,6 +154,7 @@ public class Activator implements BundleActivator {
 	static  String PAX_URL_WRAP = "pax-url-wrap-2.4.7.jar";
 	private String UNPACK200 = "unpack200-0.0.1.jar";
 	private String SLF4J = "slf4j-jdk14-1.7.21.jar";
+	private String SLF4JO = "slf4j.osgi-1.7.2.jar";
 	private String DWO_LOADER = "DwoLoader-0.0.2-SNAPSHOT.jar";
 
 	private BundleContext context;
@@ -230,7 +231,12 @@ public class Activator implements BundleActivator {
   }
 
   private void installSLF4J(LoaderBuilder builder) throws BundleException, URISyntaxException {
-	  builder.setLocation(SLF4J).start("slf4j.jdk14");
+	  try {
+		  builder.setLocation(SLF4JO).start("slf4j.osgi");
+	  } catch (Exception oops) {
+		  LOGt.log(LogService.LOG_WARNING,  "slf4j to osgi", oops);
+		  builder.setLocation(SLF4J).start("slf4j.jdk14");
+	  }
 	  try {
         String version = System.getProperty("java.version", "0.0.0");
         if ( Integer.parseInt(version.split("\\.")[0]) >= 9)

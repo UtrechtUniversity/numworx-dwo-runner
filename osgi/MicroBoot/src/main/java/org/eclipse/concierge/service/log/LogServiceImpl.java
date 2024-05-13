@@ -28,9 +28,11 @@ import org.osgi.framework.ServiceFactory;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.log.LogEntry;
+import org.osgi.service.log.LogLevel;
 import org.osgi.service.log.LogListener;
 import org.osgi.service.log.LogReaderService;
 import org.osgi.service.log.LogService;
+import org.osgi.service.log.Logger;
 
 /**
  * A lightweight log service implementation. Since this is part of the
@@ -45,7 +47,7 @@ public final class LogServiceImpl implements LogReaderService {
 	 * the log buffer. Works like a ring buffer. The size can be configured by a
 	 * property.
 	 */
-	private final Vector<LogEntryImpl> logBuffer;
+	private final Vector<LogEntry> logBuffer;
 
 	/**
 	 * the list of subscribed listeners.
@@ -94,7 +96,7 @@ public final class LogServiceImpl implements LogReaderService {
 			LOG_LEVEL = loglevel;
 		}
 		QUIET = quiet;
-		logBuffer = new Vector<LogEntryImpl>(LOG_BUFFER_SIZE);
+		logBuffer = new Vector<LogEntry>(LOG_BUFFER_SIZE);
 		if (!QUIET) {
 			System.out.println(
 					"Logger initialized, loglevel is " + LEVELS[LOG_LEVEL]);
@@ -115,7 +117,7 @@ public final class LogServiceImpl implements LogReaderService {
 					throwable, sref, bundle);
 			logBuffer.add(entry);
 			if (logBuffer.size() > LOG_BUFFER_SIZE) {
-				LogEntryImpl.releaseEntry(logBuffer.remove(0));
+				LogEntryImpl.releaseEntry((LogEntryImpl) logBuffer.remove(0));
 			}
 			for (final Iterator<LogListener> listeners = logListeners
 					.iterator(); listeners.hasNext();) {
@@ -158,7 +160,7 @@ public final class LogServiceImpl implements LogReaderService {
 	 *
 	 * @see org.osgi.service.log.LogReaderService#getLog()
 	 */
-	public Enumeration<? extends LogEntry> getLog() {
+	public Enumeration<LogEntry> getLog() {
 		return logBuffer.elements();
 	}
 
@@ -261,6 +263,36 @@ public final class LogServiceImpl implements LogReaderService {
 		public void log(final ServiceReference sr, final int level,
 				final String message, final Throwable exception) {
 			LogServiceImpl.this.log(level, message, exception, sr, bundle);
+		}
+
+		@Override
+		public Logger getLogger(String name) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Logger getLogger(Class<?> clazz) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public <L extends Logger> L getLogger(String name, Class<L> loggerType) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public <L extends Logger> L getLogger(Class<?> clazz, Class<L> loggerType) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public <L extends Logger> L getLogger(Bundle bundle, String name, Class<L> loggerType) {
+			// TODO Auto-generated method stub
+			return null;
 		}
 
 	}
@@ -399,6 +431,36 @@ public final class LogServiceImpl implements LogReaderService {
 				buffer.append(writer.toCharArray());
 			}
 			return buffer.toString();
+		}
+
+		@Override
+		public LogLevel getLogLevel() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public String getLoggerName() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public long getSequence() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		public String getThreadInfo() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public StackTraceElement getLocation() {
+			// TODO Auto-generated method stub
+			return null;
 		}
 
 	}
