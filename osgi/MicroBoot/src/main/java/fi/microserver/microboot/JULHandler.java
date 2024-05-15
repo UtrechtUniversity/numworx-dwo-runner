@@ -156,7 +156,7 @@ public class JULHandler extends Handler {
 			}
 
 		} else {
-			System.err.println(getFormatter().format(record));
+			System.err.println(message);
 		}
 	}
 
