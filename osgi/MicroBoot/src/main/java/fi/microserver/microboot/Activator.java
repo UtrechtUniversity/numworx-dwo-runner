@@ -9,8 +9,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,8 +36,11 @@ import org.osgi.service.condpermadmin.ConditionalPermissionUpdate;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
+import org.osgi.service.log.LogLevel;
 import org.osgi.service.log.LogReaderService;
 import org.osgi.service.log.LogService;
+import org.osgi.service.log.admin.LoggerAdmin;
+import org.osgi.service.log.admin.LoggerContext;
 import org.osgi.service.provisioning.ProvisioningService;
 import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
@@ -127,10 +132,34 @@ public class Activator implements BundleActivator, ServiceTrackerCustomizer<Cond
     	  ps = null;
     	  context.ungetService(ref);
       }
-      boolean QUIET = !getProperty("fi.dwo.console", false);     
-      LogServiceImpl impl = new LogServiceImpl(LOG_BUFFER_SIZE, LOG_LEVEL, QUIET);
-      context.registerService(LogReaderService.class, impl, null);
-      context.registerService(LogService.class, impl.factory, null);
+      boolean QUIET = !getProperty("fi.dwo.console", false);
+      LogLevel level = LogLevel.WARN;
+      switch(LOG_LEVEL) {
+      case LogService.LOG_DEBUG: level = LogLevel.DEBUG; break;
+      case LogService.LOG_ERROR: level = LogLevel.ERROR; break;
+      case LogService.LOG_INFO: level = LogLevel.INFO; break;
+      }
+      final LogLevel LEVEL = level;
+      ServiceTracker<LoggerAdmin, LoggerAdmin> admintracker;
+      admintracker = new ServiceTracker<LoggerAdmin, LoggerAdmin>(context, LoggerAdmin.class, null) {
+
+		@Override
+		public LoggerAdmin addingService(ServiceReference<LoggerAdmin> reference) {
+			// TODO Auto-generated method stub
+			LoggerAdmin admin = super.addingService(reference);
+			LoggerContext lc = admin.getLoggerContext(null);
+			Map<String, LogLevel> map = lc.getLogLevels();
+			if (map == null) map = new HashMap<>();
+			map.put(org.osgi.service.log.Logger.ROOT_LOGGER_NAME, LEVEL);
+			lc.setLogLevels(map);
+			return admin;
+		}
+    	  
+      };
+      admintracker.open();
+//      LogServiceImpl impl = new LogServiceImpl(LOG_BUFFER_SIZE, LOG_LEVEL, QUIET);
+//      context.registerService(LogReaderService.class, impl, null);
+//      context.registerService(LogService.class, impl.factory, null);
 }
 
 @Override
