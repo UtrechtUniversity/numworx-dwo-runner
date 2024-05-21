@@ -295,6 +295,11 @@
             	</exclusion>
             </exclusions>
         </dependency>
+ 		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-jdk14</artifactId>
+			<version>1.7.21</version>
+		</dependency>
         <dependency>
         	<groupId>org.osgi</groupId>
         	<artifactId>slf4j.osgi</artifactId>

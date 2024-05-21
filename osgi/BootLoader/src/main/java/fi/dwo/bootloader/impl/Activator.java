@@ -169,8 +169,8 @@ public class Activator implements BundleActivator {
 				.getService(serviceReference);
 		builder = factory.newInstance();
 		builder.setUpdate(Update.NEVER);
-		installDwoLoader(builder);
 		installSLF4J(builder);
+		installDwoLoader(builder);
 		installConsole("true".equals(config.getProperty("fi.dwo.console")),
 				builder);
 		
