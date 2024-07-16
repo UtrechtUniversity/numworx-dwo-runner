@@ -66,10 +66,12 @@ class ResolveContextImpl extends ResolveContext /*implements Repository*/ {
 	public List<Capability> findProviders(Requirement requirement) {
 		List<Capability> cache = this.cacheMap.get(requirement);
 		if (cache != null) 
-			return cache;
+		{
+			return filterMandatory(cache);
+		}
 		
 		
-		ArrayList<Capability> list = new ArrayList<Capability>();
+		List<Capability> list = new ArrayList<Capability>();
 		Set<Requirement> singleton = Collections.singleton(requirement);
 
 		Collection<Capability> c = this.findProviders(singleton).get(requirement);
@@ -82,7 +84,24 @@ class ResolveContextImpl extends ResolveContext /*implements Repository*/ {
         }
 		for(Repository r : repository)
 			list.addAll(r.findProviders(singleton).get(requirement));
+		list = filterMandatory(list);		
 		if (!list.isEmpty()) cacheMap.put(requirement, list);
+		return list;
+	}
+
+	public List<Capability> filterMandatory(List<Capability> list) {
+		// if list contains a resource from mantatory, remove all other
+				Iterator<Capability> iter2 = list.iterator();
+				while (iter2.hasNext()) {
+					Capability capability = (Capability) iter2.next();
+					Resource r  = capability.getResource();
+					if (mandatory.contains(r) )
+					{
+						list = Collections.singletonList(capability);
+						break;
+					}
+					
+				}
 		return list;
 	}
 
