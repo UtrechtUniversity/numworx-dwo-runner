@@ -193,10 +193,12 @@ for(int m = month-1; m < month; m++ )
 		        .source(json); 		
 		try {
 			IndexResponse indexResponse = client.index(request, RequestOptions.DEFAULT);
-		} catch (IOException e) {
+			Thread.sleep(500);
+		} catch (IOException | InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		
 	}
 
