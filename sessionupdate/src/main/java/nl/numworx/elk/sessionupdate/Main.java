@@ -15,6 +15,9 @@ import org.apache.http.HttpHost;
 import org.elasticsearch.action.ActionRequestBuilder;
 import org.elasticsearch.action.DocWriteResponse.Result;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
+import org.elasticsearch.action.bulk.BulkRequest;
+import org.elasticsearch.action.bulk.BulkRequestBuilder;
+import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteRequestBuilder;
 import org.elasticsearch.action.delete.DeleteResponse;
@@ -167,7 +170,30 @@ for(int m = month-1; m < month; m++ )
 		clear.setScrollIds(scrollIds);
 		client.clearScroll(clear, RequestOptions.DEFAULT);
 }
-		lastTime.values().forEach(item -> put(client, item, month));
+
+		BulkRequest request = new BulkRequest();
+		lastTime.values().forEach(item -> put(request, item, month));
+		BulkResponse br = client.bulk(request, RequestOptions.DEFAULT);
+		
+	
+
+
+
+//		lastTime.values().forEach(item -> {
+//			
+//			try {
+//				put(client, item, month);
+//			} catch (Exception e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//				try { Thread.sleep(5000); } catch(InterruptedException oops) {}
+//				put(client, item, month); // again...
+//				
+//			}
+//			// slow down here...
+//			try { Thread.sleep(1000); } catch(InterruptedException oops) {}
+//		}
+//		);
 		
 		client.close();
 } catch(Exception oops) {
@@ -182,18 +208,12 @@ for(int m = month-1; m < month; m++ )
 
 	private static void put(RestHighLevelClient client, UserRecord record, int m) {
 		
-		Map<String, Object> json = new TreeMap<>();
-		json.put("user_id", record.user_id);
-		int len = record.user_id.length();
-		String id = m + "-" + record.user_id.substring(len-2);
-		json.put("timestamp", record.timestamp);
-		json.put("duration", record.duration / 1000.0); // double in seconds
-		out.println(json);
-		IndexRequest request = new IndexRequest("session-"+id, "_doc", record.user_id + Long.toString(record.timestamp.getTime()))
-		        .source(json); 		
+		IndexRequest request = createIndexRequest(record, m); 		
 		try {
 			IndexResponse indexResponse = client.index(request, RequestOptions.DEFAULT);
+			System.out.println(indexResponse.getResult());
 			Thread.sleep(500);
+			
 		} catch (IOException | InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -202,7 +222,22 @@ for(int m = month-1; m < month; m++ )
 		
 	}
 
+	private static IndexRequest createIndexRequest(UserRecord record, int m) {
+		Map<String, Object> json = new TreeMap<>();
+		json.put("user_id", record.user_id);
+		int len = record.user_id.length();
+		String id = m + "-" + record.user_id.substring(len-2);
+		json.put("timestamp", record.timestamp);
+		json.put("duration", record.duration / 1000.0); // double in seconds
+		out.println(json);
+		IndexRequest request = new IndexRequest("session-"+id, "_doc", record.user_id + Long.toString(record.timestamp.getTime()))
+		        .source(json);
+		return request;
+	}
 
+	private static void put(BulkRequest builder, UserRecord record, int m) {
+		builder.add(createIndexRequest(record, m));
+	}
 
 
 
