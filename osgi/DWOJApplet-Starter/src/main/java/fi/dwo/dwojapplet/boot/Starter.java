@@ -311,7 +311,11 @@ public class Starter implements BundleActivator {
 		ParentOf parent = new ParentOf(dwo);
         frame = new MainFrame(parent,  width, height) {
 
-			@Override
+        	{
+        	    parent.setStub(this);
+        	}
+
+        	@Override
 			public URL getCodeBase() {
 				return u;
 			}

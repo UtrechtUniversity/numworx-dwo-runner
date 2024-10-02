@@ -104,7 +104,10 @@ public class JULHandler extends Handler {
 		return !(src.startsWith("java.awt") || src.startsWith("sun.") || src.startsWith("javax.swing"));
 	}
 
+	
+	private Bundle root;
 	JULHandler(BundleContext context) {
+		root = context.getBundle();
 		tracker = new ServiceTracker<LogService, LogService>(context, LogService.class, null);
 		tracker.open();
 		setFormatter(new SimpleFormatter());
@@ -170,16 +173,17 @@ public class JULHandler extends Handler {
 	}
 
 	private Bundle getCallerBundle() {
-		Bundle ret = null;
+		Bundle ret = root;
 		Class[] classCtx = securityManager.getClassContext();
 		for (int i = 0; i < classCtx.length; i++) {
+			Bundle bi = FrameworkUtil.getBundle(classCtx[i]);
+			if (bi != null) ret = bi;
 			if (!classCtx[i].getName().startsWith("fi.microserver")
-					&& !classCtx[i].getName().startsWith("java.util.logging")) {
-				ret = FrameworkUtil.getBundle(classCtx[i]);
+					&& !classCtx[i].getName().startsWith("java.util.logging") ) {
 				break;
 			}
 		}
-		return ret;
+		return ret; // never null
 	}
 
 	static class SecurityManagerEx extends SecurityManager {

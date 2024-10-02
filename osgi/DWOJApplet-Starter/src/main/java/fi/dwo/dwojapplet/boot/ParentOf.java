@@ -9,6 +9,7 @@ import fi.beans.mainframe.JApplet;
 @SuppressWarnings("serial")
 class ParentOf extends JApplet implements AppletStub {
 	private final JApplet dwo;
+	private AppletStub stub;
 
 	ParentOf(JApplet dwo) {
 		this.dwo = dwo;
@@ -41,9 +42,16 @@ class ParentOf extends JApplet implements AppletStub {
 	public void appletResize(int width, int height) {
 		
 	}
-
+   
+	public void setStub(AppletStub stub) {
+		this.stub = stub;
+		super.setStub(stub);
+	}
 	public AppletContext getAppletContext() {
-		return (AppletContext) super.getAppletContext();
+		if (stub == null) {
+			return super.getAppletContext(); // hier gaat iets mis!
+		}
+		return stub.getAppletContext();
 	}
 	
 	
