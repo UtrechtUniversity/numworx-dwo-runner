@@ -13,7 +13,7 @@
 		<module>MicroBoot</module>
     	<module>unpack200</module>
 		<module>BootLoader</module>
-<!--	<module>DWOJApplet-Starter</module>-->
+		<module>DWOJApplet-Starter</module>
 <!--    <module>ch.jm.osgi.provisioning</module>-->
 		<module>app-install</module>
 		<module>MicroServer</module>
