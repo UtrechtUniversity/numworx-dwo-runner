@@ -294,6 +294,7 @@ public class Starter implements BundleActivator {
 		dwo.addPropertyChangeListener("passWord", cm);
 		dwo.addPropertyChangeListener("language", cm);
 		dwo.addPropertyChangeListener("profile",  cm);
+		dwo.addPropertyChangeListener("refreshToken", cm);
 		
         int width = GuiConstants.DWO_WIDTH;
         int height = GuiConstants.DWO_HEIGHT;
