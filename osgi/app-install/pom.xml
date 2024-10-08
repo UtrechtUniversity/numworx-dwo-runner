@@ -43,7 +43,7 @@
 								<artifactItem>
 									<artifactId>MicroBoot</artifactId>
 									<groupId>fi.microserver</groupId>
-									<version>0.0.9-SNAPSHOT</version>
+									<version>1.0.0-SNAPSHOT</version>
 									<type>zip</type>
 									<classifier>null</classifier>
 									<destFileName>null.zip</destFileName>
