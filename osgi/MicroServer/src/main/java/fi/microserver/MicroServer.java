@@ -1,5 +1,6 @@
 package fi.microserver;
 
+import java.awt.Dimension;
 import java.io.File;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -160,7 +161,9 @@ public class MicroServer {
 					t.printStackTrace(pw);
 					pw.close();
 					JTextArea area = new JTextArea(sw.toString());
-					JOptionPane.showMessageDialog(null, new JScrollPane(area));
+					final JScrollPane message = new JScrollPane(area);
+					message.setMaximumSize(new Dimension(800,600));
+					JOptionPane.showMessageDialog(null, message);
 				}
 			};
 			if(SwingUtilities.isEventDispatchThread()) {
