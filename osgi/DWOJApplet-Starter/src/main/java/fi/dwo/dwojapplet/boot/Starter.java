@@ -421,7 +421,7 @@ public class Starter implements BundleActivator {
 			}
         	
         };
-        frame.setTitle("Numworx author");
+        frame.setTitle("Numworx Author");
         frame.pack();
         Insets insets = frame.insets();
         frame.setSize(width+insets.left + insets.right, height + insets.bottom + insets.top);
