@@ -241,7 +241,7 @@ public class Starter implements BundleActivator {
 		if(language == null) language = Locale.getDefault().getLanguage();
 		if(codebase == null) codebase = "https://app.dwo.nl/dwo/";
 		if(profile == null) profile = "77";
-		
+		if (documentbase == null) documentbase = codebase;
 		parameters.put("language", language);
         parameters.put("profile", profile);
         if(provisioning != null) {
