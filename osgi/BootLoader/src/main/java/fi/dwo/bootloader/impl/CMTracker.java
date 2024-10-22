@@ -19,6 +19,7 @@ public class CMTracker extends
 		ServiceTracker<ConfigurationAdmin, ConfigurationAdmin> {
 
 	private static final String FI_DWO_DWOJAPPLET = "fi.dwo.dwojapplet";
+	private static final String LOGGER_CONTEXT_PID = "org.osgi.service.log.admin";
 	LogService log;
 	Config config;
 	Deferred<Config> deferred;
@@ -39,8 +40,40 @@ public class CMTracker extends
 	public ConfigurationAdmin addingService(
 			ServiceReference<ConfigurationAdmin> reference) {
 		ConfigurationAdmin cm = super.addingService(reference);
+		configureLogger(cm, reference);
 		configure(cm, reference);
 		return cm;
+	}
+
+	private void configureLogger(ConfigurationAdmin cm, ServiceReference<ConfigurationAdmin> reference) {
+		try {
+			configureLogger(cm, LOGGER_CONTEXT_PID);
+		} catch(IOException e) {
+			log.log(reference, LogService.LOG_WARNING, "configure " + LOGGER_CONTEXT_PID, e);
+		}		
+	}
+
+	private void configureLogger(ConfigurationAdmin cm, String pid) throws IOException {
+		Configuration config = cm.getConfiguration(pid, null);
+		Properties p = new Properties();
+		InputStream in = getClass().getResourceAsStream("resources/" + pid);
+		p.load(in);
+		in.close();
+		@SuppressWarnings({ "unchecked", "rawtypes" })
+		Dictionary<String, Object> dict = (Dictionary) p;
+		Dictionary<String, Object> old = config.getProperties();
+		if (old != null) {
+			Enumeration<String> e = dict.keys();
+			while (e.hasMoreElements()) {
+				String key = e.nextElement();
+				if (null == old.get(key))
+					old.put(key, dict.get(key));
+			}
+		} else {
+			old = dict;
+		}
+		if (!old.equals(config.getProperties()))
+			config.update(old);
 	}
 
 	void configure(ConfigurationAdmin cm, ServiceReference<?> reference) {

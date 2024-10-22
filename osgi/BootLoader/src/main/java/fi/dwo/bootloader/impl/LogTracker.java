@@ -1,8 +1,10 @@
 package fi.dwo.bootloader.impl;
 
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.log.LogService;
+import org.osgi.service.log.Logger;
 import org.osgi.util.tracker.ServiceTracker;
 
 class LogTracker extends ServiceTracker<LogService, LogService>
@@ -24,6 +26,36 @@ class LogTracker extends ServiceTracker<LogService, LogService>
 
 		@Override
 		public void log(ServiceReference sr, int level, String message, Throwable exception) {
+		}
+
+		@Override
+		public Logger getLogger(String name) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Logger getLogger(Class<?> clazz) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public <L extends Logger> L getLogger(String name, Class<L> loggerType) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public <L extends Logger> L getLogger(Class<?> clazz, Class<L> loggerType) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public <L extends Logger> L getLogger(Bundle bundle, String name, Class<L> loggerType) {
+			// TODO Auto-generated method stub
+			return null;
 		}
 		
 	}
@@ -60,6 +92,31 @@ class LogTracker extends ServiceTracker<LogService, LogService>
 	public void log(ServiceReference sr, int level, String message,
 			Throwable exception) {
 		service().log(sr, level, message, exception);
+	}
+
+	@Override
+	public Logger getLogger(String name) {
+		return service().getLogger(name);
+	}
+
+	@Override
+	public Logger getLogger(Class<?> clazz) {
+		return service().getLogger(clazz);
+	}
+
+	@Override
+	public <L extends Logger> L getLogger(String name, Class<L> loggerType) {
+		return service().getLogger(name, loggerType);
+	}
+
+	@Override
+	public <L extends Logger> L getLogger(Class<?> clazz, Class<L> loggerType) {
+		return service().getLogger(clazz, loggerType);
+	}
+
+	@Override
+	public <L extends Logger> L getLogger(Bundle bundle, String name, Class<L> loggerType) {
+		return getLogger(bundle, name, loggerType);
 	}
 
 }
