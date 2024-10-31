@@ -147,7 +147,7 @@ public class Maintenance {
     return Boolean.FALSE;
   }
   
-  Date old = new Date(System.currentTimeMillis() - 1000L* 3600 * 24 * 265 * 2);
+  Date old = new Date(System.currentTimeMillis() - 1000L* 3600 * 24 * 365 * 2);
   private boolean isOldUser(DomUserFullwLoginContext dom) {
     Long register = dom.getDomLoginContext().getRegisterTimeStamp();
     Long login    = dom.getDomLoginContext().getLastLoginTimeStamp();
