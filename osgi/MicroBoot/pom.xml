@@ -7,7 +7,7 @@
 	</parent>
   <groupId>fi.microserver</groupId>
   <artifactId>MicroBoot</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.1-SNAPSHOT</version>
   <packaging>bundle</packaging>
   <dependencies>  
   	<dependency>
@@ -178,11 +178,6 @@
       </plugin>
  		<plugin>
 			<artifactId>maven-assembly-plugin</artifactId>
-        	<configuration>
-          		<descriptors>
-					<descriptor>src/main/assembly.xml</descriptor>
-          		</descriptors>
-        	</configuration>
             <executions>
           		<execution>
             		<id>make-assembly</id>
@@ -190,6 +185,23 @@
             		<goals>
               			<goal>single</goal>
             		</goals>
+		        	<configuration>
+		          		<descriptors>
+							<descriptor>src/main/assembly.xml</descriptor>
+		          		</descriptors>
+		        	</configuration>
+          		</execution>
+          		<execution>
+            		<id>make-assembly2</id>
+            		<phase>package</phase>
+            		<goals>
+              			<goal>single</goal>
+            		</goals>
+		        	<configuration>
+		          		<descriptors>
+							<descriptor>src/main/assembly2.xml</descriptor>
+		          		</descriptors>
+		        	</configuration>
           		</execution>
         	</executions>  		
   		</plugin>
