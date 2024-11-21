@@ -230,7 +230,7 @@
 		</dependency>
 		<dependency>
     	  <groupId>nl.numworx.swingbrowser</groupId>
-    	  <version>0.0.16-SNAPSHOT</version>
+    	  <version>0.0.17-SNAPSHOT</version>
 		  <artifactId>swingbrowser-ext</artifactId>
 		  <exclusions>
 		  	<exclusion>
