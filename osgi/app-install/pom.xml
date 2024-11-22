@@ -70,7 +70,6 @@
 						<phase>package</phase>
 						<configuration>
 							<inputDir>target</inputDir>
-							<includeJar>true</includeJar>
 						</configuration>
 					</execution>
 				</executions>

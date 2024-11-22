@@ -295,7 +295,7 @@ public class Starter implements BundleActivator {
 		dwo.addPropertyChangeListener("language", cm);
 		dwo.addPropertyChangeListener("profile",  cm);
 		dwo.addPropertyChangeListener("refreshToken", cm);
-		
+				
         int width = GuiConstants.DWO_WIDTH;
         int height = GuiConstants.DWO_HEIGHT;
         if (dict != null) {
@@ -356,14 +356,8 @@ public class Starter implements BundleActivator {
 			}
 
       private void registerForOSEvents() {
-        ServiceReference<?> ref;
-        ref = context.getServiceReference("fi.dwo.eawt.EAWT");
-        if (ref != null) {
-          EAWT eawt = (EAWT) context.getService(ref);
-          eawt.setQuit(() -> { quit(); return true; });
-          return;
-        }
-        super.registerForMacOSXEvents();
+		EAWTTracker t = new EAWTTracker(context, this, () -> { quit(); return true; });
+		t.open();
       }
       
       {
