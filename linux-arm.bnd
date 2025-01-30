@@ -1,0 +1,9 @@
+ver: 7.28.1
+-classpath: jxbrowser-linux64-arm-${ver}.jar
+Bundle-SymbolicName: com.teamdev.jxbrowser.linux-arm
+-output: ${bsn}-${ver}.jar
+Bundle-Version: ${ver}
+Fragment-Host: com.teamdev.jxbrowser;bundle-version="[${ver},${ver}]"
+Private-Package: *
+Require-Capability: osgi.native;filter:="(&(osgi.native.osname~=linux)(osgi.native.processor~=aarch64))"
+Provide-Capability: com.teamdev.jxbrowser;platform="linux"
