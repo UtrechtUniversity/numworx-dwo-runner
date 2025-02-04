@@ -283,6 +283,11 @@
 			<artifactId>com.teamdev.jxbrowser-linux64</artifactId>
 			<version>${jxb}</version>
 		</dependency>
+                <dependency>
+                        <groupId>nl.numworx</groupId>
+                        <artifactId>com.teamdev.jxbrowser-linux64-arm</artifactId>
+                        <version>${jxb}</version>
+                </dependency>
 		<dependency>
 			<groupId>nl.numworx</groupId>
 			<artifactId>com.teamdev.jxbrowser-win64</artifactId>
