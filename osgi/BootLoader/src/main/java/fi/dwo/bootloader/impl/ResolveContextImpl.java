@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,7 @@ class ResolveContextImpl extends ResolveContext /*implements Repository*/ {
 	Repository repository[];
 	BundleContext context;
 	List<Resource> mandatory = new ArrayList<>();
+	Set<Requirement> defunct = new HashSet<>();
 	boolean filter;
 
 	public void noFilter() {
@@ -69,7 +71,8 @@ class ResolveContextImpl extends ResolveContext /*implements Repository*/ {
 		{
 			return filterMandatory(cache);
 		}
-		
+		if (defunct.contains(requirement)) 
+			return Collections.emptyList();
 		
 		List<Capability> list = new ArrayList<Capability>();
 		Set<Requirement> singleton = Collections.singleton(requirement);
@@ -81,11 +84,13 @@ class ResolveContextImpl extends ResolveContext /*implements Repository*/ {
           Capability capability = iter.next();
           Resource r = capability.getResource();
           if (filter || wirings.containsKey(r)) list.add(capability);         
-        }
-		for(Repository r : repository)
-			list.addAll(r.findProviders(singleton).get(requirement));
+        } // TODO skip if list contains mandatory
+		if (list.isEmpty()) 
+			for(Repository r : repository)
+				list.addAll(r.findProviders(singleton).get(requirement));
 		list = filterMandatory(list);		
 		if (!list.isEmpty()) cacheMap.put(requirement, list);
+		else defunct.add(requirement);
 		return list;
 	}
 
