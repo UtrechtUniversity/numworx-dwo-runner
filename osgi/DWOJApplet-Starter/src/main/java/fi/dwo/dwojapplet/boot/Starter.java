@@ -256,15 +256,8 @@ public class Starter implements BundleActivator {
 		//runDWO(context);
 	}
 
-	Version ZEVEN = new Version("0.0.7");
 	private RepAdmin createRepAdmin(BundleContext context) {
-		String version = getProperty(context, "fi.microserver.version");
-		if (version != null) {
-			Version v = new Version(version);
-			if (v.compareTo(ZEVEN)>=0)
-				return new Repos2Admin(context, log);
-		}
-		return new ReposAdmin(context, log);
+		return new Repos2Admin(context, log);
 	}
 
   public String getProperty(BundleContext context, String key) {
