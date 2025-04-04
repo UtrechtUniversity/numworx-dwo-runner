@@ -5,7 +5,6 @@ import java.util.Dictionary;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
-import org.osgi.framework.Version;
 import org.osgi.service.log.LogService;
 import org.osgi.service.provisioning.ProvisioningService;
 import org.osgi.util.tracker.ServiceTracker;
@@ -43,15 +42,8 @@ public class Activator implements BundleActivator {
 		index = null;
 	}
 
-	Version ZEVEN = new Version("0.0.7");
 	private  ServiceTracker<Object, AutoCloseable> createRepAdmin(BundleContext context) {
-		String version = context.getProperty("fi.microserver.version");
-		if (version != null) {
-			Version v = new Version(version);
-			if (v.compareTo(ZEVEN)>=0)
-				return new ServiceTracker<Object, AutoCloseable>(context, "org.knopflerfish.service.repository.XmlBackedRepositoryFactory", new Repos2Admin(context, index, logTracker));
-		}
-		return new ServiceTracker<Object, AutoCloseable>(context,"org.apache.felix.bundlerepository.RepositoryAdmin", new ReposAdmin(context, index, logTracker));
+		return new ServiceTracker<Object, AutoCloseable>(context, "org.knopflerfish.service.repository.XmlBackedRepositoryFactory", new Repos2Admin(context, index, logTracker));
 	}
 
 }

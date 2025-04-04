@@ -45,8 +45,6 @@ public class Repos2Admin implements ServiceTrackerCustomizer<Object,AutoCloseabl
 
 	@Override
 	public void modifiedService(ServiceReference<Object> reference, AutoCloseable service) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
