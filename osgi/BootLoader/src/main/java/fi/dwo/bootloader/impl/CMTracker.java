@@ -20,13 +20,13 @@ public class CMTracker extends
 
 	private static final String FI_DWO_DWOJAPPLET = "fi.dwo.dwojapplet";
 	private static final String LOGGER_CONTEXT_PID = "org.osgi.service.log.admin";
-	LogService log;
+	LogTracker log;
 	Config config;
 	Deferred<Config> deferred;
 
-	public CMTracker(BundleContext context, LogService log) {
+	public CMTracker(BundleContext context, LogTracker lOGt) {
 		super(context, ConfigurationAdmin.class, null);
-		this.log = log;
+		this.log = lOGt;
 	}
 
 	public Promise<Config> open(Config config) {
@@ -49,7 +49,7 @@ public class CMTracker extends
 		try {
 			configureLogger(cm, LOGGER_CONTEXT_PID);
 		} catch(IOException e) {
-			log.log(reference, LogService.LOG_WARNING, "configure " + LOGGER_CONTEXT_PID, e);
+			log.warning(reference,"configure " + LOGGER_CONTEXT_PID, e);
 		}		
 	}
 
@@ -80,7 +80,7 @@ public class CMTracker extends
 		try {
 			configure(cm, FI_DWO_DWOJAPPLET);
 		} catch (IOException e) {
-			log.log(reference, LogService.LOG_ERROR, "configure "
+			log.error(reference, "configure "
 					+ FI_DWO_DWOJAPPLET, e);
 			deferred.fail(e);
 		}

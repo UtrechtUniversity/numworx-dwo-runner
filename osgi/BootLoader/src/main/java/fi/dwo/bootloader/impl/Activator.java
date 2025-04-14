@@ -117,7 +117,7 @@ public class Activator implements BundleActivator {
 		this.context = context;
 		Dictionary<String, Object> properties = new Hashtable<String, Object>();
 		properties.put(Constants.SERVICE_RANKING, Integer.MIN_VALUE);
-		LOGt = new LogTracker(context);
+		LOGt = new LogTracker(context, this);
 		LOGt.open();
 		config = new Config(context, LOGt);
 
@@ -191,7 +191,7 @@ public class Activator implements BundleActivator {
 						try {
 							update = Update.valueOf(u);
 						} catch (Exception e) {
-							LOGt.log(LogService.LOG_WARNING, e.toString());
+							LOGt.warning( e.toString(), e);
 						}
 					}
 					builder.setUpdate(update);
@@ -234,7 +234,7 @@ public class Activator implements BundleActivator {
 	  try {
 		  builder.setLocation(SLF4JO).start("slf4j.osgi");
 	  } catch (Exception oops) {
-		  LOGt.log(LogService.LOG_WARNING,  "slf4j to osgi", oops);
+		  LOGt.warning("slf4j to osgi", oops);
 		  builder.setLocation(SLF4J).start("slf4j.jdk14");
 	  }
 	  try {
@@ -242,7 +242,7 @@ public class Activator implements BundleActivator {
         if ( Integer.parseInt(version.split("\\.")[0]) >= 9)
           builder.setLocation("fi.dwo.eawt-0.0.1.jar").start("fi.dwo.eawt");
     } catch (Exception e) {
-      LOGt.log(LogService.LOG_WARNING, "eawt", e);
+      LOGt.warning("eawt", e);
     }
   }
   
@@ -353,7 +353,7 @@ public class Activator implements BundleActivator {
 			builder.setLocation(dwojapplet_starter).setUpdate(update).start("fi.dwo.dwojapplet");
 			return u; }).then(null, u -> {
 	           builder.setUpdate(update);
-	           LOGt.log(LogService.LOG_ERROR, "installing DWO", u.getFailure());
+	           LOGt.error( "installing DWO", u.getFailure());
 	           fatalError(u.getFailure());
 			}
 			);  
@@ -408,7 +408,7 @@ public class Activator implements BundleActivator {
 			LOGtt = new LogReaderTracker(context, print);
 			LOGtt.open();
 		} catch (Exception e) {
-			LOGt.log(LogService.LOG_WARNING, "redirect to " + std, e);
+			LOGt.warning("redirect to " + std, e);
 		}
 
 		if (start)
@@ -434,7 +434,7 @@ public class Activator implements BundleActivator {
 	  try {
         builder.setLocation("swingbrowser-jxb.jar").start("nl.numworx.swingbrowser.jxb");
       } catch (Exception e) {
-        LOGt.log(LogService.LOG_ERROR, "swingbrowser jxb", e);
+        LOGt.error( "swingbrowser jxb", e);
       }
 //	  try {
 //	    builder.setLocation("swingbrowser-jfx.jar").start("nl.numworx.swingbrowser.jfx");
@@ -451,7 +451,7 @@ public class Activator implements BundleActivator {
 		if (javaVersion < 14 && noProtocol("pack200"))
 			builder.setLocation(UNPACK200).start("fi.dwo.unpack200");
 	  	Builder.noPack200 = noProtocol("pack200");
-	  	if (Builder.noPack200) LOGt.log(LogService.LOG_WARNING, "no pack200: protocol");
+	  	if (Builder.noPack200) LOGt.warning("no pack200: protocol");
 	}
 	
 	
@@ -462,7 +462,7 @@ public class Activator implements BundleActivator {
 			ServiceReference<?>[] result = context.getAllServiceReferences(clazz, filter);
 			return result == null || result.length<1;
 		} catch (InvalidSyntaxException e) {
-			LOGt.log(LogService.LOG_ERROR, "Should not happen: " + protocol, e);
+			LOGt.error( "Should not happen: " + protocol, e);
 			return false;
 		}
 	}
@@ -480,9 +480,7 @@ public class Activator implements BundleActivator {
 			URISyntaxException {
 		config.open();
 		builder.setLocation(CM).start("org.apache.felix.configadmin");
-		LogService log = context.getService(context
-				.getServiceReference(LogService.class));
-		config.setLog(log);
-		ct = new CMTracker(context, log);
+		config.setLog(LOGt);
+		ct = new CMTracker(context, LOGt);
 	}
 }
