@@ -5,13 +5,13 @@ import java.util.Dictionary;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
-import org.osgi.service.log.LogService;
+import org.osgi.service.log.LoggerFactory;
 import org.osgi.service.provisioning.ProvisioningService;
 import org.osgi.util.tracker.ServiceTracker;
 
 public class Activator implements BundleActivator {
 	
-	private ServiceTracker<LogService,LogService> logTracker;
+	private ServiceTracker<LoggerFactory,LoggerFactory> logTracker;
 	private ServiceTracker<Object, AutoCloseable> reposTracker;
 	private String index;
 	
@@ -30,7 +30,7 @@ public class Activator implements BundleActivator {
 		else
 			index = URI.create(index).resolve("index.xml").toString();
 		
-		logTracker = new ServiceTracker<LogService,LogService>(context, LogService.class, null);
+		logTracker = new ServiceTracker<LoggerFactory,LoggerFactory>(context, LoggerFactory.class, null);
 		reposTracker  = createRepAdmin(context);
 		logTracker.open();
 		reposTracker.open();

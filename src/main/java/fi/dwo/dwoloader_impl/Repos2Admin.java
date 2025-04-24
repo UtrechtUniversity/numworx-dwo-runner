@@ -3,7 +3,7 @@ package fi.dwo.dwoloader_impl;
 import org.knopflerfish.service.repository.XmlBackedRepositoryFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
-import org.osgi.service.log.LogService;
+import org.osgi.service.log.LoggerFactory;
 import org.osgi.service.repository.Repository;
 import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
@@ -12,12 +12,12 @@ public class Repos2Admin implements ServiceTrackerCustomizer<Object,AutoCloseabl
 
 	private BundleContext context;
 	private String index;
-	private ServiceTracker<LogService, LogService> logTracker;
+	private ServiceTracker<LoggerFactory, LoggerFactory> logTracker;
 
-	public Repos2Admin(BundleContext context, String index, ServiceTracker<LogService, LogService> logTracker) {
+	public Repos2Admin(BundleContext context, String index, ServiceTracker<LoggerFactory, LoggerFactory> logTracker2) {
 		this.context = context;
 		this.index = index;
-		this.logTracker = logTracker;
+		this.logTracker = logTracker2;
 	}
 
 	@Override
@@ -31,9 +31,9 @@ public class Repos2Admin implements ServiceTrackerCustomizer<Object,AutoCloseabl
 			 // compare  version in repo and version in framework
 			 impl = new Dwo2LoaderImpl(context, rep);
 		} catch (Exception e) {
-		      LogService s = logTracker.getService();
+			  LoggerFactory s = logTracker.getService();
               if (s != null) {
-                s.log(reference, LogService.LOG_ERROR, index, e);
+                s.getLogger(getClass()).error(index, reference, e);
               }
               return new DwoLoaderDummy(e, context);
               
