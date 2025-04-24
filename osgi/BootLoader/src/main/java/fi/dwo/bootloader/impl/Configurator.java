@@ -8,7 +8,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.cm.ManagedServiceFactory;
-import org.osgi.service.log.LogService;
+import org.osgi.service.log.Logger;
 import org.osgi.util.tracker.ServiceTracker;
 
 public class Configurator extends
@@ -16,20 +16,19 @@ public class Configurator extends
 
 	private static final String PFX = "resources/";
 	private BundleContext context;
-	private LogService LOG;
+	private Logger LOG;
 
-	public Configurator(BundleContext context, LogService lOG) {
+	public Configurator(BundleContext context, LogTracker lt) {
 		super(context, ManagedServiceFactory.class, null);
 		this.context = context;
-		LOG = lOG;
+		LOG = lt.service(getClass());
 	}
 
 	public ManagedServiceFactory addingService(
 			ServiceReference<ManagedServiceFactory> ref) {
 		ManagedServiceFactory factory = context.getService(ref);
 		String pid = (String) ref.getProperty(Constants.SERVICE_PID);
-		LOG.log(LogService.LOG_INFO, "got " + factory.getName() + ", pid="
-				+ pid);
+		LOG.info( "got " + factory.getName() + ", pid=" + pid);
 		if (installFactory(factory, pid))
 			return factory;
 		context.ungetService(ref);
@@ -51,7 +50,7 @@ public class Configurator extends
 			factory.updated(instance, dict);
 			return true;
 		} catch (Exception e) {
-			LOG.log(LogService.LOG_ERROR, "installFactory " + pid, e);
+			LOG.error("installFactory " + pid, e);
 			return false;
 		}
 

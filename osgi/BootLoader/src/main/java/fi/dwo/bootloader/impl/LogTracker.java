@@ -10,13 +10,7 @@ import org.osgi.service.log.Logger;
 import org.osgi.service.log.LoggerFactory;
 import org.osgi.util.tracker.ServiceTracker;
 
-public class LogTracker extends ServiceTracker<LoggerFactory, Logger> implements InvocationHandler {
-
-	@Override
-	public Logger addingService(ServiceReference<LoggerFactory> reference) {
-		LoggerFactory factory = context.getService(reference);
-		return factory.getLogger(instance.getClass());	
-	}
+public class LogTracker extends ServiceTracker<LoggerFactory, LoggerFactory> implements InvocationHandler {
 
 	/**
 	 * @param instance the instance to set
@@ -39,10 +33,14 @@ public class LogTracker extends ServiceTracker<LoggerFactory, Logger> implements
 		setInstance(instance);
 	}
 
-	public Logger service() {
-		Logger service = getService();
+	public Logger service(Class<?> clz) {
+		LoggerFactory service = getService();
 		if (service == null) return DUMMYSERVICE;
-		return service;
+		return service.getLogger(clz);
+	}
+	
+	public Logger service() {
+		return service(instance.getClass());
 	}
 
 	public void warning(String string, Throwable e) {

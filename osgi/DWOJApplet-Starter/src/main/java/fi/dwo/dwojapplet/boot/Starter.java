@@ -30,14 +30,14 @@ import org.osgi.framework.BundleException;
 import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
-import org.osgi.framework.Version;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationException;
 import org.osgi.service.cm.ManagedService;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
 import org.osgi.service.event.EventHandler;
-import org.osgi.service.log.LogService;
+import org.osgi.service.log.Logger;
+import org.osgi.service.log.LoggerFactory;
 import org.osgi.service.provisioning.ProvisioningService;
 import fi.beans.loader.Loader;
 import fi.beans.mainframe.MainFrame;
@@ -45,7 +45,6 @@ import fi.dwo.bootloader.LoaderBuilder.Update;
 import fi.dwo.bootloader.LoaderBuilderFactory;
 import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.gui.GuiConstants;
-import fi.dwo.eawt.EAWT;
 
 public class Starter implements BundleActivator {
 	
@@ -94,9 +93,9 @@ public class Starter implements BundleActivator {
 							if(dwo == null)
 								runDWO(context);
 						} catch (MalformedURLException e) {
-							log.log(LogService.LOG_ERROR, "runDWO", e);
+							log.error("runDWO", e);
 						} catch (RuntimeException oops) {
-							log.log(LogService.LOG_ERROR, "runtime exception in runDWO", oops);
+							log.error( "runtime exception in runDWO", oops);
 							throw oops;
 						}
 					}
@@ -190,9 +189,9 @@ public class Starter implements BundleActivator {
 					try {
 						bundle.uninstall();
 					} catch (BundleException e1) {
-						log.log(LogService.LOG_ERROR, "loadClass " + name, e1);
+						log.error("loadClass " + name, e1);
 					}
-				log.log(LogService.LOG_ERROR, "loadClass " + name, e);
+				log.error("loadClass " + name, e);
 			} finally {
 			}
 			return super.loadClass(name, resolve);
@@ -206,19 +205,19 @@ public class Starter implements BundleActivator {
 	String repository;
 	public static Configurator cm;
 	private ServiceRegistration<ManagedService> ref1;
-	private LogTracker log;
-  private Dictionary provisioning;
+	private Logger log;
+	private Dictionary provisioning;
 	
 	@Override
 	public void start(BundleContext context) throws Exception {
-		log = new LogTracker(context);
-		log.open();
+		ServiceReference<LoggerFactory> logref = context.getServiceReference(LoggerFactory.class);
+		log = context.getService(logref).getLogger(getClass());
 		try {
 			reposAdmin = createRepAdmin(context);
             reposAdmin.open();
 			reposAdmin.setRepository(getProperty(context, "fi.dwo.jarindex"));
 		} catch(Throwable t) {
-		    log.log(LogService.LOG_DEBUG, "repository Admin", t);
+		    log.debug("repository Admin", t);
 		}; // expect errors as ClassNotFoundError
 		
 		cm = new Configurator(context);
@@ -338,7 +337,7 @@ public class Starter implements BundleActivator {
 					URI uri = url.toURI();
 					Desktop.getDesktop().browse(uri);
 				} catch (IOException | URISyntaxException e) {
-					log.log(LogService.LOG_ERROR, "showDocument " + url, e);
+					log.error("showDocument " + url, e);
 				}
 			}
 
@@ -433,7 +432,6 @@ public class Starter implements BundleActivator {
 		cm.close();		
 		ref = null;
 		if (reposAdmin != null) { reposAdmin.close(); reposAdmin = null; }
-		log.close();
 	}
 
 

@@ -8,16 +8,18 @@ import org.osgi.framework.ServiceRegistration;
 public class FactoryFactory implements ServiceFactory<Factory> {
 
 	private final BundleContext context;
+	private final LogTracker lt;
 	
-	FactoryFactory(BundleContext bc) {
+	FactoryFactory(BundleContext bc, LogTracker lt) {
 		context = bc;
+		this.lt = lt;
 	}
 	
 	public Factory getService(Bundle bundle,
 			ServiceRegistration<Factory> registration) {
 		String base = (String) registration.getReference().getProperty(
 				"fi.dwo.bundles");
-		return new Factory(context,bundle, base);
+		return new Factory(context, bundle, base, lt);
 	}
 
 	public void ungetService(Bundle bundle,

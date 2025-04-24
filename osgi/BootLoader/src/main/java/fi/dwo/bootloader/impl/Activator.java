@@ -30,7 +30,6 @@ import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
 import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
-import org.osgi.service.log.LogService;
 import org.osgi.service.provisioning.ProvisioningService;
 import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Promise;
@@ -88,7 +87,7 @@ public class Activator implements BundleActivator {
 		final Bundle me = context.getBundle();
 		String u = getUpdate(context);
 		if(!Update.NEVER.name().equals(u)) {
-		final InputStream modified = new Builder(null).setContext(context)
+		final InputStream modified = new Builder(null, null).setContext(context)
 				.getInputStream(me.getLocation(), me.getLastModified());
 		if (modified != null) {
 			context.addBundleListener(new BundleListener() {
@@ -127,7 +126,7 @@ public class Activator implements BundleActivator {
 		properties.put("fi.dwo.bundles", bundles);
 		ServiceRegistration<?> registration;
 		registration = context.registerService(
-				LoaderBuilderFactory.class.getName(), new FactoryFactory(context),
+				LoaderBuilderFactory.class.getName(), new FactoryFactory(context, LOGt),
 				properties);
 		boot(registration.getReference());
 	}

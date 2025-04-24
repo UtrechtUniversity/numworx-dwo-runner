@@ -37,7 +37,7 @@ import org.osgi.resource.Capability;
 import org.osgi.resource.Requirement;
 import org.osgi.resource.Resource;
 import org.osgi.resource.Wire;
-import org.osgi.service.log.LogService;
+import org.osgi.service.log.Logger;
 import org.osgi.service.repository.ContentNamespace;
 import org.osgi.service.repository.Repository;
 import org.osgi.service.resolver.ResolutionException;
@@ -122,6 +122,7 @@ public class Builder implements LoaderBuilder {
 	private Update update = Update.NEVER;
 	private URI base;
 	private Factory parent;
+	private Logger logger;
 
 	private Collection<Resource> loadResources(ResolveContext context)
 			throws ResolutionException {
@@ -131,9 +132,10 @@ public class Builder implements LoaderBuilder {
 		return result.keySet();
 	}
 
-	Builder(Factory parent) {
+	Builder(Factory parent, Logger logger) {
 		super();
 		this.parent = parent;
+		this.logger = logger;
 	}
 
 	public Builder setContext(BundleContext context) {
@@ -162,7 +164,7 @@ public class Builder implements LoaderBuilder {
 			update = installResources(update, rc, bundles, resources);
 			resolve(bundles);
 		} catch (ResolutionException e1) {
-			log(LogService.LOG_WARNING, "fromResolver", e1);
+			logger.warn("fromResolver", e1);
 			Collection<Requirement> set = e1.getUnresolvedRequirements();
 			for (Requirement r: set) {
 				if (NativeNamespace.NATIVE_NAMESPACE.equals(r.getNamespace()))
@@ -171,7 +173,7 @@ public class Builder implements LoaderBuilder {
 					throw new BundleException(e1.getLocalizedMessage(), BundleException.RESOLVE_ERROR, e1);
 			}
 		} catch (BundleException e2) {
-			log(LogService.LOG_WARNING, "installBundle", e2);
+			logger.warn("installBundle", e2);
 		}
 
 		URI location = this.location;
@@ -245,7 +247,7 @@ public class Builder implements LoaderBuilder {
 					try {
 						bundle = context.installBundle(url);
 					} catch (BundleException e) {
-						log(LogService.LOG_ERROR, "missing " + url, e);
+						logger.error("missing " + url, e);
 						continue;
 					}
      		} else {
@@ -269,7 +271,7 @@ public class Builder implements LoaderBuilder {
         in.close();
         return bundle;
       } catch (IOException e) {
-        log(LogService.LOG_WARNING, "update failed " + url, e);
+        logger.warn("update failed " + url, e);
       } 
 //      bundle.uninstall();
 //      bundle = context.installBundle(url);
@@ -409,7 +411,7 @@ public class Builder implements LoaderBuilder {
 				((HttpURLConnection) uc).disconnect();
 			return last;
 		} catch (IOException e) {
-			log(LogService.LOG_ERROR, e.toString());
+			logger.error(e.toString());
 			return 0L;
 		}
 	}
@@ -429,7 +431,7 @@ public class Builder implements LoaderBuilder {
 				((HttpURLConnection) uc).disconnect();
 			return last;
 		} catch (IOException e) {
-			log(LogService.LOG_ERROR, e.toString());
+			logger.error(e.toString());
 			return 0L;
 		}
 	}
@@ -451,7 +453,8 @@ public class Builder implements LoaderBuilder {
 			if (uc instanceof HttpURLConnection)
 				((HttpURLConnection) uc).disconnect();
 		} catch (IOException e) {
-			log(LogService.LOG_ERROR, e.toString());
+			if (logger != null)
+				logger.error(e.toString());
 		}
 		return null;
 	}
@@ -522,7 +525,7 @@ public class Builder implements LoaderBuilder {
 			ServiceReference<?>[] result = context.getAllServiceReferences(clazz, filter);
 			return result == null || result.length<1;
 		} catch (InvalidSyntaxException e) {
-			log(LogService.LOG_ERROR, "Should not happen: " + protocol, e);
+			logger.error("Should not happen: " + protocol, e);
 			return false;
 		}
 	}
@@ -537,7 +540,7 @@ public class Builder implements LoaderBuilder {
 					builder.setLocation(Activator.PAX_URL_WRAP).start(Activator.WRAP);
 					hasWrap = true;
 				} catch (URISyntaxException e) {
-					log(LogService.LOG_ERROR, "should not happen", e);
+					logger.error("should not happen", e);
 					throw new BundleException("ooops", e);
 				}
 			}
@@ -577,7 +580,7 @@ public class Builder implements LoaderBuilder {
 				}
 				Bundle b;
 				try {
-					log(LogService.LOG_DEBUG, wrap != null ? wrap : jar.toString());
+					logger.debug(wrap != null ? wrap : jar.toString());
 					b = istart(jar, wrap);
 					first = false;
 					bundles.add(b);
@@ -591,7 +594,7 @@ public class Builder implements LoaderBuilder {
 						}
 					}
 				} catch (Exception e) {
-					log(LogService.LOG_WARNING, e.toString());
+					logger.warn(e.toString());
 				}
 				bnd = "," + getClass().getResource("resources/fragment.bnd") + "$" + Constants.FRAGMENT_HOST + "=" + main;
 			}
@@ -615,14 +618,13 @@ public class Builder implements LoaderBuilder {
         installResources(Update.NEVER, rc, set, resources);
         set.forEach(b -> {if (!bundles.contains(b)) bundles.add(b);});
       } catch (ResolutionException e) {
-        log(LogService.LOG_WARNING, "fromResolver", e);
+        logger.warn("fromResolver", e);
       } catch (BundleException e) {
-        log(LogService.LOG_ERROR, "fromResolver", e);      
+        logger.error("fromResolver", e);      
       } catch (RuntimeException e) {
-        log(LogService.LOG_ERROR, "fromResolver", e);
+        logger.error("fromResolver", e);
       } catch (Error e) {
-        log(LogService.LOG_ERROR, "fromResolver", e);
-
+        logger.error("fromResolver", e);
       }
   }
 
@@ -638,7 +640,7 @@ public class Builder implements LoaderBuilder {
 			b.uninstall();
 			uninstallFragments(main);
 		} catch (BundleException e) {
-			log(LogService.LOG_ERROR, e.toString());
+			logger.error(e.toString());
 		}
 	}
 
@@ -648,7 +650,7 @@ public class Builder implements LoaderBuilder {
 			try {
 				bundle.uninstall();
 			} catch (BundleException e) {
-				log(LogService.LOG_ERROR, e.toString());
+				logger.error(e.toString());
 			}
 		}
 	}
@@ -708,22 +710,6 @@ public class Builder implements LoaderBuilder {
 			if ( (type & BundleRevision.TYPE_FRAGMENT) == 0)
 			//if (b.getHeaders().get(Constants.FRAGMENT_HOST) == null)
 				b.start(Bundle.START_TRANSIENT);
-		}
-	}
-
-	private void log(int logDebug, String wrap) {
-		log(logDebug, wrap, null);
-	}
-
-	private void log(int logDebug, String wrap, Throwable t) {
-		ServiceReference<LogService> ref = context
-				.getServiceReference(LogService.class);
-		if (ref != null) {
-			LogService log = context.getService(ref);
-			if (log != null) {
-				log.log(logDebug, wrap, t);
-				context.ungetService(ref);
-			}
 		}
 	}
 

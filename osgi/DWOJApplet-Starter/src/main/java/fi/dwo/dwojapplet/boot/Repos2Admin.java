@@ -3,18 +3,18 @@ package fi.dwo.dwojapplet.boot;
 import org.knopflerfish.service.repository.XmlBackedRepositoryFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
-import org.osgi.service.log.LogService;
+import org.osgi.service.log.Logger;
 import org.osgi.service.repository.Repository;
 import org.osgi.util.tracker.ServiceTracker;
 
 public class Repos2Admin extends ServiceTracker<XmlBackedRepositoryFactory,XmlBackedRepositoryFactory> implements RepAdmin {
 
 	private String repository;
-	private LogService LOG;
+	private Logger LOG;
 
-	public Repos2Admin(BundleContext context, LogService logservice) {
+	public Repos2Admin(BundleContext context, Logger log2) {
 		super(context, "org.knopflerfish.service.repository.XmlBackedRepositoryFactory", null);
-		LOG = logservice;
+		LOG = log2;
 		
 	}
 
@@ -26,9 +26,9 @@ public class Repos2Admin extends ServiceTracker<XmlBackedRepositoryFactory,XmlBa
 		try {
 			 rep = factory.create(repository, null, this);
 		} catch (Exception e) {
-		      LogService s = LOG;
+		      Logger s = LOG;
               if (s != null) {
-                s.log(reference, LogService.LOG_ERROR, repository, e);
+                s.error( repository, reference, e);
               }
               
 		    }
@@ -48,7 +48,7 @@ public class Repos2Admin extends ServiceTracker<XmlBackedRepositoryFactory,XmlBa
 		try {
 			service.destroy(this);
 		} catch (Exception e) {
-			LOG.log(LogService.LOG_WARNING, "removedService", e);
+			LOG.warn( "removedService", e);
 		}
 		super.removedService(reference, service);
 	}
@@ -62,20 +62,20 @@ public class Repos2Admin extends ServiceTracker<XmlBackedRepositoryFactory,XmlBa
 		XmlBackedRepositoryFactory admin = getService();
 		if(admin != null && getRepository() != null)
 		{
-		  LOG.log(LogService.LOG_INFO, "remove Repository " + getRepository());
+		  LOG.info("remove Repository " + getRepository());
 		  try {
 			admin.destroy(this);
 		} catch (Exception e) {
-			LOG.log(LogService.LOG_WARNING, "setRepository removal " + getRepository(), e);
+			LOG.warn("setRepository removal " + getRepository(), e);
 		}
 		}
 		this.repository = repository;
 		if(admin != null && getRepository() != null)
 			try {
-	            LOG.log(LogService.LOG_INFO, "addRepository " + getRepository());
+	            LOG.info("addRepository " + getRepository());
 				admin.create(getRepository(), null, this);
 			} catch (Exception e) {
-				LOG.log(LogService.LOG_ERROR, "addRepository failed", e);
+				LOG.error("addRepository failed", e);
 			}
 		
 	}

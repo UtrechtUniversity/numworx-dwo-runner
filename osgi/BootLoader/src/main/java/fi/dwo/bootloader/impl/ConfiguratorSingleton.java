@@ -8,7 +8,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.cm.ManagedService;
-import org.osgi.service.log.LogService;
+import org.osgi.service.log.Logger;
 import org.osgi.util.tracker.ServiceTracker;
 
 public class ConfiguratorSingleton extends
@@ -16,18 +16,18 @@ public class ConfiguratorSingleton extends
 
 	private static final String PFX = "resources/";
 	private BundleContext context;
-	private LogService LOG;
+	private Logger LOG;
 
-	public ConfiguratorSingleton(BundleContext context, LogService lOG) {
+	public ConfiguratorSingleton(BundleContext context, LogTracker lOG) {
 		super(context, ManagedService.class, null);
 		this.context = context;
-		LOG = lOG;
+		LOG = lOG.service(getClass());
 	}
 
 	public ManagedService addingService(ServiceReference<ManagedService> ref) {
 		ManagedService singleton = context.getService(ref);
 		String pid = (String) ref.getProperty(Constants.SERVICE_PID);
-		LOG.log(LogService.LOG_INFO, "got " + singleton + ", pid=" + pid);
+		LOG.info("got " + singleton + ", pid=" + pid);
 		if (installSingleton(singleton, pid))
 			return singleton;
 		context.ungetService(ref);
@@ -47,7 +47,7 @@ public class ConfiguratorSingleton extends
 			factory.updated(dict);
 			return true;
 		} catch (Exception e) {
-			LOG.log(LogService.LOG_ERROR, "installSingleton " + pid, e);
+			LOG.error("installSingleton " + pid, e);
 			return false;
 		}
 	}

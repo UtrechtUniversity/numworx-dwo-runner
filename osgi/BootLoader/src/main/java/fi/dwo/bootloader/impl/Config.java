@@ -12,6 +12,7 @@ import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.cm.ConfigurationException;
 import org.osgi.service.cm.ManagedService;
+import org.osgi.service.log.Logger;
 import org.osgi.service.provisioning.ProvisioningService;
 import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Promise;
@@ -24,7 +25,7 @@ public class Config implements ManagedService {
 	private Dictionary<String, ?> config;
 	private Dictionary<?,?> provision;
 	private ServiceTracker<ConfigurationAdmin, ConfigurationAdmin> cm;
-	private LogTracker log;
+	private Logger log;
 	private Deferred<Config> deferred = new Deferred<Config>();
 
 	public Config(BundleContext context, LogTracker lOGt) {
@@ -50,7 +51,7 @@ public class Config implements ManagedService {
           provision = service.getInformation(); context.ungetService(r);
         }
       } catch (Exception e) {
-        log.warning(ref.getReference(), "install provision service", e);
+        log.warn("install provision service", ref.getReference(), e);
       }
     
   }
@@ -97,17 +98,17 @@ public class Config implements ManagedService {
 				dict.put(key, value);
 				c.update(dict);
 			} catch (IOException e) {
-				getLog().warning( "setProperty " + key, e);
+				getLog().warn( "setProperty " + key, e);
 			}
 		}
 	}
 
-	public LogTracker getLog() {
+	public Logger getLog() {
 		return log;
 	}
 
 	public void setLog(LogTracker lOGt) {
-		this.log = lOGt;
+		this.log = lOGt.service(getClass());
 	}
 
 	Promise<Config> getPromise() {

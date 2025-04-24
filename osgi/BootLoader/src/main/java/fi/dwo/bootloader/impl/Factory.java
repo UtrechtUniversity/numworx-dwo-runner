@@ -7,6 +7,7 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
+import org.osgi.service.log.Logger;
 import org.osgi.service.repository.Repository;
 import org.osgi.service.resolver.Resolver;
 import org.osgi.util.tracker.ServiceTracker;
@@ -24,10 +25,12 @@ public class Factory implements LoaderBuilderFactory, ServiceTrackerCustomizer<R
 
 	ServiceTracker<Resolver, Resolver> resolver;
 	ServiceTracker<Repository, Repository> repository;
+	final Logger logger;
 	
-	public Factory(BundleContext context, Bundle bundle, String base) {
+	public Factory(BundleContext context, Bundle bundle, String base, LogTracker lt) {
 		this.context = context;
 		this.base = base;
+		this.logger = lt.service(Builder.class);
 		bundles = new Hashtable<String, Bundle>();
 		mainTracker = new MainTracker(context, "Main-Class");
 		fragmentTracker = new MainTracker(context, Constants.FRAGMENT_HOST);
@@ -60,7 +63,7 @@ public class Factory implements LoaderBuilderFactory, ServiceTrackerCustomizer<R
 	}
 
 	public LoaderBuilder newInstance() {
-		return new Builder(this).setContext(context).setBase(base);
+		return new Builder(this, logger).setContext(context).setBase(base);
 	}
 
 	public Bundle searchBundle(String name) {
