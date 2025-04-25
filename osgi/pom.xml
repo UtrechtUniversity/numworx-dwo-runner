@@ -17,6 +17,7 @@
 <!--    <module>ch.jm.osgi.provisioning</module>-->
 		<module>app-install</module>
 <!--		<module>MicroServer</module>-->
+	<module>dwoloader</module>
 	</modules>
 	<build>
 		<plugins>
