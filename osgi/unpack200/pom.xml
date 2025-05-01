@@ -50,7 +50,7 @@
 				<_snapshot>${osgi.qualifier}</_snapshot>
 				<Bundle-Activator>fi.dwo.unpack200.Activator</Bundle-Activator>
 				<Private-Package>fi.dwo.unpack200</Private-Package>
-				<Export-Package></Export-Package>
+				<Export-Package />
 				<Import-Package>java.util.jar;*</Import-Package>
           </instructions>
         </configuration>
@@ -62,6 +62,6 @@
   	<groupId>nl.uu.fi.dwo</groupId>
   	<artifactId>DWO.master.pom</artifactId>
   	<version>1.1</version>
-  	<relativePath></relativePath>
+  	<relativePath />
   </parent>
 </project>
