@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>fi.dwo</groupId>
 	<artifactId>DwoLoader</artifactId>
-	<version>0.0.4-SNAPSHOT</version>
+	<version>0.0.3</version>
 	<name>DWO Loader</name>
 	<description>Load DWO via Resolver</description>
 	<properties>
@@ -28,7 +28,7 @@
 		<dependency>
 			<groupId>fi.dwo</groupId>
 			<artifactId>BootLoader</artifactId>
-			<version>2.0.10-SNAPSHOT</version>
+			<version>2.0.9</version>
 			<scope>provided</scope>
 			<exclusions>
 				<exclusion>
