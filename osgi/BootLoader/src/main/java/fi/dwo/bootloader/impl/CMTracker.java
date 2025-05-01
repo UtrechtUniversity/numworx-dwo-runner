@@ -10,7 +10,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
-import org.osgi.service.log.LogService;
+import org.osgi.service.log.Logger;
 import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.tracker.ServiceTracker;
@@ -19,13 +19,14 @@ public class CMTracker extends
 		ServiceTracker<ConfigurationAdmin, ConfigurationAdmin> {
 
 	private static final String FI_DWO_DWOJAPPLET = "fi.dwo.dwojapplet";
-	LogService log;
+	private static final String LOGGER_CONTEXT_PID = "org.osgi.service.log.admin";
+	Logger log;
 	Config config;
 	Deferred<Config> deferred;
 
-	public CMTracker(BundleContext context, LogService log) {
+	public CMTracker(BundleContext context, LogTracker lOGt) {
 		super(context, ConfigurationAdmin.class, null);
-		this.log = log;
+		this.log = lOGt.service(getClass());
 	}
 
 	public Promise<Config> open(Config config) {
@@ -39,16 +40,47 @@ public class CMTracker extends
 	public ConfigurationAdmin addingService(
 			ServiceReference<ConfigurationAdmin> reference) {
 		ConfigurationAdmin cm = super.addingService(reference);
+		configureLogger(cm, reference);
 		configure(cm, reference);
 		return cm;
+	}
+
+	private void configureLogger(ConfigurationAdmin cm, ServiceReference<ConfigurationAdmin> reference) {
+		try {
+			configureLogger(cm, LOGGER_CONTEXT_PID);
+		} catch(IOException e) {
+			log.warn("configure " + LOGGER_CONTEXT_PID, reference, e);
+		}		
+	}
+
+	private void configureLogger(ConfigurationAdmin cm, String pid) throws IOException {
+		Configuration config = cm.getConfiguration(pid, null);
+		Properties p = new Properties();
+		InputStream in = getClass().getResourceAsStream("resources/" + pid);
+		p.load(in);
+		in.close();
+		@SuppressWarnings({ "unchecked", "rawtypes" })
+		Dictionary<String, Object> dict = (Dictionary) p;
+		Dictionary<String, Object> old = config.getProperties();
+		if (old != null) {
+			Enumeration<String> e = dict.keys();
+			while (e.hasMoreElements()) {
+				String key = e.nextElement();
+				if (null == old.get(key))
+					old.put(key, dict.get(key));
+			}
+		} else {
+			old = dict;
+		}
+		if (!old.equals(config.getProperties()))
+			config.update(old);
 	}
 
 	void configure(ConfigurationAdmin cm, ServiceReference<?> reference) {
 		try {
 			configure(cm, FI_DWO_DWOJAPPLET);
 		} catch (IOException e) {
-			log.log(reference, LogService.LOG_ERROR, "configure "
-					+ FI_DWO_DWOJAPPLET, e);
+			log.error("configure " + FI_DWO_DWOJAPPLET, reference, e);
 			deferred.fail(e);
 		}
 	}

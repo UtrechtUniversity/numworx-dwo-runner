@@ -128,7 +128,8 @@ public class Configurator extends
 		Object value = evt.getNewValue();
 		Configuration c = getConfiguration();
 		Dictionary<String, Object> dict = c.getProperties();
-		dict.put(key, value);
+		if (value != null) dict.put(key, value);
+		else dict.remove(key);
 		try {
 			c.update(dict);
 		} catch (IOException e) {

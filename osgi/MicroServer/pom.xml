@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>fi.microserver</groupId>
 	<artifactId>MicroServer</artifactId>
-	<version>0.0.7</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<repositories>	
 	<repository>
 	  <id>com.teamdev</id>
@@ -161,7 +161,7 @@
 	<parent>
   <groupId>fi.microserver</groupId>
   <artifactId>osgi-parent</artifactId>
-  <version>0.0.7</version>
+  <version>0.0.8-SNAPSHOT</version>
 	</parent>
 	<profiles>
 		<profile>

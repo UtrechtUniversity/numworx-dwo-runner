@@ -2,12 +2,14 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>fi.dwo</groupId>
   <artifactId>unpack200</artifactId>
-  <version>0.0.3-SNAPSHOT</version>
+  <version>0.0.3</version>
   <name>UnPack200</name>
   <description>StreamHandler voor pack200 jars</description>
 	<properties>
 		<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
 		<osgi.qualifier>${maven.build.timestamp}</osgi.qualifier>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
 	</properties>
   <dependencies>
   	<dependency>
@@ -20,9 +22,28 @@
   <build>
   	<plugins>
   	  <plugin>
+    	<groupId>org.apache.maven.plugins</groupId>
+    	<artifactId>maven-toolchains-plugin</artifactId>
+    	<version>3.1.0</version>
+    <executions>
+      <execution>
+        <goals>
+          <goal>toolchain</goal>
+        </goals>
+      </execution>
+    </executions>
+    <configuration>
+      <toolchains>
+        <jdk>
+          <version>11</version>
+        </jdk>
+      </toolchains>
+    </configuration>
+  	  </plugin>
+  	  <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
-        <version>2.5.3</version>
+        <version>5.1.1</version>
         <extensions>true</extensions>
         <configuration>
           <instructions>
@@ -30,23 +51,17 @@
 				<Bundle-Activator>fi.dwo.unpack200.Activator</Bundle-Activator>
 				<Private-Package>fi.dwo.unpack200</Private-Package>
 				<Export-Package />
+				<Import-Package>java.util.jar;*</Import-Package>
           </instructions>
         </configuration>
       </plugin>
-      <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-release-plugin</artifactId>
-          <version>2.5.3</version>
-      </plugin>
-  	</plugins>  
+ 	</plugins>  
   </build>
   <packaging>bundle</packaging>
   <parent>
   	<groupId>nl.uu.fi.dwo</groupId>
   	<artifactId>DWO.master.pom</artifactId>
   	<version>1.1</version>
+  	<relativePath />
   </parent>
-  <scm>
-  	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.projects/unpack200/trunk</developerConnection>
-  </scm>
 </project>

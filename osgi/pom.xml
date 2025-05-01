@@ -7,16 +7,17 @@
 	</parent>
 	<groupId>fi.microserver</groupId>
 	<artifactId>osgi-parent</artifactId>
-	<version>0.0.7</version>
+	<version>0.0.8</version>
 	<packaging>pom</packaging>
 	<modules>
-		<module>MicroBoot</module>
-<!--    <module>unpack200</module>-->
+<!--		<module>MicroBoot</module>-->
+    	<module>unpack200</module>
 		<module>BootLoader</module>
-<!--	<module>DWOJApplet-Starter</module>-->
+		<module>DWOJApplet-Starter</module>
 <!--    <module>ch.jm.osgi.provisioning</module>-->
 		<module>app-install</module>
-		<module>MicroServer</module>
+<!--		<module>MicroServer</module>-->
+	<module>dwoloader</module>
 	</modules>
 	<build>
 		<plugins>

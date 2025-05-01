@@ -22,6 +22,9 @@ implements LogListener {
 
 	@Override
 	public void logged(LogEntry entry) {
+// Nog niet te regelen via logadmin.
+		if (entry.getLoggerName().startsWith("Events."))
+			return; // skip Events
 		writer.println(entry);		
 	}
 

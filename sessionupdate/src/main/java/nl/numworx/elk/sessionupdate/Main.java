@@ -1,6 +1,8 @@
 package nl.numworx.elk.sessionupdate;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,6 +15,9 @@ import org.apache.http.HttpHost;
 import org.elasticsearch.action.ActionRequestBuilder;
 import org.elasticsearch.action.DocWriteResponse.Result;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
+import org.elasticsearch.action.bulk.BulkRequest;
+import org.elasticsearch.action.bulk.BulkRequestBuilder;
+import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteRequestBuilder;
 import org.elasticsearch.action.delete.DeleteResponse;
@@ -60,7 +65,10 @@ public class Main {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		int month = 11; // NOVEMBER
+try {
+		int month = Integer.parseInt(args[0]); // FEBRUARI=2 March=3
+		int year = 2025;
+		out = new PrintStream(new FileOutputStream("session-" + month + "-" + year + ".txt"));
 		
 		formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
 
@@ -80,8 +88,8 @@ for(int m = month-1; m < month; m++ )
 		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder(); 
 		QueryBuilder query = new MatchQueryBuilder("fileset.name", "access");
 		QueryBuilder exist = new ExistsQueryBuilder("url.original");
-		Date fromdate = new Date(2023-1900,m  ,1,0,0,0);
-		Date todate   = new Date(2023-1900,m+1,1,0,0,0);
+		Date fromdate = new Date(year-1900,m  ,1,0,0,0);
+		Date todate   = new Date(year-1900,m+1,1,0,0,0);
 		QueryBuilder start = new RangeQueryBuilder("@timestamp").from(fromdate, true).to(todate, false);
 		searchSourceBuilder.query(new BoolQueryBuilder().must(query).must(exist)
 				.must(start)
@@ -118,6 +126,7 @@ for(int m = month-1; m < month; m++ )
 			userid = (String) map.get("original");
 			if (userid == null) {
 				System.out.println("no url.original" + sourceAsMap);
+				continue;
 			}
 			String[] split = userid.split("-",3);
 			if (split.length == 3 && "/dwo/rest/sec:1".equals(split[0])) {
@@ -136,6 +145,7 @@ for(int m = month-1; m < month; m++ )
 			} else {
 				long diff = time - record.timestamp.getTime();
 				if (diff > 30*60*1000L) {
+					
 					put(client, record, m);
 					record.timestamp = t;
 					record.duration = 0;
@@ -160,34 +170,74 @@ for(int m = month-1; m < month; m++ )
 		clear.setScrollIds(scrollIds);
 		client.clearScroll(clear, RequestOptions.DEFAULT);
 }
-		lastTime.values().forEach(item -> put(client, item, month));
+
+		BulkRequest request = new BulkRequest();
+		lastTime.values().forEach(item -> put(request, item, month));
+		BulkResponse br = client.bulk(request, RequestOptions.DEFAULT);
+		
+	
+
+
+
+//		lastTime.values().forEach(item -> {
+//			
+//			try {
+//				put(client, item, month);
+//			} catch (Exception e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//				try { Thread.sleep(5000); } catch(InterruptedException oops) {}
+//				put(client, item, month); // again...
+//				
+//			}
+//			// slow down here...
+//			try { Thread.sleep(1000); } catch(InterruptedException oops) {}
+//		}
+//		);
 		
 		client.close();
+} catch(Exception oops) {
+	oops.printStackTrace();
+} finally {
+		out.flush();
 		System.exit(0); 
+}
 	}
+	
+	private static PrintStream out = System.out;
 
-	
-	
 	private static void put(RestHighLevelClient client, UserRecord record, int m) {
 		
+		IndexRequest request = createIndexRequest(record, m); 		
+		try {
+			IndexResponse indexResponse = client.index(request, RequestOptions.DEFAULT);
+			System.out.println(indexResponse.getResult());
+			Thread.sleep(500);
+			
+		} catch (IOException | InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
+
+	private static IndexRequest createIndexRequest(UserRecord record, int m) {
 		Map<String, Object> json = new TreeMap<>();
 		json.put("user_id", record.user_id);
 		int len = record.user_id.length();
 		String id = m + "-" + record.user_id.substring(len-2);
 		json.put("timestamp", record.timestamp);
 		json.put("duration", record.duration / 1000.0); // double in seconds
+		out.println(json);
 		IndexRequest request = new IndexRequest("session-"+id, "_doc", record.user_id + Long.toString(record.timestamp.getTime()))
-		        .source(json); 		
-		try {
-			IndexResponse indexResponse = client.index(request, RequestOptions.DEFAULT);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+		        .source(json);
+		return request;
 	}
 
-
+	private static void put(BulkRequest builder, UserRecord record, int m) {
+		builder.add(createIndexRequest(record, m));
+	}
 
 
 

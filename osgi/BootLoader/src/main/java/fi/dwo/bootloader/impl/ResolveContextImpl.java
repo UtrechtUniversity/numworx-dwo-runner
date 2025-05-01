@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,7 @@ class ResolveContextImpl extends ResolveContext /*implements Repository*/ {
 	Repository repository[];
 	BundleContext context;
 	List<Resource> mandatory = new ArrayList<>();
+	Set<Requirement> defunct = new HashSet<>();
 	boolean filter;
 
 	public void noFilter() {
@@ -39,9 +41,10 @@ class ResolveContextImpl extends ResolveContext /*implements Repository*/ {
 		return mandatory;
 	}
 
-	ResolveContextImpl(Repository[] repository, BundleContext context) {
+	ResolveContextImpl(Repository[] repository, BundleContext context, Map<Requirement, List<Capability>> cacheMap) {
 		this.repository = repository;
 		this.context = context;
+		this.cacheMap = cacheMap;
 		initWirings();
 		framework = context.getBundle(0).adapt(FrameworkWiring.class);
 	}
@@ -58,9 +61,20 @@ class ResolveContextImpl extends ResolveContext /*implements Repository*/ {
 		return framework.findProviders(requirement);
 	}
 
+	private Map<Requirement, List<Capability>> cacheMap = new HashMap<>();
+	
+	
 	@Override
 	public List<Capability> findProviders(Requirement requirement) {
-		ArrayList<Capability> list = new ArrayList<Capability>();
+		List<Capability> cache = this.cacheMap.get(requirement);
+		if (cache != null) 
+		{
+			return filterMandatory(cache);
+		}
+		if (defunct.contains(requirement)) 
+			return Collections.emptyList();
+		
+		List<Capability> list = new ArrayList<Capability>();
 		Set<Requirement> singleton = Collections.singleton(requirement);
 
 		Collection<Capability> c = this.findProviders(singleton).get(requirement);
@@ -70,9 +84,29 @@ class ResolveContextImpl extends ResolveContext /*implements Repository*/ {
           Capability capability = iter.next();
           Resource r = capability.getResource();
           if (filter || wirings.containsKey(r)) list.add(capability);         
-        }
-		for(Repository r : repository)
-			list.addAll(r.findProviders(singleton).get(requirement));
+        } // TODO skip if list contains mandatory
+		if (list.isEmpty()) 
+			for(Repository r : repository)
+				list.addAll(r.findProviders(singleton).get(requirement));
+		list = filterMandatory(list);		
+		if (!list.isEmpty()) cacheMap.put(requirement, list);
+		else defunct.add(requirement);
+		return list;
+	}
+
+	public List<Capability> filterMandatory(List<Capability> list) {
+		// if list contains a resource from mantatory, remove all other
+				Iterator<Capability> iter2 = list.iterator();
+				while (iter2.hasNext()) {
+					Capability capability = (Capability) iter2.next();
+					Resource r  = capability.getResource();
+					if (mandatory.contains(r) )
+					{
+						list = Collections.singletonList(capability);
+						break;
+					}
+					
+				}
 		return list;
 	}
 
