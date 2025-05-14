@@ -20,6 +20,7 @@
   		<groupId>org.osgi</groupId>
 		<artifactId>org.osgi.util.promise</artifactId>
 		<version>1.0.0</version>
+		<scope>provided</scope>
   	</dependency>
   	<dependency>
   		<groupId>org.osgi</groupId>
@@ -43,11 +44,13 @@
   		<groupId>org.osgi</groupId>
   		<artifactId>org.osgi.service.repository</artifactId>
   		<version>1.0.0</version>
+  		<scope>provided</scope>
   	</dependency>
   	<dependency>
   		<groupId>org.osgi</groupId>
   		<artifactId>org.osgi.util.function</artifactId>
   		<version>1.0.0</version>
+  		<scope>provided</scope>
   	</dependency>
   	<dependency>
   		<groupId>org.osgi</groupId>
@@ -74,7 +77,7 @@
           <instructions>
 				<_snapshot>${osgi.qualifier}</_snapshot>
 				<Bundle-Activator>fi.dwo.bootloader.impl.Activator</Bundle-Activator>
-				<Export-Package>fi.dwo.bootloader;version=${ifVersion},fi.dwo.dwoloader;version=1.0,fi.dwo.eawt,org.osgi.service.repository</Export-Package>
+				<Export-Package>fi.dwo.bootloader;version=${ifVersion},fi.dwo.dwoloader;version=1.0,fi.dwo.eawt</Export-Package>
 				<Require-Capability>osgi.ee; filter:="(&amp;(osgi.ee=JavaSE)(version=1.8))"</Require-Capability>
 				<Embed-Transitive>true</Embed-Transitive>
  				<Embed-Dependency>*;scope=compile;type=!pom;inline=true</Embed-Dependency>
