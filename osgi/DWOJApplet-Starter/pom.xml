@@ -38,12 +38,6 @@
 	<scm>
 		<developerConnection>scm:git:git@github.com:UtrechtUniversity/numworx-dwo-runner.git</developerConnection>
 	</scm>
- 	<repositories>	<!-- als de mirror uit staat -->
-		<repository>
-		  <id>repos</id>
-		  <url>https://repos.dwo.nl/artifactory/repos</url>
-		</repository>
-	</repositories>
 
 	<!-- dependencies -->
 
@@ -206,5 +200,9 @@
 	      <name>Knopflerfish 6 Releases Repository</name>
 	      <url>https://resources.knopflerfish.org/repo/maven2/release</url> 
 	    </repository>
+		<repository>
+		  <id>repos</id>
+		  <url>https://repos.dwo.nl/artifactory/repos</url>
+		</repository>
 	  </repositories>
   </project>
