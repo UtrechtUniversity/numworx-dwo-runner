@@ -344,6 +344,12 @@
         	<version>1.7.2</version>
         </dependency>
 	</dependencies>
+ 	<repositories>	<!-- als de mirror uit staat -->
+		<repository>
+		  <id>repos</id>
+		  <url>https://repos.dwo.nl/artifactory/repos</url>
+		</repository>
+	</repositories>
 	<properties>
 		<s3>s3://test-dwo-nl</s3>
 		<jxb>7.28.1</jxb>
