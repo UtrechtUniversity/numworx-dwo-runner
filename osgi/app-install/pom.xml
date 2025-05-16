@@ -64,23 +64,6 @@
 							<goal>copy-dependencies</goal>
 						</goals>
 					</execution>
-					<execution>
-						<id>provision-copy</id>
-						<phase>process-resources</phase>
-						<goals><goal>copy</goal></goals>
-						<configuration>
-							<artifactItems>
-								<artifactItem>
-									<artifactId>MicroBoot</artifactId>
-									<groupId>nl.numworx.author</groupId>
-									<version>1.0.3</version>
-									<type>zip</type>
-									<classifier>null</classifier>
-									<destFileName>null.zip</destFileName>
-								</artifactItem>
-							</artifactItems>
-						</configuration>
-					</execution>
 				</executions>
 				<configuration>
 					<includeScope>runtime</includeScope>
@@ -141,6 +124,19 @@
 		    <groupId>org.osgi</groupId>
 		    <artifactId>org.osgi.service.repository</artifactId>
 		    <version>1.1.0</version>
+		</dependency>
+<!-- repository 1.1 samen met promise 1.1 -->
+		<dependency>
+		    <groupId>org.osgi</groupId>
+		    <artifactId>org.osgi.util.function</artifactId>
+		    <version>1.1.0</version>
+		    <optional>true</optional>
+		</dependency>  
+		<dependency>
+		    <groupId>org.osgi</groupId>
+		    <artifactId>org.osgi.util.promise</artifactId>
+		    <version>1.1.1</version>
+		    <optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>fi.dwo</groupId>
