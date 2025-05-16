@@ -7,6 +7,7 @@
 		<groupId>nl.uu.fi.dwo</groupId>
 		<artifactId>DWO</artifactId>
 		<version>2.5.37</version>
+	    <relativePath />
 	</parent>
 	<!-- Adjust artifact, name and description for new projects -->
 	<artifactId>DWOJApplet-Starter</artifactId>
@@ -37,6 +38,12 @@
 	<scm>
 		<developerConnection>scm:git:git@github.com:UtrechtUniversity/numworx-dwo-runner.git</developerConnection>
 	</scm>
+ 	<repositories>	<!-- als de mirror uit staat -->
+		<repository>
+		  <id>repos</id>
+		  <url>https://repos.dwo.nl/artifactory/repos</url>
+		</repository>
+	</repositories>
 
 	<!-- dependencies -->
 
