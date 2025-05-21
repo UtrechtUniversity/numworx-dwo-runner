@@ -47,7 +47,6 @@ public class MicroServer {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void main(String[] args) throws Exception {
 	    System.setProperty("apple.eawt.quitStrategy", "CLOSE_ALL_WINDOWS");
-	    System.setProperty("java.security.policy","all.policy");
 	    
 		Preferences pref = Preferences.userRoot().node("fi/microserver");
 		String uuid = pref.get("uuid", null);
