@@ -422,12 +422,12 @@ public class Activator implements BundleActivator {
 
 	final static String WRAP = "org.ops4j.pax.url.wrap";
 
-	private void installWrap(LoaderBuilder builder, LoaderBuilderFactory factory)
-			throws BundleException, URISyntaxException {
-		if(noProtocol("wrap"))
-			builder.setLocation(Activator.PAX_URL_WRAP).start(Activator.WRAP);
-		
-	}
+//	private void installWrap(LoaderBuilder builder, LoaderBuilderFactory factory)
+//			throws BundleException, URISyntaxException {
+//		if(noProtocol("wrap"))
+//			builder.setLocation(Activator.PAX_URL_WRAP).start(Activator.WRAP);
+//		
+//	}
 	
 	private void installSwingBrowser(LoaderBuilder builder) {
 	  try {
