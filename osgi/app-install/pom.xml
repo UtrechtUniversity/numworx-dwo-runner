@@ -6,11 +6,11 @@
 	    <artifactId>DWO.master.pom</artifactId>
 	    <relativePath />
 	  </parent>
-	<groupId>nl.uu.fi.dwo</groupId>
 	<artifactId>app-install</artifactId>
 	<version>0.0.9-SNAPSHOT</version>
-	<packaging>pom</packaging>
+	<packaging>war</packaging>
 	<build>
+		<finalName>bundles</finalName>
 		<extensions>
         <extension>
             <groupId>com.github.seahen</groupId>
@@ -67,7 +67,7 @@
 				</executions>
 				<configuration>
 					<includeScope>runtime</includeScope>
-					<outputDirectory>${project.build.directory}</outputDirectory>
+					<outputDirectory>${project.build.directory}/${project.build.finalName}</outputDirectory>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -80,9 +80,13 @@
 						<goals>
 							<goal>local-index</goal>
 						</goals>
-						<phase>package</phase>
+						<phase>prepare-package</phase>
 						<configuration>
-							<inputDir>target</inputDir>
+							<inputDir>${project.build.directory}/${project.build.finalName}</inputDir>
+							<outputFile>${project.build.directory}/${project.build.finalName}/index.xml</outputFile>
+							<indexFiles>
+								<include>*.jar</include>
+							</indexFiles>
 						</configuration>
 					</execution>
 				</executions>
@@ -101,7 +105,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<fromDir>${project.build.directory}</fromDir>
+					<fromDir>${project.build.directory}/${project.build.finalName}</fromDir>
 					<includes>*</includes>
 					<serverId>prod</serverId>
 					<url>${s3}</url>
