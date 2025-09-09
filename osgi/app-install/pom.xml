@@ -373,6 +373,8 @@
 		<s3>s3://test-dwo-nl</s3>
 		<jxb>7.28.1</jxb>
  		<wagonPhase>verify</wagonPhase>
+ 		<maven.compiler.source>1.8</maven.compiler.source>
+ 		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
 	<profiles>
 		<profile>
