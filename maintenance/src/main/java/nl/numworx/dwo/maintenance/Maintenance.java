@@ -38,6 +38,7 @@ public class Maintenance {
   private String url  = "http://localhost:8080/dwo/";
   private Integer amount;
   private Long since;
+  private Boolean single;
   
   private RestAuthenticator authenticator;
   private StoredRestManager manager;
@@ -61,6 +62,7 @@ public class Maintenance {
     logincontext = result.getDomLoginContext();
   }
   
+  @SuppressWarnings("deprecation")
   private String md5(String pass) {
     return MD5.getHashString(pass);
   }
@@ -74,10 +76,11 @@ public class Maintenance {
     main.setURL(System.getProperty("maintenance.url",main.url));
     main.setUser(System.getProperty("maintenance.user", main.user));
     main.setPass(System.getProperty("maintenance.pass", main.pass));
+    main.setSingle(System.getProperty("maintenance.single"));
     main.setAmount(100);
     main.login();
   
-    long count = main.getUsers()       
+    long count = main.getUsers(main.single)       
         .map(main::removeUser)
         .filter(Boolean::booleanValue)
         .count();  
@@ -110,7 +113,17 @@ public class Maintenance {
 
   }
 
-  private Stream<DomClassCourse> getClassCourses(Integer amount) throws Dwo2Exception {
+  private void setSingle(String property) {
+	try {
+		if (property != null)
+			single = Boolean.valueOf(property);
+	} catch(Exception oops) {
+		LOG.warning("setSingle " + property  +" " + oops);
+	}
+	
+}
+
+private Stream<DomClassCourse> getClassCourses(Integer amount) throws Dwo2Exception {
 	return garbage.getClassCourses(amount).stream().limit(amount);
   }
 
@@ -123,8 +136,8 @@ public class Maintenance {
 	  }
   }
   
-  private Stream<DomUser> getUsers() throws Dwo2Exception {
-    return garbage.getUsers(amount, since).stream()
+  private Stream<DomUser> getUsers(Boolean single) throws Dwo2Exception {
+    return garbage.getUsers(amount, since, single).stream()
         .limit(getAmount().longValue())
         .filter(this::isOldUser)
         .map(DomUserFullwLoginContext::getDomUserFull);
@@ -169,6 +182,8 @@ public class Maintenance {
 
   private Boolean removeUser(DomUser user) {
     try {
+      if (Boolean.TRUE.equals(single))
+    	  user.setSingleSchool(Boolean.FALSE);
       return garbage.removeUser(user);
     } catch (Dwo2Exception e) {
       LOG.log(Level.SEVERE, "remove User " + user.getUniqueDisplayName(), e);
