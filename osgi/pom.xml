@@ -10,14 +10,11 @@
 	<version>0.0.9-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<modules>
-<!--		<module>MicroBoot</module>-->
-    	<module>unpack200</module>
+    		<module>unpack200</module>
 		<module>BootLoader</module>
 		<module>DWOJApplet-Starter</module>
-<!--    <module>ch.jm.osgi.provisioning</module>-->
 		<module>app-install</module>
-<!--		<module>MicroServer</module>-->
-	<module>dwoloader</module>
+		<module>dwoloader</module>
 	</modules>
 	<build>
 		<plugins>
