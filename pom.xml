@@ -1,0 +1,36 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>nl.numworx</groupId>
+  <artifactId>com.teamdev.jxbrowser</artifactId>
+  <version>7.28.1</version>
+  <repositories>
+  <repository>
+    <id>com.teamdev</id>
+    <url>https://europe-maven.pkg.dev/jxbrowser/releases</url>
+  </repository>
+  </repositories>
+  <dependencies>
+	<!-- https://mvnrepository.com/artifact/biz.aQute.bnd/biz.aQute.bnd -->
+	<dependency>
+    	    <groupId>biz.aQute.bnd</groupId>
+	    <artifactId>biz.aQute.bnd</artifactId>
+	    <version>5.3.0</version>
+	</dependency>
+      <dependency>
+          <groupId>com.teamdev.jxbrowser</groupId>
+          <artifactId>jxbrowser-cross-platform</artifactId>
+          <type>pom</type>
+          <version>7.13</version>
+      </dependency>
+      <dependency>
+          <groupId>com.teamdev.jxbrowser</groupId>
+          <artifactId>jxbrowser-swing</artifactId>
+          <version>7.13</version>
+      </dependency>
+  </dependencies>
+  <build>
+      <plugins>
+      </plugins>
+  </build>
+  
+</project>
