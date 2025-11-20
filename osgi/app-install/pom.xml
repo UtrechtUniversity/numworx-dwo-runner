@@ -265,7 +265,7 @@
 		  <version>2.5.5-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>nl.numworx</groupId>
+			<groupId>nl.numworx.swingbrowser</groupId>
 			<artifactId>org.eclipse.equinox.http</artifactId>
 			<version>1.0.501-SNAPSHOT</version>
 			<exclusions>
@@ -363,11 +363,30 @@
         	<version>1.7.2</version>
         </dependency>
 	</dependencies>
- 	<repositories>	<!-- als de mirror uit staat -->
-		<repository>
-		  <id>repos</id>
-		  <url>https://repos.dwo.nl/artifactory/repos</url>
-		</repository>
+ 	<repositories>
+ 	    <repository>
+	      <id>numworx-dwo-project</id>
+	      <name>GitHub Packages DWO project</name>
+	      <url>https://maven.pkg.github.com/UtrechtUniversity/numworx-dwo-project</url>
+	      <snapshots>
+			  <enabled>true</enabled>
+		  </snapshots>
+	    </repository>		
+ 	    <repository>
+	      <id>numworx-vendor-jxbrowser</id>
+	      <name>GitHub Packages Swingbrowser</name>
+	      <url>https://maven.pkg.github.com/UtrechtUniversity/numworx-vendor-jxbrowser</url>
+	      <snapshots>
+			  <enabled>true</enabled>
+		  </snapshots>
+	    </repository>
+	    <repository>
+			<id>repos</id>
+			<url>https://repos.dwo.nl/artifactory/repos</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>	
 	</repositories>
 	<properties>
 		<s3>s3://test-dwo-nl</s3>

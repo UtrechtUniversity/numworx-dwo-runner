@@ -92,12 +92,6 @@
             </plugin>            
   </plugins>
   </build>
-  <distributionManagement>
-        <snapshotRepository>
-            <id>snapshots</id>
-            <url>https://repos.dwo.nl/artifactory/libs-snapshot-local</url>    
-        </snapshotRepository>
-  </distributionManagement>       
   <version>2.0.10-SNAPSHOT</version>
   <properties>
 	<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
