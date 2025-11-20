@@ -267,7 +267,7 @@
 		<dependency>
 			<groupId>nl.numworx.swingbrowser</groupId>
 			<artifactId>org.eclipse.equinox.http</artifactId>
-			<version>1.0.501-SNAPSHOT</version>
+			<version>1.0.501</version>
 			<exclusions>
 				<exclusion>
 					<groupId>javax.servlet</groupId>
@@ -277,7 +277,7 @@
 		</dependency>
 		<dependency>
     	  <groupId>nl.numworx.swingbrowser</groupId>
-    	  <version>0.0.19-SNAPSHOT</version>
+    	  <version>0.0.19</version>
 		  <artifactId>swingbrowser-ext</artifactId>
 		  <exclusions>
 		  	<exclusion>
