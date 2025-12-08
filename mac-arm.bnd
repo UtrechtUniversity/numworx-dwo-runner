@@ -1,6 +1,6 @@
 ver: 7.28.1
 -classpath: target/jxbrowser-mac-arm-${ver}.jar
-Bundle-SymbolicName: com.teamdev.jxbrowser.mac-arm
+Bundle-SymbolicName: com.teamdev.jxbrowser-mac-arm
 -output: target/${bsn}-${ver}.jar
 Bundle-Version: ${ver}
 Fragment-Host: com.teamdev.jxbrowser;bundle-version="[${ver},${ver}]"

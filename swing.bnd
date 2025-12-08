@@ -1,7 +1,7 @@
 ver: 7.28.1
 -classpath: target/jxbrowser-swing-${ver}.jar
-Bundle-SymbolicName: com.teamdev.jxbrowser.swing
--output: target/${bsn}-${ver}.jar
+Bundle-SymbolicName: com.teamdev.jxbrowser-swing
+-output: target/com.teamdev.jxbrowser-swing-${ver}.jar
 Bundle-Version: ${ver}
 Export-Package: *;version=${ver}
 Import-Package: com.teamdev.jxbrowser.*;version="[${ver},${ver}]",sun.awt.*;resolution:=optional,javax.annotation;resolution:=optional,*
