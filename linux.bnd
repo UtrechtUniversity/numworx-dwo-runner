@@ -1,7 +1,7 @@
 ver: 7.28.1
--classpath: jxbrowser-linux64-${ver}.jar
-Bundle-SymbolicName: com.teamdev.jxbrowser.linux
--output: ${bsn}-${ver}.jar
+-classpath: target/jxbrowser-linux64-${ver}.jar
+Bundle-SymbolicName: com.teamdev.jxbrowser.linux64
+-output: target/${bsn}-${ver}.jar
 Bundle-Version: ${ver}
 Fragment-Host: com.teamdev.jxbrowser;bundle-version="[${ver},${ver}]"
 Private-Package: *

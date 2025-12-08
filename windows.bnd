@@ -1,7 +1,7 @@
 ver: 7.28.1
--classpath: jxbrowser-win64-${ver}.jar
-Bundle-SymbolicName: com.teamdev.jxbrowser.windows
--output: ${bsn}-${ver}.jar
+-classpath: target/jxbrowser-win64-${ver}.jar
+Bundle-SymbolicName: com.teamdev.jxbrowser.win64
+-output: target/${bsn}-${ver}.jar
 Bundle-Version: ${ver}
 Fragment-Host: com.teamdev.jxbrowser;bundle-version="[${ver},${ver}]"
 Private-Package: *

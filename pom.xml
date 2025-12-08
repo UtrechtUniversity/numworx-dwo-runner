@@ -12,7 +12,7 @@
   <dependencies>
 	<!-- https://mvnrepository.com/artifact/biz.aQute.bnd/biz.aQute.bnd -->
 	<dependency>
-    	    <groupId>biz.aQute.bnd</groupId>
+    	<groupId>biz.aQute.bnd</groupId>
 	    <artifactId>biz.aQute.bnd</artifactId>
 	    <version>6.3.1</version>
 	</dependency>
@@ -30,7 +30,48 @@
   </dependencies>
   <build>
       <plugins>
+   		<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.10</version>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<phase>generate-resources</phase>
+					</execution>
+				</executions>
+				<configuration>
+					<includeScope>runtime</includeScope>
+					<outputDirectory>${project.build.directory}</outputDirectory>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+        		<artifactId>exec-maven-plugin</artifactId>
+        		<version>3.6.2</version>
+        		<executions>
+          			<execution>
+            			<goals>
+              				<goal>exec</goal>
+            			</goals>
+            			<phase>compile</phase>
+          			</execution>
+        		</executions>
+        		<configuration>
+          		  <executable>sh</executable>
+		          <workingDirectory>${project.basedir}</workingDirectory>
+		          <arguments>
+		            <argument>go.sh</argument>
+		          </arguments>
+		          <environmentVariables>
+		          </environmentVariables>
+		        </configuration>
+			</plugin>
       </plugins>
   </build>
   
+  <packaging>pom</packaging>
 </project>

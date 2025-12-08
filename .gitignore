@@ -2,3 +2,6 @@ target/
 /com.teamdev.jxbrowser*.jar
 /jxbrowser*.jar
 /biz.aQute.bnd-6.3.1.jar
+.project
+.classpath
+.settings/
