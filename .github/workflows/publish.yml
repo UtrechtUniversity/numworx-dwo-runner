@@ -1,0 +1,76 @@
+name: Publish package to GitHub Packages
+on:
+  push:
+    branches: ['main', 'develop']
+    tags: ['*']
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-maven-
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          cache: maven
+      - uses: s4u/maven-settings-action@v4.0.0
+        with:
+          servers: |
+            [{
+                "id": "numworx-vendor-geogebra",
+                "username": "${{ secrets.USER_PACKAGE_READ }}",
+                "password": "${{ secrets.TOKEN_PACKAGE_READ }}"
+            },
+            {
+                "id": "numworx-vendor-cbook",
+                "username": "${{ secrets.USER_PACKAGE_READ }}",
+                "password": "${{ secrets.TOKEN_PACKAGE_READ }}"
+            },
+            {   
+                "id": "numworx-vendor-jxbrowser",
+                "username": "${{ secrets.USER_PACKAGE_READ }}",
+                "password": "${{ secrets.TOKEN_PACKAGE_READ }}"
+            },
+            {
+                "id": "numworx-vendor-oauth",
+                "username": "${{ secrets.USER_PACKAGE_READ }}",
+                "password": "${{ secrets.TOKEN_PACKAGE_READ }}"
+            },
+            {
+                "id": "numworx-dwo-gwtclienthtmlui",
+                "username": "${{ secrets.USER_PACKAGE_READ }}",
+                "password": "${{ secrets.TOKEN_PACKAGE_READ }}"
+            },
+            {
+                "id": "github-uoc-lti-core",
+                "username": "${{ secrets.USER_PACKAGE_READ }}",
+                "password": "${{ secrets.TOKEN_PACKAGE_READ }}"
+            },
+            {
+                "id": "github-uoc-lti-jwt",
+                "username": "${{ secrets.USER_PACKAGE_READ }}",
+                "password": "${{ secrets.TOKEN_PACKAGE_READ }}"
+            },
+            {
+                "id": "github-uoc-lti",
+                "username": "${{ secrets.USER_PACKAGE_READ }}",
+                "password": "${{ secrets.TOKEN_PACKAGE_READ }}"
+            },
+            {
+                "id": "numworx-dwo-project",
+                "username": "${{ secrets.USER_PACKAGE_READ }}",
+                "password": "${{ secrets.TOKEN_PACKAGE_READ }}"
+            },
+            {    "id": "numworx-dwo-openmath",
+                 "username":"${{ secrets.USER_PACKAGE_READ }}",
+                 "password": "${{ secrets.TOKEN_PACKAGE_READ }}"
+            }]
+      - name: Publish package
+        run: mvn --batch-mode --fail-at-end install -Pgithub
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
