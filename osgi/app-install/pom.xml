@@ -262,7 +262,7 @@
 		<dependency>
 		  <groupId>fi.beans</groupId>
 		  <artifactId>numworxlf</artifactId>
-		  <version>2.5.5-SNAPSHOT</version>
+		  <version>2.5.47</version>
 		</dependency>
 		<dependency>
 			<groupId>nl.numworx.swingbrowser</groupId>
@@ -380,13 +380,6 @@
 			  <enabled>true</enabled>
 		  </snapshots>
 	    </repository>
-	    <repository>
-			<id>repos</id>
-			<url>https://repos.dwo.nl/artifactory/repos</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>	
 	</repositories>
 	<properties>
 		<s3>s3://test-dwo-nl</s3>
