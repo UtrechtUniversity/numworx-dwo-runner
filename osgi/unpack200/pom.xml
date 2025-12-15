@@ -60,8 +60,8 @@
   <packaging>bundle</packaging>
   <parent>
   	<groupId>nl.uu.fi.dwo</groupId>
-  	<artifactId>DWO.master.pom</artifactId>
-  	<version>1.1</version>
+  	<artifactId>dwo.master.pom</artifactId>
+  	<version>2.5.47</version>
   	<relativePath />
   </parent>
 </project>

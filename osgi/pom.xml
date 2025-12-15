@@ -2,8 +2,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>nl.uu.fi.dwo</groupId>
-		<artifactId>DWO.master.pom</artifactId>
-		<version>1.1</version>
+		<artifactId>dwo.master.pom</artifactId>
+		<version>2.5.47</version>
 	</parent>
 	<groupId>fi.microserver</groupId>
 	<artifactId>osgi-parent</artifactId>
