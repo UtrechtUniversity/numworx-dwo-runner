@@ -62,5 +62,6 @@
           <groupId>nl.uu.fi.dwo</groupId>
           <artifactId>runner-parent</artifactId>
           <version>1.0.0-SNAPSHOT</version>
+          <relativePath>../..</relativePath>
   </parent>
 </project>
