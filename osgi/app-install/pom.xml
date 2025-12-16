@@ -136,7 +136,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>fi.dwo</groupId>
-			<artifactId>DwoLoader</artifactId>
+			<artifactId>dwoloader</artifactId>
 			<version>0.0.4-SNAPSHOT</version>
 		</dependency>
 		<dependency>
@@ -159,7 +159,7 @@
 		</dependency>
 		<dependency>
 			<groupId>fi.dwo</groupId>
-			<artifactId>BootLoader</artifactId>
+			<artifactId>bootloader</artifactId>
 			<version>2.0.10-SNAPSHOT</version>
 			<exclusions>
 				<exclusion>
@@ -176,7 +176,7 @@
 		</dependency>
 		<dependency>
 			<groupId>fi.dwo</groupId>
-			<artifactId>DWOJApplet-Starter</artifactId>
+			<artifactId>dwojapplet-starter</artifactId>
 			<version>2.0.4-SNAPSHOT</version>
 			<exclusions>
 				<exclusion>
@@ -399,6 +399,13 @@
 			<id>localhost</id>
 			<properties>
 				<s3>file://${user.home}/Public</s3>
+			</properties>
+		</profile>
+		<profile>
+			<id>github</id>
+			<properties>
+			  <wagonPhase>none</wagonPhase>
+			  <s3>file://${user.home}/not_used</s3>
 			</properties>
 		</profile>
 	</profiles>

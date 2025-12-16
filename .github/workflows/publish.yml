@@ -71,6 +71,6 @@ jobs:
                  "password": "${{ secrets.TOKEN_PACKAGE_READ }}"
             }]
       - name: Publish package
-        run: mvn --batch-mode --fail-at-end install -Pgithub
+        run: mvn --batch-mode --fail-at-end deploy -Pgithub
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

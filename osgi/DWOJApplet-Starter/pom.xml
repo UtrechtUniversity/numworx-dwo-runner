@@ -10,7 +10,7 @@
 	    <relativePath />
 	</parent>
 	<!-- Adjust artifact, name and description for new projects -->
-	<artifactId>DWOJApplet-Starter</artifactId>
+	<artifactId>dwojapplet-starter</artifactId>
 	<name>DWOJApplet - Starter</name>
 	<url>http://www.dwo.nl</url>
 	<packaging>jar</packaging>

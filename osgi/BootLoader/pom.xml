@@ -6,7 +6,7 @@
     <artifactId>dwo.master.pom</artifactId>
     <relativePath />
   </parent>
-  <artifactId>BootLoader</artifactId>
+  <artifactId>bootloader</artifactId>
   <packaging>bundle</packaging>
   <name>Boot loader</name>
   <dependencies> 
