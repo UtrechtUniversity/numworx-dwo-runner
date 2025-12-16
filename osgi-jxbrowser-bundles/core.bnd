@@ -1,0 +1,8 @@
+ver: 7.28.1
+-classpath: target/jxbrowser-${ver}.jar
+Bundle-SymbolicName: com.teamdev.jxbrowser
+-output: target/${bsn}-${ver}.jar
+Bundle-Version: ${ver}
+Export-Package: *;version=${ver}
+Import-Package: com.teamdev.jxbrowser.*;version=${ver},javax.annotation;resolution:=optional,*
+Require-Capability: com.teamdev.jxbrowser;filter:="(platform=*)"
