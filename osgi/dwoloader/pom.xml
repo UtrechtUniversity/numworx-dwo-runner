@@ -87,6 +87,7 @@
         <configuration>
           <instructions>
 				<_snapshot>${osgi.qualifier}</_snapshot>
+				<Bundle-SymbolicName>fi.dwo.DwoLoader</Bundle-SymbolicName>
 				<Bundle-Activator>fi.dwo.dwoloader_impl.Activator</Bundle-Activator>
 				<Embed-Transitive>false</Embed-Transitive>
  				<Embed-Dependency />

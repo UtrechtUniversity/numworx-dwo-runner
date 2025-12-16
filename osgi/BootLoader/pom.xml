@@ -76,6 +76,7 @@
         <configuration>
           <instructions>
 				<_snapshot>${osgi.qualifier}</_snapshot>
+				<Bundle-SymbolicName>fi.dwo.BootLoader</Bundle-SymbolicName>
 				<Bundle-Activator>fi.dwo.bootloader.impl.Activator</Bundle-Activator>
 				<Export-Package>fi.dwo.bootloader;version=${ifVersion},fi.dwo.dwoloader;version=1.0,fi.dwo.eawt</Export-Package>
 				<Require-Capability>osgi.ee; filter:="(&amp;(osgi.ee=JavaSE)(version=1.8))"</Require-Capability>
