@@ -4,10 +4,9 @@
 
 	<!-- Adjust artifact, name and description for new projects -->
 	<parent>
-		<groupId>nl.uu.fi.dwo</groupId>
-		<artifactId>dwo</artifactId>
-		<version>2.5.47</version>
-	    <relativePath />
+          <groupId>nl.uu.fi.dwo</groupId>
+          <artifactId>runner-parent</artifactId>
+          <version>1.0.0-SNAPSHOT</version>
 	</parent>
 	<!-- Adjust artifact, name and description for new projects -->
 	<artifactId>dwojapplet-starter</artifactId>
