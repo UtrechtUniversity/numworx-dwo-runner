@@ -15,6 +15,9 @@
   <modules>
 	<module>osgi-jxbrowser-bundles</module>
 	<module>osgi</module>
+	<module>DWO_runner</module>
+	<module>maintenance</module>
+	<module>DWOOffline</module>
   </modules>
   <repositories>
     <repository>

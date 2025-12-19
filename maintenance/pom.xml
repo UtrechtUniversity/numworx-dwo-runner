@@ -2,8 +2,8 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>nl.uu.fi.dwo</groupId>
-    <artifactId>dwo</artifactId>
-    <version>2.5.47-SNAPSHOT</version>
+    <artifactId>runner-parent</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
   </parent>
   <groupId>nl.numworx.dwo.maintenance</groupId>
   <artifactId>maintenance</artifactId>
@@ -88,6 +88,12 @@
   			<exec.skip>true</exec.skip>
   		</properties>
   	</profile>
+        <profile>
+                <id>github</id>
+                <properties>
+                        <exec.skip>true</exec.skip>
+                </properties>
+        </profile>
   </profiles>
   <version>2.4.16-SNAPSHOT</version>
 </project>
