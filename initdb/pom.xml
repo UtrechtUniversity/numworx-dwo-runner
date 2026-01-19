@@ -2,6 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>nl.numworx</groupId>
   <artifactId>initdb</artifactId>
+  <version>2.5.48-SNAPSHOT</version>
     <parent>
 	  <groupId>nl.uu.fi.dwo</groupId>
 	  <artifactId>runner-parent</artifactId>
@@ -54,6 +55,19 @@
 			</resource>
 		</resources>
 		<plugins>
+	              <plugin>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <version>2.4</version>
+                        <configuration>
+                                <archive>
+                                        <manifest>
+        			                <mainClass>nl.numworx.initdb.Main</mainClass>
+                                                <addClasspath>true</addClasspath>
+                                                <useUniqueVersions>false</useUniqueVersions>
+                                        </manifest>
+                                </archive>
+                        </configuration>
+                      </plugin>
 			<plugin>
        			<groupId>org.codehaus.mojo</groupId>
         		<artifactId>exec-maven-plugin</artifactId>
