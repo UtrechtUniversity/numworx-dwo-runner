@@ -1,5 +1,6 @@
 package nl.numworx.initdb;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URI;
@@ -120,6 +121,11 @@ fi.dwo.commons.persistence.entities.PersistentMFA</class>
 		Properties properties = new Properties();
 		properties = new Properties();
 		properties.load(Main.class.getResourceAsStream("/dest.properties"));
+		if (args.length != 0) {
+			FileInputStream in = new FileInputStream(args[0]);
+			properties.load(in);
+			in.close();
+		}
 		DestDB dest = new DestDB("DWO_COPYDB", properties);
 		dest.install();
 		List<PersistentDwoSystemParameters> parameters = Collections.emptyList();
@@ -132,15 +138,20 @@ fi.dwo.commons.persistence.entities.PersistentMFA</class>
 			t = t.getCause();
 			System.err.println(t.getClass());
 			if (t.getMessage().startsWith("Unknown database")) {
-				URI uri = URI.create("mysql://127.0.0.1:3306/dwocopy?allowPublicKeyRetrieval=true&useSSL=false");
+				String db = properties.getProperty("javax.persistence.jdbc.url");
+				int index = db.indexOf("://")+1;
+				String schema = db.substring(0, index);
+				db = db.substring(index);
+				URI uri = URI.create(db);
+				db = uri.getPath().substring(1);
 				String q = uri.getQuery();
 				uri = uri.resolve("/");
 				if(q != null) uri = uri.resolve("?"+q);
 				String root = properties.getProperty("javax.persistence.jdbc.user");
 				String test = properties.getProperty("javax.persistence.jdbc.password");
-				Connection c = DriverManager.getConnection("jdbc:" + uri.toString(), root, test);
+				Connection c = DriverManager.getConnection(schema + uri.toString(), root, test);
 				Statement s = c.createStatement();
-				s.execute("create database dwocopy");
+				s.execute("create database " + db);
 				dest = new DestDB("DWO_COPYDB", properties);
 				dest.install();
 				parameters = DwoSystemParametersManager.findEntities(); // should work, empty parameters though

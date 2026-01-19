@@ -18,11 +18,7 @@ import javax.persistence.RollbackException;
 import javax.persistence.Table;
 import javax.persistence.TypedQuery;
 
-import org.eclipse.persistence.internal.security.PrivilegedGetDeclaredFields;
-
-import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.server.persistence.DwoEmfFactory;
-import nl.uu.fi.dwo.rest.dom.entities.util.DelState;
 
 public class DestDB {
 
