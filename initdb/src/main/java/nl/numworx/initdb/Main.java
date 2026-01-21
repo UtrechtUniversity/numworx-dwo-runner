@@ -61,6 +61,7 @@ import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentUrnResource;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.system.MD5;
+import fi.dwo.server.PersistentDataManagers.core.AppletConfigManager;
 import fi.dwo.server.PersistentDataManagers.core.AppletManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoSystemParametersManager;
@@ -220,13 +221,47 @@ fi.dwo.commons.persistence.entities.PersistentMFA</class>
  			em.getTransaction().commit();
  			em.close();			
  		}
- 	// Essential schoolgroups dwoadmin and free student
+// Essential schoolgroups dwoadmin and free student
  		schoolgroups(adminschool, nullschool, properties);
  		dwoadmin(adminschool,properties);
- 		profile("VO", "/vo", "nl", "<html>Dit is de Numworx DWO-omgeving voor voortgezet onderwijs. In deze omgeving is een bibliotheek beschikbaar met veel digitaal lesmateriaal. Er zijn modules met oefeningen , er zijn ook modules die een volledige lessenserie rond een onderwerp bevatten. Het menu aan de linkerzijde geeft toegang tot modules van verschillende niveaus. Klik op een niveau en kies een module. Elke module biedt een aantal activiteiten die je kunt starten en uitvoeren. <br><br> Met een (gratis) persoonlijk DWO-account kun je alle activiteiten uit de bibliotheek gebruiken. Je werk en resultaten worden opgeslagen. Ben je verbonden aan een school met een Numworx DWO-abonnement, dan zijn er in het linkermenu ook modules speciaal voor jouw school.  <br><br> Ben je leerling bij een school met een Numworx abonnement, dan zie je in het linkermenu de modules die je docent speciaal voor jouw klas heeft klaargezet. Je docent heeft ook inzicht in jouw werk. Klik op een module, kies een activiteit en je kunt aan de slag. </html>", "Numworx Modules Voortgezet Onderwijs");
+ 		profile("VO", "/vo", "nl", "rp", "<html>Dit is de Numworx DWO-omgeving voor voortgezet onderwijs. In deze omgeving is een bibliotheek beschikbaar met veel digitaal lesmateriaal. Er zijn modules met oefeningen , er zijn ook modules die een volledige lessenserie rond een onderwerp bevatten. Het menu aan de linkerzijde geeft toegang tot modules van verschillende niveaus. Klik op een niveau en kies een module. Elke module biedt een aantal activiteiten die je kunt starten en uitvoeren. <br><br> Met een (gratis) persoonlijk DWO-account kun je alle activiteiten uit de bibliotheek gebruiken. Je werk en resultaten worden opgeslagen. Ben je verbonden aan een school met een Numworx DWO-abonnement, dan zijn er in het linkermenu ook modules speciaal voor jouw school.  <br><br> Ben je leerling bij een school met een Numworx abonnement, dan zie je in het linkermenu de modules die je docent speciaal voor jouw klas heeft klaargezet. Je docent heeft ook inzicht in jouw werk. Klik op een module, kies een activiteit en je kunt aan de slag. </html>", "Numworx Modules Voortgezet Onderwijs");
+ 		profile("HO", "/ho", "nl", "rpH", "<html>Dit is de Numworx DWO-omgeving voor hoger onderwijs. In deze omgeving is een bibliotheek beschikbaar met veel digitaal lesmateriaal. Er zijn modules met oefeningen , er zijn ook modules die een volledige lessenserie rond een onderwerp bevatten. Het menu aan de linkerzijde geeft toegang tot modules van verschillende niveaus. Klik op een niveau en kies een module. Elke module biedt een aantal activiteiten die je kunt starten en uitvoeren. <br><br> Met een (gratis) persoonlijk DWO-account kun je alle activiteiten uit de bibliotheek gebruiken. Je werk en resultaten worden opgeslagen. Ben je verbonden aan een school met een Numworx DWO-abonnement, dan zijn er in het linkermenu ook modules speciaal voor jouw school.  <br><br> Ben je leerling bij een school met een Numworx abonnement, dan zie je in het linkermenu de modules die je docent speciaal voor jouw klas heeft klaargezet. Je docent heeft ook inzicht in jouw werk. Klik op een module, kies een activiteit en je kunt aan de slag. </html>", "Numworx Modules Hoger Onderwijs");	
+ 		profile("SE (English)", "/en/se", "en", "rp", "<html>Dit is de Numworx DWO-omgeving voor voortgezet onderwijs. In deze omgeving is een bibliotheek beschikbaar met veel digitaal lesmateriaal. Er zijn modules met oefeningen , er zijn ook modules die een volledige lessenserie rond een onderwerp bevatten. Het menu aan de linkerzijde geeft toegang tot modules van verschillende niveaus. Klik op een niveau en kies een module. Elke module biedt een aantal activiteiten die je kunt starten en uitvoeren. <br><br> Met een (gratis) persoonlijk DWO-account kun je alle activiteiten uit de bibliotheek gebruiken. Je werk en resultaten worden opgeslagen. Ben je verbonden aan een school met een Numworx DWO-abonnement, dan zijn er in het linkermenu ook modules speciaal voor jouw school.  <br><br> Ben je leerling bij een school met een Numworx abonnement, dan zie je in het linkermenu de modules die je docent speciaal voor jouw klas heeft klaargezet. Je docent heeft ook inzicht in jouw werk. Klik op een module, kies een activiteit en je kunt aan de slag. </html>", "Numworx Modules Secondary Education");
+ 		profile("HE (English)", "/en/he", "en", "rpH", "<html>Dit is de Numworx DWO-omgeving voor voortgezet onderwijs. In deze omgeving is een bibliotheek beschikbaar met veel digitaal lesmateriaal. Er zijn modules met oefeningen , er zijn ook modules die een volledige lessenserie rond een onderwerp bevatten. Het menu aan de linkerzijde geeft toegang tot modules van verschillende niveaus. Klik op een niveau en kies een module. Elke module biedt een aantal activiteiten die je kunt starten en uitvoeren. <br><br> Met een (gratis) persoonlijk DWO-account kun je alle activiteiten uit de bibliotheek gebruiken. Je werk en resultaten worden opgeslagen. Ben je verbonden aan een school met een Numworx DWO-abonnement, dan zijn er in het linkermenu ook modules speciaal voor jouw school.  <br><br> Ben je leerling bij een school met een Numworx abonnement, dan zie je in het linkermenu de modules die je docent speciaal voor jouw klas heeft klaargezet. Je docent heeft ook inzicht in jouw werk. Klik op een module, kies een activiteit en je kunt aan de slag. </html>", "Numworx Modules Higher Education");
+ 		profile("public", "/public", "nl", "rp", "", "Public Modules");
+// essential applet configurations
+ 		applet(17L, "Wiskunde Opdracht", "fi.wiskopdr.WiskOpdr", "wiskopdr.jar", "rmJ");
+ 		List<PersistentAppletConfig> configs = AppletConfigManager.findEntities();
+ 		appletConfig(17, "Template Leeg", "nl", EMPTY_CONFIG, configs);
+ 		appletConfig(17, "Template Empty", "en", EMPTY_CONFIG, configs);
 	}
 
-	private static void profile(String name, String url, String language, String description, String title) {
+	static String EMPTY_CONFIG = "H4sIAAAAAAAAAFVUyc7jxhnUTGJkvABGYgM5GxmfCFgify7SIUi4b6K4kxIvBne22FxENhfxnMfJAwTIq+SQQ655h2gQJ4Y/oBuNrg+Nqg9V/dd/7z4bh90393iOf5gQgD8o8VihOIH5N3//+vvvtH/97Ve799LuC9jFmRSnqBvU3eeoGvKx6mC29n/68+5T/Xb58Np//1pfot1XXZ8NcVqhH/EfcfT+nwo5quz/Ssbdmdh7NudgXmOnda/Xgq1zlWTbg3bVK8Nh7YCP/foBHR3wdKjv14aeMiw5tkrFj4bA8tXoCup2YimBlAnufvPVQCeX0iiUURPpS4o0CrtQzBt5erPmRcsat0QuJt9A2Ng6NQKjbA+RdcOQS6atsq3H9AkvcaUP1wXvgjMxeJVm1bKKn87nBc6DKNFSnQb7noHTgStvNH+8xlG2yQD6FhEgcB47vKbzeV9te/OKH/oSpWLOV/B+e7AUfZpM4a3vrtUTmwKO2Rd4wLusxqYdLOFQgPOB5XACRZFCS8DocDODR2wbCAbbN9bgQKETy9bg3HUilIk3fR68Ofqa7plbKTojeXyrBm/2Bgbri6LFGKTUh0OeZtZNblnNXKC7jnd3z5gV3idxleHGPX4S9bwUDYVVB7diryFhdwnHIuGiEP5SkOVL17iF8sN5xHjpR4AUD2eRamhf8MCI0mp5hvxxCk+XmxbKZ/M4jcZ8BLxvdgMm0+hCl3WyWeLDzvz58fCelynK7vXVZkxR9cJhaZFWAb6fM10nIaFSvopUme/odAWJFzQUnqCI0UR7LUc96Oc7Nm/kfQIUl9bQ4igqPOw1hUeafSdFbSkVMTjAUajmN6dwtrSWFbLnvN4CytXFj0PfZwRNyEOLEcZ1wsU4eqMP7pQNZRGJ6YmIWrsxsmbR+GdhMM5sFtnAH58NLzlJx7npCr21qQg1j4bx+dDmIxssoMj1UXg5+o8vx7+SAWaAcvDyPNp96IfulaBmRLvfxXGLYsj+H89btHv36vnyo2qwsvjRYK2PaPeXX2REmjfYyfikVpzJT+tZkmfE25tzPN5HD9w1Qew1PCAvDPboUO4p6WJ4MmlchZYCLpzAa0aYH+aCtkDZD/vVaSnTrQOuuJkCL7B+SnKaBrmN7diGLcsnbrP/1fEBxm05xWWOdu8/Ef2JvflTnvP2k7pP7H/ddNmr6d0B7b7u+hbk02J0ZQ7BvUa7z4oYji/02zKvu77PYZb//MLP8FegHVEOIWjL1/W7f/xiBEpgT4dO8B0+00TXkwXRcjjE8afZlzoNiI4RSI57zjRrjKy0yTBszLDTVHZB15EhyqpbCOeaXUJsQVy+4kG8pA+rvuUKK2gr1Uatl5N5PdDKbam4c+nIz0BUCiMA10B5pmHAxC9Sqn1eDDmFHUykKpTSKnHWyzxaLt32A33i3wo+DdakVfvl4NNggY2TUJdMWjwOd5x1o5SF1p6AQoaI+FPidhtFzfPGAFFHnFHbkX/Jz3Jakp6JX+7Ord+vlanaohzVZngBzRlVAdMxoZAiVYWH28K4Z90mHtY5rYjmHATRdJDrLol4+4S6K6+CpzTcipPg39msK/vtQD4wg3attXlQVW1eTnemt9K9K4uEmUxNgcAlvRW07kuhnFx0CWdmZttbZ+gDka5ZUUig80YwJV7D4iSTYf+gimFS2auLuXl2ZTUF6f6FjYxHGA/GkzMteEo25vFs4z2bOcE8JRX7chfa/SYpX99dN7xOfxAEUZSk9T98kFJ+fQYAAA==";
+	
+	private static void appletConfig(int applet, String name, String language, String launchdata, List<PersistentAppletConfig> configs) {
+		if (!configs.stream().anyMatch(c -> name.equals(c.getName()))) {
+			PersistentAppletConfig config = new PersistentAppletConfig();
+			config.setAppletID(applet);
+			config.setLanguage(language);
+			config.setLaunchdata(launchdata);
+			config.setName(name);
+			AppletConfigManager.create(config);
+		}
+}
+
+	private static void applet(Long id, String name, String main, String jar, String features) {
+		PersistentApplet applet = AppletManager.findEntity(id);
+		if (applet != null) return;
+		applet = new PersistentApplet(id);
+		applet.setAppletName(name);
+		applet.setClassname(main);
+		applet.setJarname(jar);
+		applet.setFeatures(features);
+		AppletManager.create(applet);
+	
+}
+
+	private static void profile(String name, String url, String language, String rights, String description, String title) {
 		PersistentDwoProfile profile = DwoProfileManager.findEntity(name);
 		if (profile == null) {
 			profile = new PersistentDwoProfile(null, name);
@@ -234,7 +269,7 @@ fi.dwo.commons.persistence.entities.PersistentMFA</class>
 			profile.setLanguage(language);
 			profile.setTitle(title);
 			profile.setDwoProfileText(description);
-			profile.setDwoProfileRights("rp"); // default for HTML5
+			profile.setDwoProfileRights(rights); // default for HTML5
 			profile.setDwoProfileDescription(title);
 			DwoProfileManager.create(profile);
 		}
@@ -247,7 +282,7 @@ fi.dwo.commons.persistence.entities.PersistentMFA</class>
 		String username = properties.getProperty("admin.username", "dwoadmin");
 		PersistentUser admin = UserManager.findByUserName(username);
 		if (admin == null) {
-			String password = properties.getProperty("admin.password", "dwomadmin");
+			String password = properties.getProperty("admin.password", "dwoadmin");
 			password = MD5.getHashString(password);
 			String email = properties.getProperty("admin.email", "admin@example.com");
 			Date now = new Date();
