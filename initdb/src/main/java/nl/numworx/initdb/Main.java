@@ -116,6 +116,7 @@ fi.dwo.commons.persistence.entities.PersistentMFA</class>
  * 
  * @param args commandline arguments
  * @throws IOException
+ * @throws ption 
  */
 	
 	public static void main(String[] args) throws IOException, SQLException {
@@ -234,6 +235,15 @@ fi.dwo.commons.persistence.entities.PersistentMFA</class>
  		List<PersistentAppletConfig> configs = AppletConfigManager.findEntities();
  		appletConfig(17, "Template Leeg", "nl", EMPTY_CONFIG, configs);
  		appletConfig(17, "Template Empty", "en", EMPTY_CONFIG, configs);
+ 		
+// essential redis cache and force exit	
+ 		try {
+			RedisCache.main(args); // won't exit always
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} finally {
+			System.exit(0);
+		}
 	}
 
 	static String EMPTY_CONFIG = "H4sIAAAAAAAAAFVUyc7jxhnUTGJkvABGYgM5GxmfCFgify7SIUi4b6K4kxIvBne22FxENhfxnMfJAwTIq+SQQ655h2gQJ4Y/oBuNrg+Nqg9V/dd/7z4bh90393iOf5gQgD8o8VihOIH5N3//+vvvtH/97Ve799LuC9jFmRSnqBvU3eeoGvKx6mC29n/68+5T/Xb58Np//1pfot1XXZ8NcVqhH/EfcfT+nwo5quz/Ssbdmdh7NudgXmOnda/Xgq1zlWTbg3bVK8Nh7YCP/foBHR3wdKjv14aeMiw5tkrFj4bA8tXoCup2YimBlAnufvPVQCeX0iiUURPpS4o0CrtQzBt5erPmRcsat0QuJt9A2Ng6NQKjbA+RdcOQS6atsq3H9AkvcaUP1wXvgjMxeJVm1bKKn87nBc6DKNFSnQb7noHTgStvNH+8xlG2yQD6FhEgcB47vKbzeV9te/OKH/oSpWLOV/B+e7AUfZpM4a3vrtUTmwKO2Rd4wLusxqYdLOFQgPOB5XACRZFCS8DocDODR2wbCAbbN9bgQKETy9bg3HUilIk3fR68Ofqa7plbKTojeXyrBm/2Bgbri6LFGKTUh0OeZtZNblnNXKC7jnd3z5gV3idxleHGPX4S9bwUDYVVB7diryFhdwnHIuGiEP5SkOVL17iF8sN5xHjpR4AUD2eRamhf8MCI0mp5hvxxCk+XmxbKZ/M4jcZ8BLxvdgMm0+hCl3WyWeLDzvz58fCelynK7vXVZkxR9cJhaZFWAb6fM10nIaFSvopUme/odAWJFzQUnqCI0UR7LUc96Oc7Nm/kfQIUl9bQ4igqPOw1hUeafSdFbSkVMTjAUajmN6dwtrSWFbLnvN4CytXFj0PfZwRNyEOLEcZ1wsU4eqMP7pQNZRGJ6YmIWrsxsmbR+GdhMM5sFtnAH58NLzlJx7npCr21qQg1j4bx+dDmIxssoMj1UXg5+o8vx7+SAWaAcvDyPNp96IfulaBmRLvfxXGLYsj+H89btHv36vnyo2qwsvjRYK2PaPeXX2REmjfYyfikVpzJT+tZkmfE25tzPN5HD9w1Qew1PCAvDPboUO4p6WJ4MmlchZYCLpzAa0aYH+aCtkDZD/vVaSnTrQOuuJkCL7B+SnKaBrmN7diGLcsnbrP/1fEBxm05xWWOdu8/Ef2JvflTnvP2k7pP7H/ddNmr6d0B7b7u+hbk02J0ZQ7BvUa7z4oYji/02zKvu77PYZb//MLP8FegHVEOIWjL1/W7f/xiBEpgT4dO8B0+00TXkwXRcjjE8afZlzoNiI4RSI57zjRrjKy0yTBszLDTVHZB15EhyqpbCOeaXUJsQVy+4kG8pA+rvuUKK2gr1Uatl5N5PdDKbam4c+nIz0BUCiMA10B5pmHAxC9Sqn1eDDmFHUykKpTSKnHWyzxaLt32A33i3wo+DdakVfvl4NNggY2TUJdMWjwOd5x1o5SF1p6AQoaI+FPidhtFzfPGAFFHnFHbkX/Jz3Jakp6JX+7Ord+vlanaohzVZngBzRlVAdMxoZAiVYWH28K4Z90mHtY5rYjmHATRdJDrLol4+4S6K6+CpzTcipPg39msK/vtQD4wg3attXlQVW1eTnemt9K9K4uEmUxNgcAlvRW07kuhnFx0CWdmZttbZ+gDka5ZUUig80YwJV7D4iSTYf+gimFS2auLuXl2ZTUF6f6FjYxHGA/GkzMteEo25vFs4z2bOcE8JRX7chfa/SYpX99dN7xOfxAEUZSk9T98kFJ+fQYAAA==";
