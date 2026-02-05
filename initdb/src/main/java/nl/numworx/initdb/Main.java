@@ -188,6 +188,7 @@ fi.dwo.commons.persistence.entities.PersistentMFA</class>
  			school.setSchoolLogin(UUID.randomUUID().toString().replace("-", ""));
  			school.setSchoolName("Numworx Admin");
  			school.setSchoolRights("_");
+ 			school.changeTimestamp();
  			em.persist(school);
  			em.getTransaction().commit();
  			em.getTransaction().begin();
@@ -208,6 +209,7 @@ fi.dwo.commons.persistence.entities.PersistentMFA</class>
  			school.setSchoolLogin("null");
  			school.setSchoolName("Numworx Free School");
  			school.setSchoolRights("_");
+ 			school.changeTimestamp();
  			em.persist(school);
  			em.getTransaction().commit();
  			em.getTransaction().begin();
@@ -321,7 +323,7 @@ fi.dwo.commons.persistence.entities.PersistentMFA</class>
 		group = SchoolGroupManager.findBySchoolAndRole(nulls, RoleType.STUDENT);
 		if (group == null) {
 			String password = "null"; // by default
-			group = new PersistentSchoolGroup(null, RoleType.STUDENT.ordinal(), nulls.getSchoolID().intValue(), password);			
+			group = new PersistentSchoolGroup(null, RoleType.STUDENT.ordinal(), nulls.getSchoolID().intValue(), password);
 			SchoolGroupManager.create(group);
 		}
 		
