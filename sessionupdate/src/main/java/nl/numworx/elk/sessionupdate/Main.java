@@ -67,7 +67,7 @@ public class Main {
 	public static void main(String[] args) throws Exception {
 try {
 		int month = Integer.parseInt(args[0]); // FEBRUARI=2 March=3
-		int year = 2025;
+		int year = 2026;
 		out = new PrintStream(new FileOutputStream("session-" + month + "-" + year + ".txt"));
 		
 		formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
