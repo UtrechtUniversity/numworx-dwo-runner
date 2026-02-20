@@ -239,7 +239,7 @@ public class Starter implements BundleActivator {
 		String language = getProperty(context,"fi.dwo.language");
 		if(language == null) language = Locale.getDefault().getLanguage();
 		if(codebase == null) codebase = "https://app.dwo.nl/dwo/";
-		if(profile == null) profile = "77";
+		if(profile == null) profile = "VO";
 		if (documentbase == null) documentbase = codebase;
 		parameters.put("language", language);
         parameters.put("profile", profile);
