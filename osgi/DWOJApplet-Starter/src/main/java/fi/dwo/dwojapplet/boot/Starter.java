@@ -39,12 +39,15 @@ import org.osgi.service.event.EventHandler;
 import org.osgi.service.log.Logger;
 import org.osgi.service.log.LoggerFactory;
 import org.osgi.service.provisioning.ProvisioningService;
+import org.osgi.util.tracker.ServiceTracker;
+
 import fi.beans.loader.Loader;
 import fi.beans.mainframe.MainFrame;
 import fi.dwo.bootloader.LoaderBuilder.Update;
 import fi.dwo.bootloader.LoaderBuilderFactory;
 import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.gui.GuiConstants;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.cache.CacheUtilManager;
 
 public class Starter implements BundleActivator {
 	
@@ -279,7 +282,8 @@ public class Starter implements BundleActivator {
 
 	@SuppressWarnings("serial")
 	private void runDWO(BundleContext context) throws MalformedURLException {
-				
+		
+		provideJCache(context); // optional cacheprovider from osgi services.
 		dwo = new DWO();
 		ref1.unregister();
 		dwo.addPropertyChangeListener("userName", cm);
@@ -429,10 +433,30 @@ public class Starter implements BundleActivator {
 			factory = null;
 			context.ungetService(ref);
 		}
-		cm.close();		
+		cm.close();	
 		ref = null;
 		if (reposAdmin != null) { reposAdmin.close(); reposAdmin = null; }
+		clearJCache(context);
 	}
 
+	
+	private ServiceTracker<?,?> cacheTracker;
+	private void provideJCache(BundleContext context) {
+		try {
+			OSGISupplier cacher = new OSGISupplier(context);
+			cacher.open();
+			cacheTracker = cacher;			
+			CacheUtilManager.setCachingProvider(cacher);
+		} catch(Throwable all) { }
+	}
+	
+	private void clearJCache(BundleContext context) {
+		if (cacheTracker != null) {
+			cacheTracker.close();
+			cacheTracker = null;
+			CacheUtilManager.setCachingProvider(null);
+		}
+		
+	}
 
 }
