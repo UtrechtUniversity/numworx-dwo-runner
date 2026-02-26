@@ -237,7 +237,7 @@
 		<dependency>
 			<groupId>fi.dwo</groupId>
 			<artifactId>fi.dwo.eawt</artifactId>
-			<version>2.5.47</version>
+			<version>${dwo.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.osgi</groupId>
@@ -262,7 +262,6 @@
 		<dependency>
 		  <groupId>fi.beans</groupId>
 		  <artifactId>numworxlf</artifactId>
-		  <version>2.5.47</version>
 		</dependency>
 		<dependency>
 			<groupId>nl.numworx.swingbrowser</groupId>

@@ -52,7 +52,7 @@
             <goals>
               <goal>java</goal>
             </goals>
-            <phase>package</phase>
+            <phase>verify</phase>
           </execution>
         </executions>
         <configuration>
@@ -105,6 +105,15 @@
                 <id>github</id>
                 <properties>
                         <exec.skip>true</exec.skip>
+                </properties>
+        </profile>
+                <profile>
+                <id>localhost</id>
+                <properties>
+                        <exec.skip>true</exec.skip>
+                        <user>dwoadmin</user>
+                        <pass>dwoadmin</pass>
+   						<server.url>http://localhost:8080/dwo/</server.url>
                 </properties>
         </profile>
   </profiles>
