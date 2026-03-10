@@ -1,7 +1,8 @@
-ver=7.28.1
-mvn org.apache.maven.plugins:maven-install-plugin:3.1.4:install-file -Dfile=$1-$ver.jar \
+exit 0
+#ver=7.28.1
+#mvn org.apache.maven.plugins:maven-install-plugin:3.1.4:install-file -Dfile=$1-$ver.jar \
                                                                               -DgroupId=nl.numworx \
                                                                               -DartifactId=$1 \
-                                                                              -Dversion=$ver \
+                                                                              -Dversion=$2 \
                                                                               -Dpackaging=jar \
                                                                               -DgeneratePom=true

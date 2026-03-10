@@ -3,11 +3,10 @@
 	<parent>
 	  <groupId>nl.uu.fi.dwo</groupId>
 	  <artifactId>runner-parent</artifactId>
-	  <version>1.0.0-SNAPSHOT</version>
-          <relativePath>../..</relativePath>
+	  <version>2.5.48-SNAPSHOT</version>
+      <relativePath>../..</relativePath>
 	</parent>
 	<artifactId>app-install</artifactId>
-	<version>0.0.9-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<build>
 		<finalName>bundles</finalName>
@@ -137,7 +136,7 @@
 		<dependency>
 			<groupId>fi.dwo</groupId>
 			<artifactId>dwoloader</artifactId>
-			<version>0.0.4-SNAPSHOT</version>
+			<version>2.5.48-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.osgi</groupId>
@@ -160,7 +159,7 @@
 		<dependency>
 			<groupId>fi.dwo</groupId>
 			<artifactId>bootloader</artifactId>
-			<version>2.0.10-SNAPSHOT</version>
+			<version>2.5.48-SNAPSHOT</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>org.osgi.core</artifactId>
@@ -177,7 +176,7 @@
 		<dependency>
 			<groupId>fi.dwo</groupId>
 			<artifactId>dwojapplet-starter</artifactId>
-			<version>2.0.4-SNAPSHOT</version>
+			<version>2.5.48-SNAPSHOT</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>org.osgi.core</artifactId>
@@ -220,7 +219,7 @@
 		<dependency>
 			<groupId>fi.dwo</groupId>
 			<artifactId>unpack200</artifactId>
-			<version>0.0.4-SNAPSHOT</version>
+			<version>2.5.48-SNAPSHOT</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.apache.sling/org.apache.sling.javax.activation -->
 		<dependency>
@@ -308,37 +307,43 @@
 		<dependency>
 			<groupId>nl.numworx</groupId>
 			<artifactId>com.teamdev.jxbrowser</artifactId>
-			<version>${jxb}</version>
+			<version>2.5.48-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>nl.numworx</groupId>
-			<artifactId>com.teamdev.jxbrowser-swing</artifactId>
-			<version>${jxb}</version>
+			<artifactId>com.teamdev.jxbrowser</artifactId>
+			<version>2.5.48-SNAPSHOT</version>
+			<classifier>swing</classifier>
 		</dependency>
 		<dependency>
 			<groupId>nl.numworx</groupId>
-			<artifactId>com.teamdev.jxbrowser-mac</artifactId>
-			<version>${jxb}</version>
+			<artifactId>com.teamdev.jxbrowser</artifactId>
+			<version>2.5.48-SNAPSHOT</version>
+			<classifier>mac</classifier>
 		</dependency>
 		<dependency>
 			<groupId>nl.numworx</groupId>
-			<artifactId>com.teamdev.jxbrowser-mac-arm</artifactId>
-			<version>${jxb}</version>
+			<artifactId>com.teamdev.jxbrowser</artifactId>
+			<version>2.5.48-SNAPSHOT</version>
+			<classifier>mac-arm</classifier>
 		</dependency>
 		<dependency>
 			<groupId>nl.numworx</groupId>
-			<artifactId>com.teamdev.jxbrowser-linux64</artifactId>
-			<version>${jxb}</version>
+			<artifactId>com.teamdev.jxbrowser</artifactId>
+			<version>2.5.48-SNAPSHOT</version>
+			<classifier>linux64</classifier>
 		</dependency>
-                <dependency>
-                        <groupId>nl.numworx</groupId>
-                        <artifactId>com.teamdev.jxbrowser-linux64-arm</artifactId>
-                        <version>${jxb}</version>
-                </dependency>
+        <dependency>
+            <groupId>nl.numworx</groupId>
+            <artifactId>com.teamdev.jxbrowser</artifactId>
+            <version>2.5.48-SNAPSHOT</version>
+            <classifier>linux64-arm</classifier>
+        </dependency>
 		<dependency>
 			<groupId>nl.numworx</groupId>
-			<artifactId>com.teamdev.jxbrowser-win64</artifactId>
-			<version>${jxb}</version>
+			<artifactId>com.teamdev.jxbrowser</artifactId>
+			<version>2.5.48-SNAPSHOT</version>
+			<classifier>win64</classifier>
 		</dependency>
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
@@ -389,7 +394,7 @@
 	</repositories>
 	<properties>
 		<s3>s3://test-dwo-nl</s3>
-		<jxb>7.28.1</jxb>
+		<jxb>${project.version}</jxb>
  		<wagonPhase>verify</wagonPhase>
  		<maven.compiler.source>1.8</maven.compiler.source>
  		<maven.compiler.target>1.8</maven.compiler.target>

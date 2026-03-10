@@ -3,11 +3,10 @@
   <parent>
     <groupId>nl.uu.fi.dwo</groupId>
     <artifactId>runner-parent</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>2.5.48-SNAPSHOT</version>
   </parent>
   <groupId>nl.numworx</groupId>
   <artifactId>com.teamdev.jxbrowser</artifactId>
-  <version>7.28.1-SNAPSHOT</version>
   <repositories>
   <repository>
     <id>com.teamdev</id>
@@ -20,17 +19,20 @@
     	<groupId>biz.aQute.bnd</groupId>
 	    <artifactId>biz.aQute.bnd</artifactId>
 	    <version>6.3.1</version>
+	    <optional>true</optional>
 	</dependency>
       <dependency>
           <groupId>com.teamdev.jxbrowser</groupId>
           <artifactId>jxbrowser-cross-platform</artifactId>
           <type>pom</type>
           <version>7.28.1</version>
+          <optional>true</optional>
       </dependency>
       <dependency>
           <groupId>com.teamdev.jxbrowser</groupId>
           <artifactId>jxbrowser-swing</artifactId>
           <version>7.28.1</version>
+          <optional>true</optional>
       </dependency>
   </dependencies>
   <build>
@@ -70,11 +72,84 @@
 		          <workingDirectory>${project.basedir}</workingDirectory>
 		          <arguments>
 		            <argument>go.sh</argument>
+		            <argument>${project.version}</argument>
 		          </arguments>
 		          <environmentVariables>
 		          </environmentVariables>
 		        </configuration>
 			</plugin>
+			<plugin>
+				<artifactId>maven-install-plugin</artifactId>
+				<configuration>
+					<groupId>nl.numworx</groupId>
+					<artifactId>com.teamdev.jxbrowser</artifactId>
+					<version>${project.version}</version>
+					<packaging>jar</packaging>
+				</configuration>
+				<executions>
+					<execution>
+					   <goals><goal>install-file</goal></goals>
+					   <phase>install</phase>
+					   <configuration>
+					   		<file>target/com.teamdev.jxbrowser-7.28.1.jar</file>
+					   </configuration>
+					</execution>
+                    <execution>
+					   <id>swing</id>
+                       <goals><goal>install-file</goal></goals>
+                       <phase>install</phase>
+                       <configuration>
+                            <file>target/com.teamdev.jxbrowser-swing-7.28.1.jar</file>
+							<classifier>swing</classifier>
+                        </configuration>
+                    </execution>
+                    <execution>
+					   <id>win64</id>
+                       <goals><goal>install-file</goal></goals>
+                       <phase>install</phase>
+                       <configuration>
+                            <file>target/com.teamdev.jxbrowser-win64-7.28.1.jar</file>
+							<classifier>win64</classifier>
+                        </configuration>
+                    </execution>
+                    <execution>
+					   <id>linux64</id>
+                       <goals><goal>install-file</goal></goals>
+                       <phase>install</phase>
+                       <configuration>
+                            <file>target/com.teamdev.jxbrowser-linux64-7.28.1.jar</file>
+							<classifier>linux64</classifier>
+                        </configuration>
+                    </execution>
+                    <execution>
+					   <id>linux64-arm</id>
+                       <goals><goal>install-file</goal></goals>
+                       <phase>install</phase>
+                       <configuration>
+                            <file>target/com.teamdev.jxbrowser-linux64-arm-7.28.1.jar</file>
+							<classifier>linux64-arm</classifier>
+                        </configuration>
+                    </execution>
+                    <execution>
+					   <id>mac</id>
+                       <goals><goal>install-file</goal></goals>
+                       <phase>install</phase>
+                       <configuration>
+                            <file>target/com.teamdev.jxbrowser-mac-7.28.1.jar</file>
+							<classifier>mac</classifier>
+                        </configuration>
+                    </execution>
+                    <execution>
+					   <id>mac-arm</id>
+                       <goals><goal>install-file</goal></goals>
+                       <phase>install</phase>
+                       <configuration>
+                            <file>target/com.teamdev.jxbrowser-mac-arm-7.28.1.jar</file>
+							<classifier>mac-arm</classifier>
+                        </configuration>
+                    </execution>
+			    </executions>
+			 </plugin>
       </plugins>
   </build>
   
