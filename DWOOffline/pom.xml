@@ -1,12 +1,13 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>nl.uu.fi.dwo</groupId>
-	<artifactId>DWOOffline</artifactId>
+    <parent>
+      <groupId>nl.uu.fi.dwo</groupId>
+      <artifactId>runner-parent</artifactId>
+      <version>2.5.48</version>
+    </parent>
+	<artifactId>dwo_offline</artifactId>
 	<packaging>war</packaging>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>DWOOffline Maven Webapp</name>
-	<url>http://maven.apache.org</url>
+	<name>DWOOffline Webapp</name>
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -18,6 +19,7 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
 			<version>2.5</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 	<build>
@@ -39,16 +41,4 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
-	<distributionManagement>
-		<repository>
-			<id>release</id>
-			<name>libs-release-local</name>
-			<url>https://repos.dwo.nl/artifactory/libs-release-local</url>
-		</repository>
-		<snapshotRepository>
-			<id>snapshots</id>
-			<name>libs-snapshot-local</name>
-			<url>https://repos.dwo.nl/artifactory/libs-snapshot-local</url>
-		</snapshotRepository>
-	</distributionManagement>
 </project>

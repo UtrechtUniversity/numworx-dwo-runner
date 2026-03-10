@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+  <persistence-unit name="DWO_COPYDB" transaction-type="RESOURCE_LOCAL">
+    <!-- include all and any required persistent entity in here exclude-unlisted-classes is being ignored!-->
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>fi.dwo.commons.persistence.entities.PersistentApplet</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentAppletConfig</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentClassCourse</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentCourse</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentCourseData</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentDwoProfile</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentDwoSystemParameters</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentFromTo</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentHasRole</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentImage</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentLoginContext</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentSamlUser</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentScoContext</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentScoData</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentSchool</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentSchoolClass</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentSchoolData</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentSchoolGroup</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentStudentOfClass</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentStudentScoContext</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentStudentScoData</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentTeacherOfClass</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentUrnResource</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentUser</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentStudentModelContext</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentStudentModelData</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentStudentModelOfClass</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentACL</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentStudentModelItem</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentMethod</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentSchoolMethod</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentScoPage</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentMFA</class>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <shared-cache-mode>NONE</shared-cache-mode>
+    <properties>
+      <property name="eclipselink.cache.shared.default" value="false"/>
+      <property name="eclipselink.allow-zero-id" value="true"/>
+      <property name="javax.persistence.jdbc.driver" value="${jdbc.driver}"/>
+      <property name="javax.persistence.jdbc.user" value="test"/>
+      <property name="javax.persistence.jdbc.password" value="test"/>
+<!--  
+	  <property name="eclipselink.ddl-generation" value="create-tables" />
+	  <property name="eclipselink.ddl-generation.output-mode" value="database" />     
+-->
+      <!--      <property name="eclipselink.weaving" value="static"/>
+      <property name="eclipselink.weaving.lazy" value="true"/>-->
+      <!-- logging all on -->
+      <property name="eclipselink.logging.logger" value="JavaLogger"/>
+      <property name="eclipselink.logging.level.sql" value="WARNING"/>
+      <property name="eclipselink.logging.level" value="WARNING"/>
+      <property name="eclipselink.logging.parameters" value="false"/>
+    </properties>
+  </persistence-unit>
+</persistence>

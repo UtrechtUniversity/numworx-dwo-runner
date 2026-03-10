@@ -1,8 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	<parent>
+	  <groupId>nl.uu.fi.dwo</groupId>
+	  <artifactId>runner-parent</artifactId>
+	  <version>2.5.48</version>
+          <relativePath>../..</relativePath>
+	</parent>
 	<groupId>fi.dwo</groupId>
-	<artifactId>DwoLoader</artifactId>
-	<version>0.0.3</version>
+	<artifactId>dwoloader</artifactId>
 	<name>DWO Loader</name>
 	<description>Load DWO via Resolver</description>
 	<properties>
@@ -27,8 +32,8 @@
 	  	</dependency>
 		<dependency>
 			<groupId>fi.dwo</groupId>
-			<artifactId>BootLoader</artifactId>
-			<version>2.0.9</version>
+			<artifactId>bootloader</artifactId>
+			<version>2.5.48</version>
 			<scope>provided</scope>
 			<exclusions>
 				<exclusion>
@@ -81,6 +86,7 @@
         <configuration>
           <instructions>
 				<_snapshot>${osgi.qualifier}</_snapshot>
+				<Bundle-SymbolicName>fi.dwo.DwoLoader</Bundle-SymbolicName>
 				<Bundle-Activator>fi.dwo.dwoloader_impl.Activator</Bundle-Activator>
 				<Embed-Transitive>false</Embed-Transitive>
  				<Embed-Dependency />
@@ -98,18 +104,6 @@
   </plugins>
 	</build>
 	<packaging>bundle</packaging>
-	<distributionManagement>
-		<snapshotRepository>
-			<id>snapshots</id>
-			<name>libs-snapshot</name>
-			<url>https://repos.dwo.nl/artifactory/libs-snapshot-local</url>
-		</snapshotRepository>
-        <repository>
-            <id>release</id>
-            <name>libs-release</name>
-            <url>https://repos.dwo.nl/artifactory/libs-release-local</url>    
-        </repository>
-	</distributionManagement>
 <repositories>
     <repository>
       <id>Knopflerfish 6 Repository</id>

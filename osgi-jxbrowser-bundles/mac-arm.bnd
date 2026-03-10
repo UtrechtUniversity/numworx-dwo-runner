@@ -1,0 +1,9 @@
+ver: 7.28.1
+-classpath: target/jxbrowser-mac-arm-${ver}.jar
+Bundle-SymbolicName: com.teamdev.jxbrowser-mac-arm
+-output: target/${bsn}-${ver}.jar
+Bundle-Version: ${ver}
+Fragment-Host: com.teamdev.jxbrowser;bundle-version="[${ver},${ver}]"
+Private-Package: *
+Require-Capability: osgi.native;filter:="(&(osgi.native.osname~=macosx)(osgi.native.processor~=aarch64))"
+Provide-Capability: com.teamdev.jxbrowser;platform="mac"

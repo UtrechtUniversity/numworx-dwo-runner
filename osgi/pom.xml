@@ -1,23 +1,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>nl.uu.fi.dwo</groupId>
-		<artifactId>DWO.master.pom</artifactId>
-		<version>1.1</version>
+          <groupId>nl.uu.fi.dwo</groupId>
+          <artifactId>runner-parent</artifactId>
+          <version>2.5.48</version>
 	</parent>
 	<groupId>fi.microserver</groupId>
 	<artifactId>osgi-parent</artifactId>
-	<version>0.0.8</version>
 	<packaging>pom</packaging>
 	<modules>
-<!--		<module>MicroBoot</module>-->
     	<module>unpack200</module>
 		<module>BootLoader</module>
 		<module>DWOJApplet-Starter</module>
-<!--    <module>ch.jm.osgi.provisioning</module>-->
 		<module>app-install</module>
-<!--		<module>MicroServer</module>-->
-	<module>dwoloader</module>
+		<module>dwoloader</module>
 	</modules>
 	<build>
 		<plugins>

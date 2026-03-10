@@ -1,0 +1,2 @@
+#!/bin/sh
+exec java -jar biz.aQute.bnd-6.3.1.jar bnd "$@"
