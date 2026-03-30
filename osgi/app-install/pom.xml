@@ -236,7 +236,7 @@
 		<dependency>
 			<groupId>fi.dwo</groupId>
 			<artifactId>fi.dwo.eawt</artifactId>
-			<version>${dwo.version}</version>
+			<version>2.5.48</version>
 		</dependency>
 		<dependency>
 			<groupId>org.osgi</groupId>
