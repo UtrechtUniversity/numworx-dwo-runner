@@ -373,6 +373,11 @@
 		    <optional>true</optional>
 		</dependency>
 
+        <dependency>
+        	<groupId>nl.numworx.osgi</groupId>
+        	<artifactId>ri-jcache</artifactId>
+        	<version>2.5.49-SNAPSHOT</version>
+        </dependency>
 	</dependencies>
  	<repositories>
  	    <repository>
