@@ -377,6 +377,12 @@
         	<groupId>nl.numworx.osgi</groupId>
         	<artifactId>ri-jcache</artifactId>
         	<version>2.5.49-SNAPSHOT</version>
+        	<exclusions>
+        		<exclusion>
+        			<groupId>org.jsr107.ri</groupId>
+        			<artifactId>cache-ri-impl</artifactId>
+        		</exclusion>
+        	</exclusions>
         </dependency>
 	</dependencies>
  	<repositories>

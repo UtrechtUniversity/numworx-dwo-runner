@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>nl.numworx.osgi</groupId>
   <artifactId>ri-jcache</artifactId>
-  <name>ri-cache</name>
+  <name>ri-jcache</name>
   <description>reference jsr-107 for osgi</description>
   <packaging>bundle</packaging>
   <dependencies> 
