@@ -15,6 +15,7 @@
 		<module>app-install</module>
 		<module>dwoloader</module>
 		<module>ri-jcache</module>
+		<module>toolloader</module>
 	</modules>
 	<build>
 		<plugins>
