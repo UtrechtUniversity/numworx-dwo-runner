@@ -1,9 +1,4 @@
 # numworx-dwo-runner
-De Numworx applicatie
-# Title of your code or analysis
-
-Provide a concise and informative title for your code or analysis that
-accurately reflects its content.
 
 ## Introduction
 
@@ -45,22 +40,9 @@ detailed step-by-step instructions.
 
 ## License
 
-With an open-source license, you grant permission to use your work.
-The most common open-source licenses are MIT, GPL3, and Apache 2.0.
-Choose a license that aligns with your goals for your code.
-
-For example:
-
-> This work is licensed under the MIT License.
-
-## Citation (optional)
-
-Provide clear instructions on how to cite your code or related
-publications in a research paper or publication. You can include the
-citation in the README file or create a separate CITATION.cff file. 
+This work is licensed under the GNU General Public License version 3.0
+Copyright 2006 Utrecht University, all rights reserved.
 
 ## Contact 
 
-Include contact information for questions or comments about your code.
-You can also provide clear instructions for how users can provide
-feedback, contribute, or suggest improvements to your work. 
+[Wim van Velthoven](mailto:w.p.g.vanvelthoven@uu.nl)

@@ -78,6 +78,7 @@ public class Maintenance {
     main.setPass(System.getProperty("maintenance.pass", main.pass));
     main.setSingle(System.getProperty("maintenance.single"));
     main.setAmount(100);
+    main.setDuration(2L * 365L * 24L * 3600L * 1000L);
     main.login();
   
     long count = main.getUsers(main.single)       
@@ -255,6 +256,7 @@ private Stream<DomClassCourse> getClassCourses(Integer amount) throws Dwo2Except
    */
   public void setSince(Long since) {
     this.since = since;
+    this.old = new Date(since);
   }
   
   public void setDuration(long time) {

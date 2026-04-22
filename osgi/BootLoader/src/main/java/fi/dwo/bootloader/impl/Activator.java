@@ -168,7 +168,7 @@ public class Activator implements BundleActivator {
 				.getService(serviceReference);
 		builder = factory.newInstance();
 		builder.setUpdate(Update.NEVER);
-		installSLF4J(builder);
+		installSLF4J(builder, factory);
 		installDwoLoader(builder);
 		installConsole("true".equals(config.getProperty("fi.dwo.console")),
 				builder);
@@ -229,12 +229,16 @@ public class Activator implements BundleActivator {
         
   }
 
-  private void installSLF4J(LoaderBuilder builder) throws BundleException, URISyntaxException {
+  private void installSLF4J(LoaderBuilder builder, LoaderBuilderFactory factory) throws BundleException, URISyntaxException {
 	  try {
 		  builder.setLocation(SLF4JO).start("slf4j.osgi");
 	  } catch (Exception oops) {
-		  LOGt.warning("slf4j to osgi", oops);
-		  builder.setLocation(SLF4J).start("slf4j.jdk14");
+		  // perhaps slf4j.api is active, don't retry
+		  Bundle b = factory.searchBundle("slf4j.api");
+		  if (b == null) {		  // and state?
+			  LOGt.warning("slf4j to osgi", oops);
+			  builder.setLocation(SLF4J).start("slf4j.jdk14");
+		  }
 	  }
 	  try {
         String version = System.getProperty("java.version", "0.0.0");

@@ -69,10 +69,10 @@ class ResolveContextImpl extends ResolveContext /*implements Repository*/ {
 		List<Capability> cache = this.cacheMap.get(requirement);
 		if (cache != null) 
 		{
-			return filterMandatory(cache);
+			return new ArrayList<>(filterMandatory(cache));
 		}
 		if (defunct.contains(requirement)) 
-			return Collections.emptyList();
+			return new ArrayList<>();
 		
 		List<Capability> list = new ArrayList<Capability>();
 		Set<Requirement> singleton = Collections.singleton(requirement);
@@ -91,7 +91,7 @@ class ResolveContextImpl extends ResolveContext /*implements Repository*/ {
 		list = filterMandatory(list);		
 		if (!list.isEmpty()) cacheMap.put(requirement, list);
 		else defunct.add(requirement);
-		return list;
+		return new ArrayList<>(list); // always a mutable copy
 	}
 
 	public List<Capability> filterMandatory(List<Capability> list) {
