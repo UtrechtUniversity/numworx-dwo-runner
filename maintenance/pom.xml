@@ -97,6 +97,9 @@
   	</profile>
   	<profile>
   		<id>release</id>
+		<activation>
+			<property><name>performRelease</name></property>
+		</activation>
   		<properties>
   			<exec.skip>true</exec.skip>
   		</properties>
