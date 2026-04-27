@@ -73,7 +73,7 @@ public class Activator implements BundleActivator {
 
   }
 
-	private LogTracker LOGt;
+	protected LogTracker LOGt;
 	private LogReaderTracker LOGtt;
 	private ServiceTracker<DwoLoader, Update> dwoloader;
 	private Updater updater;
@@ -81,7 +81,7 @@ public class Activator implements BundleActivator {
 	private static final long DELAY = 600000L;
 
 	private CMTracker ct;
-	private Config config;
+	protected Config config;
 
 	public void start(final BundleContext context) throws Exception {
 		final Bundle me = context.getBundle();
@@ -147,8 +147,7 @@ public class Activator implements BundleActivator {
 
 	private String BUNDLES = "http://cdn.dwo.nl/bundles/";
 	private String DWOJAPPLET = "https://app.dwo.nl/dwo/DWOJApplet.jar";
-	private String CONSOLE = "org.eclipse.concierge.shell-5.0.0.20151029184259.jar";
-	//private String EVENT_ADMIN = "org.apache.felix.eventadmin-1.4.8.jar";;
+	private String CONSOLE = "org.eclipse.concierge.shell-5.0.0.jar";
 	private String DWOJAPPLET_STARTER = "DWOJApplet-Starter-2.0.jar";
 	static  String PAX_URL_WRAP = "pax-url-wrap-2.4.7.jar";
 	private String UNPACK200 = "unpack200-0.0.1.jar";
@@ -156,11 +155,11 @@ public class Activator implements BundleActivator {
 	private String SLF4JO = "slf4j.osgi-1.7.2.jar";
 	private String DWO_LOADER = "DwoLoader-0.0.2-SNAPSHOT.jar";
 
-	private BundleContext context;
+	protected BundleContext context;
 
 	private String dwojapplet;
 
-	private void boot(ServiceReference<?> serviceReference)
+	protected void boot(ServiceReference<?> serviceReference)
 			throws BundleException, URISyntaxException {
 
 		LoaderBuilder builder;
@@ -172,13 +171,7 @@ public class Activator implements BundleActivator {
 		installDwoLoader(builder);
 		installConsole("true".equals(config.getProperty("fi.dwo.console")),
 				builder);
-		
-		installJXBrowser(builder);
-		
-		
-		installEventAdmin(builder);
 		installCM(builder);
-		//installWrap(builder, factory);
 		installUnpack200(builder);
 
 		config.getPromise().then((p) -> ct.open(p.getValue()))
@@ -229,7 +222,7 @@ public class Activator implements BundleActivator {
         
   }
 
-  private void installSLF4J(LoaderBuilder builder, LoaderBuilderFactory factory) throws BundleException, URISyntaxException {
+  protected void installSLF4J(LoaderBuilder builder, LoaderBuilderFactory factory) throws BundleException, URISyntaxException {
 	  try {
 		  builder.setLocation(SLF4JO).start("slf4j.osgi");
 	  } catch (Exception oops) {
@@ -249,36 +242,6 @@ public class Activator implements BundleActivator {
     }
   }
   
-  private void installJXBrowser(LoaderBuilder builder) {
-//	  try {
-//		  builder.setLocation("non-existent");
-//		  builder.start("com.teamdev.jxbrowser.mac");
-//	  } catch (Exception e) {
-//	      LOGt.log(LogService.LOG_WARNING, "jxbrowser.mac", e);		  
-//	  }
-//	  try {
-//		  builder.setLocation("non-existent");
-//		  builder.start("com.teamdev.jxbrowser.linux");
-//	  } catch (Exception e) {
-//	      LOGt.log(LogService.LOG_WARNING, "jxbrowser.linux", e);		  
-//	  }
-//	  try {
-//		  builder.setLocation("non-existent");
-//		  builder.start("com.teamdev.jxbrowser.windows");
-//	  } catch (Exception e) {
-//	      LOGt.log(LogService.LOG_WARNING, "jxbrowser.windows", e);		  
-//	  }
-//	  try {
-//		  builder.setLocation("non-existent");
-//		  builder.start("com.teamdev.jxbrowser.swing");
-//	  } catch (Exception e) {
-//	      LOGt.log(LogService.LOG_WARNING, "jxbrowser.swing", e);		  
-//	  }
-	  
-  }
-  
-  
-
   private Promise<Config> checkVersion(final Promise<Config> p)
 			throws Exception {
 		Config config = p.getValue();
@@ -401,7 +364,7 @@ public class Activator implements BundleActivator {
 		}
 	}
 
-	private void installConsole(boolean start, LoaderBuilder builder) throws BundleException, URISyntaxException {
+	protected void installConsole(boolean start, LoaderBuilder builder) throws BundleException, URISyntaxException {
 		File std = null;
 		PrintStream print = null;
 		try {
@@ -433,7 +396,7 @@ public class Activator implements BundleActivator {
 //		
 //	}
 	
-	private void installSwingBrowser(LoaderBuilder builder) {
+	protected void installSwingBrowser(LoaderBuilder builder) {
 	  try {
         builder.setLocation("swingbrowser-jxb.jar").start("nl.numworx.swingbrowser.jxb");
       } catch (Exception e) {
@@ -448,7 +411,7 @@ public class Activator implements BundleActivator {
 		
 	// missing in java 14
 	@Deprecated
-	private void installUnpack200(LoaderBuilder builder) throws BundleException, URISyntaxException {
+	protected void installUnpack200(LoaderBuilder builder) throws BundleException, URISyntaxException {
 		String version = System.getProperty("java.version", "0.0.0");		
 		int javaVersion = Integer.parseInt(version.split("\\.")[0]);
 		if (javaVersion < 14 && noProtocol("pack200"))
@@ -458,7 +421,7 @@ public class Activator implements BundleActivator {
 	}
 	
 	
-	private boolean noProtocol(String protocol) {
+	protected boolean noProtocol(String protocol) {
 		String clazz = "org.osgi.service.url.URLStreamHandlerService";
 		String filter = "(url.handler.protocol="+ protocol + ")";
 		try {
@@ -470,16 +433,11 @@ public class Activator implements BundleActivator {
 		}
 	}
 	
-	private void installEventAdmin(LoaderBuilder builder)
-			throws BundleException, URISyntaxException {
-		//builder.setLocation(EVENT_ADMIN).start("org.apache.felix.eventadmin");
-	}
-
 	private final static String CM = "org.apache.felix.configadmin-1.8.10.jar";
 
 	private String dwojapplet_starter = DWOJAPPLET_STARTER;
 
-	private void installCM(LoaderBuilder builder) throws BundleException,
+	protected void installCM(LoaderBuilder builder) throws BundleException,
 			URISyntaxException {
 		config.open();
 		builder.setLocation(CM).start("org.apache.felix.configadmin");
