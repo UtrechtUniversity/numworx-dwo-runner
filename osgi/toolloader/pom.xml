@@ -71,6 +71,30 @@
     <build>
 		<finalName>${project.artifactId}</finalName>
         <plugins>
+			<plugin>
+			    <groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-dependency-plugin</artifactId>
+			    <executions>
+			        <execution>
+			            <id>unpack-dependencies</id>
+			            <phase>generate-resources</phase>
+			            <goals>
+			                <goal>unpack</goal>
+			            </goals>
+			            <configuration>
+			                <markersDirectory>${project.build.directory}/dependencies/dependency-maven-plugin-markers</markersDirectory>
+			                <artifactItems>
+			                    <artifactItem>
+			                        <groupId>fi.dwo</groupId>
+			                        <artifactId>bootloader</artifactId>
+			                        <outputDirectory>${project.build.directory}/dependencies/bootloader</outputDirectory>
+			                    </artifactItem>
+			                </artifactItems>
+			            </configuration>
+			        </execution>
+			    </executions>
+			</plugin>
+
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
@@ -88,9 +112,9 @@
 								nl.uu.fi.dwo.rest.*,
 								nl.uu.fi.dwo.lms.jclient.lib.rest.*,
 								nl.numworx.async,
-								javax.xml.bind.* <!-- DYNAMIC -->
-								
+								fi.beans.loader
 						</Export-Package>
+						<Include-Resource>{maven-resources},fi/dwo/bootloader/impl/resources=${project.build.directory}/dependencies/bootloader/fi/dwo/bootloader/impl/resources</Include-Resource>
                         <Private-Package>fi.dwo.bootloader.impl,
 								nl.numworx.toolloader,
 								fi.beans.private_base64code,
@@ -115,7 +139,7 @@
 						</Import-Package>
 <!-- 						<Embed-Transitive>false</Embed-Transitive>-->
 <!-- 						<Embed-Dependency>*;scope=compile;type=!pom;inline=true</Embed-Dependency>-->
-						<Dynamic-Import-Package>*</Dynamic-Import-Package> <!-- catch all later -->
+						<DynamicImport-Package>*</DynamicImport-Package> <!-- catch all later -->
                    </instructions>
                 </configuration>
             </plugin>

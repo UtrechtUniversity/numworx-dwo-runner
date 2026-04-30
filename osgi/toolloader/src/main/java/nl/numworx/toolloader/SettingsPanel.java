@@ -11,12 +11,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Vector;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import javax.swing.AbstractAction;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -28,12 +31,15 @@ import org.osgi.framework.BundleContext;
 import fi.beans.scorm.SAMLLoginIF;
 import fi.dwo.bootloader.impl.Config;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.OAuthManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountLoginsManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.DwoLocale;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
@@ -91,7 +97,7 @@ public class SettingsPanel extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 			SAMLLoginIF panel = login.get();
 			panel.setEndpoint("/dwo/oauth2/entree");
-			panel.popup(SettingsPanel.this, "https://test.dwo.nl/dwo/oauth2/login3.jsp?idphint=dwo")
+			panel.popup(SettingsPanel.this, serverURI + "oauth2/login3.jsp?idphint=dwo")
 			.then(pr -> {
 				System.out.println("got " + pr.getValue());
 			    loginViaSaml(pr.getValue());
@@ -131,8 +137,7 @@ public class SettingsPanel extends JPanel {
 	        OAuthManager m = new OAuthManager();
 	        token = m.authorization_token(authToken, clientId, verifier, redirectUri);
 	        if (token != null) {
-	          StoredRestManager.getInstance().setRecover(this);
-	          setRefreshToken(token);
+	          StoredRestManager.getInstance().setRecover(this);	          
 	        }
 	        DomLoginContext loginContext = SecureUserAccountManager.getLoginContext();
 	        DomContext context = StoredRestManager.getInstance().getAuthenticator().getContext();
@@ -145,6 +150,16 @@ public class SettingsPanel extends JPanel {
 	        DomUserFull user = SecureUserAccountManager.getAccountData();
 	        name.setText(user.getUserName());
 	        name.setEnabled(false);
+// init school combobox:
+	        DomSchoolsRolesAndClassesV2 logins = SecureUserAccountLoginsManager.getSchoolLogins();
+	        DefaultComboBoxModel<String>model = new DefaultComboBoxModel<>(new Vector());
+			for (DomSchoolRoleAndClassV2 login : logins.getSchoolsRolesAndClassesList()) {
+				if (login.getRole().getRoleName().equals("TEACHER"))
+					model.addElement(login.getSchool().getSchoolName());
+			}
+			schools.setModel(model);
+			schools.setSelectedItem(logins.getActiveSchoolRoleAndClass().getSchool().getSchoolName());
+			setRefreshToken(token);     
 	      }
 
 		@Override
@@ -178,7 +193,7 @@ public class SettingsPanel extends JPanel {
 		Box line; 
 		line = Box.createHorizontalBox();
 		line.add(new JLabel("Naam"));
-		name = new JTextField();
+		name = new JTextField((String) config.getProperty("userName"));
 		line.add(name);
 		add(line);
 		line = Box.createHorizontalBox();
@@ -188,17 +203,23 @@ public class SettingsPanel extends JPanel {
 		add(line);
 		line = Box.createHorizontalBox();
 		line.add(new JLabel("school"));
-		schools = new JComboBox<>();
+		String s = (String) config.getProperty("school");
+		schools = s != null ? new JComboBox<>(new String[] { s}) : new JComboBox<>();
+
 		line.add(schools);
 		add(line);
 		line = Box.createHorizontalBox();
 		line.add(new JLabel("profiel"));
-		profile = new JTextField("VO");
+		s = (String) config.getProperty("profile");
+		if (s == null) s = "VO";
+		profile = new JTextField(s);
 		line.add(profile);
 		add(line);
 		line = Box.createHorizontalBox();
 		line.add(new JLabel("taal"));
 		language = new JComboBox<String>(new String[] {"nl", "en" });
+		s = (String) config.getProperty("language");
+		if (s != null) language.setSelectedItem(s);
 		line.add(language);
 		add(line);
 		add(Box.createVerticalStrut(20));
@@ -214,6 +235,7 @@ public class SettingsPanel extends JPanel {
 
 	public void setRefreshToken(String token) {
 		config.setProperty("refresh_token", token);
+		config.setProperty("userName", name.getText());
 	}
 	
 }
