@@ -51,6 +51,7 @@ public class Loader {
 			}
 			return super.loadClass(name, resolve);
 		}
+
 		private void error(String string, Throwable e1) {
 			System.err.println(string);
 			e1.printStackTrace();			

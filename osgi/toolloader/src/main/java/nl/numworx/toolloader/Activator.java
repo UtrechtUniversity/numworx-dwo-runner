@@ -123,7 +123,7 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 		} catch (Exception e) {
 			throw new BundleException(e.getMessage(),e);
 		}
-		
+		Loader.setPrefix(jarindex);
 		List<Bundle> bundles = builder
 				.setBase(jarindex)
 				.setLocation("samllogin.jar")
