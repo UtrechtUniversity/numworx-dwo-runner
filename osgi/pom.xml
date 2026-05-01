@@ -9,12 +9,12 @@
 	<artifactId>osgi-parent</artifactId>
 	<packaging>pom</packaging>
 	<modules>
-    	<module>unpack200</module>
-		<module>BootLoader</module>
+<!--    	<module>unpack200</module>-->
+<!--		<module>BootLoader</module>-->
 		<module>DWOJApplet-Starter</module>
 		<module>app-install</module>
-		<module>dwoloader</module>
-		<module>ri-jcache</module>
+<!--		<module>dwoloader</module>-->
+<!--		<module>ri-jcache</module>-->
 		<module>toolloader</module>
 	</modules>
 	<build>
