@@ -12,7 +12,7 @@
 	<dwo.version>2.5.50</dwo.version>
   </properties>
   <modules>
-<!--	<module>osgi-jxbrowser-bundles</module>-->
+	<module>osgi-jxbrowser-bundles</module>
 	<module>osgi</module>
 	<module>DWO_runner</module>
 	<module>maintenance</module>
