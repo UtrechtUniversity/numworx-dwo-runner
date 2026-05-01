@@ -10,7 +10,7 @@
 	<packaging>pom</packaging>
 	<modules>
 <!--    	<module>unpack200</module>-->
-<!--		<module>BootLoader</module>-->
+		<module>BootLoader</module>
 		<module>DWOJApplet-Starter</module>
 		<module>app-install</module>
 <!--		<module>dwoloader</module>-->
