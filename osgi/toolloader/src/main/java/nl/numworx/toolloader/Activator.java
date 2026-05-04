@@ -10,6 +10,7 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import javax.swing.AbstractAction;
@@ -31,9 +32,10 @@ import fi.beans.scorm.SAMLLoginIF;
 import fi.dwo.bootloader.LoaderBuilder;
 import fi.dwo.bootloader.LoaderBuilderFactory;
 import fi.dwo.bootloader.LoaderBuilder.Update;
+import fi.dwo.eawt.EAWT;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 
-public class Activator extends fi.dwo.bootloader.impl.Activator implements BundleActivator {
+public class Activator extends fi.dwo.bootloader.impl.Activator implements BundleActivator, BooleanSupplier {
 	
 	public class OkAction extends AbstractAction implements Action {
 
@@ -71,6 +73,7 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 
 		@Override
 		public void windowClosing(WindowEvent e) {
+			e.getWindow().removeWindowListener(this);
 			stopApplication();
 		}
 		
@@ -81,6 +84,8 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
     private BundleContext context;
     private Supplier<fi.beans.scorm.SAMLLoginIF> samlLogin;
 	private Class<?> teachertool;
+	private String jarindex;
+	private ServiceReference<EAWT> eawtref;
 
 	public void start(BundleContext context) throws Exception {
 		this.context = context;
@@ -99,6 +104,12 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 		
         main.pack();
         main.show();
+        
+        eawtref = context.getServiceReference(EAWT.class);
+        if (eawtref != null) {
+        	EAWT eawt = context.getService(eawtref);
+        	eawt.setQuit(this);
+        }
     }
 
     @Override
@@ -113,10 +124,11 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 		installConsole("true".equals(context.getProperty("fi.dwo.console")),
 				builder);
 		installJAXB(builder);
+		installCache(builder);
 		installCM(builder);
 		installUnpack200(builder);
 		
-		String jarindex = (String) config.getProperty("fi.dwo.jarindex");
+		jarindex = (String) config.getProperty("fi.dwo.jarindex");
 		XmlBackedRepositoryFactory admin = getService();
 		try {
 			admin.create(jarindex, null, this);
@@ -135,11 +147,10 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 				Class<SAMLLoginIF> clazz = (Class<SAMLLoginIF>) bundles.get(0).loadClass("nl.numworx.samllogin.SamlLoginPanel");
 				return clazz.newInstance();
 			} catch (RuntimeException e) {
-				e.printStackTrace();
+				LOGt.error("loading samllogin", e);
 				throw e;
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				LOGt.error("loading samllogin", e);
 				throw new RuntimeException(e.getMessage(), e);
 			} 
 		};
@@ -153,24 +164,14 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 		try {
 			constructor = teachertool.getConstructor(Properties.class);
 	    	return constructor.newInstance(props);
-		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (NoSuchMethodException
+				|SecurityException
+				|InstantiationException
+				|IllegalAccessException
+				|IllegalArgumentException
+				|InvocationTargetException
+				e) {
+			LOGt.warning("startTeacherTool", e);
 		}
 		return null;
     }
@@ -181,21 +182,31 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 		String location = "teachertool.jar";
 		try {
 			String TOOL = "nl.numworx.teachertool.TeacherTool";
-			List<Bundle> bundles = builder.setBase(base).setLocation(location).startWrap(TOOL);
+			List<Bundle> bundles = builder
+					.setBase(jarindex)
+					.setBase(base)
+					.setLocation(location)
+					.setUpdate(Update.MAYBE)
+					.startWrap(TOOL);
 			teachertool = bundles.get(0).loadClass(TOOL);			
-		} catch (BundleException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
+		} catch (BundleException
+				|URISyntaxException
+				|ClassNotFoundException
+				e) {
+			LOGt.error("install TeacherTool", e);
+		}
 		
 	}
 
+	private void installCache(LoaderBuilder builder) {
+		try {
+			builder.setLocation("ri-jcache-2.5.49.jar").start("nl.numworx.osgi.ri-jcache");
+		} catch (Exception oops) {
+			LOGt.warning("install Cache", oops); 
+		}
+	}
+	
+	
 	private void installJAXB(LoaderBuilder builder) {
 		try {
 			builder.setLocation("jaxb-api-2.3.1.jar").start("jaxb-api");
@@ -217,6 +228,12 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 	public void stop(BundleContext context) throws Exception {
         main.dispose();
         main = null;
+    	if (eawtref != null) {
+    		EAWT s = context.getService(eawtref);
+			if (s != null) s.setQuit(null);
+    		context.ungetService(eawtref);
+    		eawtref = null;
+    	}
         super.stop(context);
     }
 
@@ -226,7 +243,7 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 		{
 			EventAdmin admin = context.getService(ref);
 			if(admin != null) {
-				Event event = new Event("fi/microserver/MicroServer/STOP", new HashMap());
+				Event event = new Event("fi/microserver/MicroServer/STOP", new HashMap<String,Object>());
 				admin.postEvent(event);
 				context.ungetService(ref);
 				return; // zolang er geen versie control is, alleen de harde manier.
@@ -235,6 +252,12 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 		System.exit(0); // the hard way.
 
     }
+
+	@Override
+	public boolean getAsBoolean() {
+		stopApplication();
+		return false;
+	}
     
     
 }

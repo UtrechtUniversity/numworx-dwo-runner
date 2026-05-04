@@ -1,13 +1,16 @@
 package nl.numworx.toolloader;
 
 import java.awt.event.ActionEvent;
+import java.lang.reflect.InvocationTargetException;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Dictionary;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -27,6 +30,11 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.Constants;
+import org.osgi.framework.ServiceRegistration;
+import org.osgi.service.cm.ConfigurationException;
+import org.osgi.service.cm.ManagedService;
+import org.osgi.util.promise.Promise;
 
 import fi.beans.scorm.SAMLLoginIF;
 import fi.dwo.bootloader.impl.Config;
@@ -46,6 +54,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.util.DWO2ExceptionTranslatorInterface;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
+@SuppressWarnings("serial")
 public class SettingsPanel extends JPanel {
 
 	public class Translator implements DWO2ExceptionTranslatorInterface {
@@ -88,8 +97,11 @@ public class SettingsPanel extends JPanel {
 	public URI serverURI = URI.create("https://test.dwo.nl/dwo/");
 
 	private Config config;
+
+	private ServiceRegistration<ManagedService> ref;
 	
-	class LoginAction extends AbstractAction implements Predicate<Dwo2Exception> {
+	@SuppressWarnings("serial")
+	class LoginAction extends AbstractAction implements Predicate<Dwo2Exception> , ManagedService {
 
 		private String token;
 
@@ -100,6 +112,8 @@ public class SettingsPanel extends JPanel {
 			panel.popup(SettingsPanel.this, serverURI + "oauth2/login3.jsp?idphint=dwo")
 			.then(pr -> {
 				System.out.println("got " + pr.getValue());
+				if (ref != null) ref.unregister();
+				ref = null;
 			    loginViaSaml(pr.getValue());
 				return pr;
 			}).then(null, (p) -> {
@@ -136,7 +150,11 @@ public class SettingsPanel extends JPanel {
 	    public void loginWithToken(String authToken, String clientId, String verifier, String redirectUri) throws Dwo2Exception {
 	        OAuthManager m = new OAuthManager();
 	        token = m.authorization_token(authToken, clientId, verifier, redirectUri);
-	        if (token != null) {
+	        logintail();     
+	      }
+
+		private void logintail() throws Dwo2Exception {
+			if (token != null) {
 	          StoredRestManager.getInstance().setRecover(this);	          
 	        }
 	        DomLoginContext loginContext = SecureUserAccountManager.getLoginContext();
@@ -159,14 +177,40 @@ public class SettingsPanel extends JPanel {
 			}
 			schools.setModel(model);
 			schools.setSelectedItem(logins.getActiveSchoolRoleAndClass().getSchool().getSchoolName());
-			setRefreshToken(token);     
-	      }
+			setRefreshToken(token);
+		}
 
 		@Override
 		public boolean test(Dwo2Exception t) {
 			return false;
 		}
 
+		@Override
+		public void updated(Dictionary<String, ?> properties) throws ConfigurationException {
+			if (properties != null) {
+				Object token = properties.get("refresh_token");
+				if (token != null) {
+					OAuthManager m = new OAuthManager();
+					this.token = m.refresh_token(token.toString());
+					try {
+						ref.unregister();ref = null;
+						logintail();
+						token = properties.get("school");
+						if (token != null) {
+							schools.setSelectedItem(token);
+						}
+						
+					} catch (Dwo2Exception e) {
+						
+					}
+				}
+				
+			}
+			
+		}
+
+		
+		
 	}
 	
 	
@@ -198,7 +242,8 @@ public class SettingsPanel extends JPanel {
 		add(line);
 		line = Box.createHorizontalBox();
 		line.add(Box.createGlue());
-		loginBtn = new JButton(new LoginAction("login"));
+		LoginAction loginAction = new LoginAction("login");
+		loginBtn = new JButton(loginAction);
 		line.add(loginBtn);
 		add(line);
 		line = Box.createHorizontalBox();
@@ -230,9 +275,19 @@ public class SettingsPanel extends JPanel {
 		cancelBtn = new JButton("Annuleer");
 		line.add(cancelBtn);
 		add(line);
+		
+		Dictionary<String, String> dict = new Hashtable<String, String>();
+		dict.put(Constants.SERVICE_PID, context.getBundle().getSymbolicName());
+		ref = context.registerService(ManagedService.class, loginAction, dict);
+
 	}
 
-
+	
+	
+	
+	
+	
+	
 	public void setRefreshToken(String token) {
 		config.setProperty("refresh_token", token);
 		config.setProperty("userName", name.getText());

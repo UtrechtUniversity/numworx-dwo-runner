@@ -111,7 +111,7 @@ public class Config implements ManagedService {
 		this.log = lOGt.service(getClass());
 	}
 
-	Promise<Config> getPromise() {
+	public Promise<Config> getPromise() {
 		return deferred.getPromise();
 	}
 }
