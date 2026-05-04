@@ -31,12 +31,32 @@ import fi.beans.loader.Loader;
 import fi.beans.scorm.SAMLLoginIF;
 import fi.dwo.bootloader.LoaderBuilder;
 import fi.dwo.bootloader.LoaderBuilderFactory;
+import fi.dwo.bootloader.impl.Config;
 import fi.dwo.bootloader.LoaderBuilder.Update;
 import fi.dwo.eawt.EAWT;
+
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 
 public class Activator extends fi.dwo.bootloader.impl.Activator implements BundleActivator, BooleanSupplier {
 	
+	private class Delegate extends Properties {
+
+		private Config setter;
+
+		public Delegate(Properties p, Config config) {
+			super(p);
+			super.putAll(p);
+			setter = config;
+		}
+
+		@Override
+		public synchronized Object put(Object key, Object value) {
+			if(setter != null) setter.setProperty(key.toString(), value);
+			return super.put(key, value);
+		}
+
+	}
+
 	public class OkAction extends AbstractAction implements Action {
 
 		private SettingsPanel settings;
@@ -57,7 +77,11 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 			config.setProperty("language", p.getProperty("language"));
 			config.setProperty("profile", p.getProperty("profile"));
 			config.setProperty("school", p.getProperty("school"));
+// all relevant keys here!
+			Object m = config.getProperty("studentmodelcontext");
+			if (m != null) p.put("studentmodelcontext", m);
 			
+			p = new Delegate(p, config);
 			main.hide();
 			startTeacherTool(p);
 		}
@@ -90,7 +114,8 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 	public void start(BundleContext context) throws Exception {
 		this.context = context;
 		super.start(context);
-
+		if(config == null) return; // update in progress
+		
         main = new JFrame("Teacher Tool");
         main.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         main.addWindowListener(new Closer());
@@ -126,7 +151,6 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 		installJAXB(builder);
 		installCache(builder);
 		installCM(builder);
-		installUnpack200(builder);
 		
 		jarindex = (String) config.getProperty("fi.dwo.jarindex");
 		XmlBackedRepositoryFactory admin = getService();
@@ -158,8 +182,7 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 		
 	}
 
-    
-    Object startTeacherTool(Properties props) {
+	Object startTeacherTool(Properties props) {
     	Constructor<?> constructor;
 		try {
 			constructor = teachertool.getConstructor(Properties.class);
@@ -226,7 +249,8 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 	}
 
 	public void stop(BundleContext context) throws Exception {
-        main.dispose();
+		if (main!=null)
+			main.dispose();
         main = null;
     	if (eawtref != null) {
     		EAWT s = context.getService(eawtref);
