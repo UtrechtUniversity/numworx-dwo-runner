@@ -103,6 +103,7 @@
                 <configuration>
 					<niceManifest>true</niceManifest>
                     <instructions>
+						<_snapshot>${osgi.qualifier}</_snapshot>
                         <Bundle-Activator>nl.numworx.toolloader.Activator</Bundle-Activator>
                         <Export-Package>fi.dwo.bootloader;version=2.1,
 								fi.dwo.dwoloader;version=1.0,

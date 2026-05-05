@@ -207,7 +207,7 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 			String TOOL = "nl.numworx.teachertool.TeacherTool";
 			List<Bundle> bundles = builder
 					.setBase(jarindex)
-					.setBase(base)
+					//.setBase(base)
 					.setLocation(location)
 					.setUpdate(Update.MAYBE)
 					.startWrap(TOOL);
