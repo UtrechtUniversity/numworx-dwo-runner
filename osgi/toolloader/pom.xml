@@ -43,6 +43,7 @@
 		<dependency>
 			<groupId>nl.uu.fi.dwo</groupId>
         	<artifactId>dwo-commons-lib</artifactId>
+        	<optional>true</optional>
 		</dependency>
 		<dependency>
 		  	<groupId>org.knopflerfish.kf6.bundle.repository</groupId>
@@ -65,7 +66,8 @@
 	  	<dependency>
             <groupId>nl.uu.fi.dwo.rest</groupId>
             <artifactId>dwo-jclient-lib</artifactId>
-        </dependency>
+            <optional>true</optional>
+	  	</dependency>
     </dependencies>
 
     <build>
