@@ -3,18 +3,19 @@
 	<parent>
           <groupId>nl.uu.fi.dwo</groupId>
           <artifactId>runner-parent</artifactId>
-          <version>2.5.49</version>
+          <version>2.5.50</version>
 	</parent>
 	<groupId>fi.microserver</groupId>
 	<artifactId>osgi-parent</artifactId>
 	<packaging>pom</packaging>
 	<modules>
-    	<module>unpack200</module>
+<!--    	<module>unpack200</module>-->
 		<module>BootLoader</module>
 		<module>DWOJApplet-Starter</module>
 		<module>app-install</module>
-		<module>dwoloader</module>
-		<module>ri-jcache</module>
+<!--		<module>dwoloader</module>-->
+<!--		<module>ri-jcache</module>-->
+		<module>toolloader</module>
 	</modules>
 	<build>
 		<plugins>

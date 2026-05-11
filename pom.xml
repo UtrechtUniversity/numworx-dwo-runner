@@ -3,13 +3,13 @@
 	<parent>
         <groupId>nl.uu.fi.dwo</groupId>
         <artifactId>dwo</artifactId>
-        <version>2.5.49</version>
+        <version>2.5.50</version>
 	</parent>
   <artifactId>runner-parent</artifactId>
-  <version>2.5.49</version>
+  <version>2.5.50</version>
   <packaging>pom</packaging>
   <properties>
-	<dwo.version>2.5.49</dwo.version>
+	<dwo.version>2.5.50</dwo.version>
   </properties>
   <modules>
 	<module>osgi-jxbrowser-bundles</module>
