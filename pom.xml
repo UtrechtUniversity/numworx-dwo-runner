@@ -6,7 +6,7 @@
         <version>2.5.50</version>
 	</parent>
   <artifactId>runner-parent</artifactId>
-  <version>2.5.51-SNAPSHOT</version>
+  <version>2.5.50</version>
   <packaging>pom</packaging>
   <properties>
 	<dwo.version>2.5.50</dwo.version>
