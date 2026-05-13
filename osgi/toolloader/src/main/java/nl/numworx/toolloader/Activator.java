@@ -3,6 +3,7 @@ package nl.numworx.toolloader;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
@@ -55,6 +56,19 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 			return super.put(key, value);
 		}
 
+		@Override
+		public String getProperty(String key) {
+			// TODO Auto-generated method stub
+			String property = super.getProperty(key);
+			if (property == null) {
+				Object value = setter.getProperty(key);
+				if (value instanceof String) {
+					property = value.toString();
+				}
+			}
+			return property;
+		}
+
 	}
 
 	public class OkAction extends AbstractAction implements Action {
@@ -80,7 +94,14 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 // all relevant keys here!
 			Object m = config.getProperty("studentmodelcontext");
 			if (m != null) p.put("studentmodelcontext", m);
-			
+// root folder
+			m = config.getProperty("rootfolder");
+			if (m == null) {
+				File dir = context.getDataFile("rootfolder");
+				dir.mkdir();
+				String rootfolder = dir.getAbsolutePath();
+				p.put("rootfolder", rootfolder);
+			}
 			p = new Delegate(p, config);
 			main.hide();
 			startTeacherTool(p);
