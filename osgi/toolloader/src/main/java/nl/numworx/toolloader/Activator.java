@@ -222,7 +222,7 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
     
     
 	private void installTeacherTool(LoaderBuilder builder) {
-		String base = "file:" + System.getProperty("user.home") + "/git/teachertool/target/";
+		String base = "file:" + System.getProperty("user.home") + "/git/nolai-teachertool/teachertool/target/";
 		String location = "teachertool.jar";
 		try {
 			String TOOL = "nl.numworx.teachertool.TeacherTool";
@@ -230,7 +230,7 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 					.setBase(jarindex)
 					//.setBase(base)
 					.setLocation(location)
-					.setUpdate(Update.MAYBE)
+					.setUpdate(Update.ALWAYS)
 					.startWrap(TOOL);
 			teachertool = bundles.get(0).loadClass(TOOL);			
 		} catch (BundleException
