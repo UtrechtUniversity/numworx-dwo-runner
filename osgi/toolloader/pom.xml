@@ -114,7 +114,8 @@
 								nl.uu.fi.dwo.rest.*,
 								nl.uu.fi.dwo.lms.jclient.lib.rest.*,
 								nl.numworx.async,
-								fi.beans.loader
+								fi.beans.loader,
+								com.owlike.genson,com.owlike.genson.ext,com.owlike.genson.ext.jaxb
 						</Export-Package>
 						<Include-Resource>{maven-resources},fi/dwo/bootloader/impl/resources=${project.build.directory}/dependencies/bootloader/fi/dwo/bootloader/impl/resources</Include-Resource>
                         <Private-Package>fi.dwo.bootloader.impl,
