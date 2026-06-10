@@ -1,11 +1,9 @@
 package nl.numworx.toolloader;
 
 import java.awt.event.ActionEvent;
-import java.lang.reflect.InvocationTargetException;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Dictionary;
@@ -21,7 +19,6 @@ import java.util.function.Supplier;
 import javax.swing.AbstractAction;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -34,8 +31,6 @@ import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.cm.ConfigurationException;
 import org.osgi.service.cm.ManagedService;
-import org.osgi.util.promise.Promise;
-
 import fi.beans.scorm.SAMLLoginIF;
 import fi.dwo.bootloader.impl.Config;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.OAuthManager;
@@ -94,7 +89,7 @@ public class SettingsPanel extends JPanel {
 
 	private Supplier<SAMLLoginIF> login;
 
-	public URI serverURI = URI.create("https://test.dwo.nl/dwo/");
+	public static URI serverURI = URI.create("https://test.dwo.nl/dwo/");
 
 	private Config config;
 
@@ -256,7 +251,7 @@ public class SettingsPanel extends JPanel {
 		line = Box.createHorizontalBox();
 		line.add(new JLabel("profiel"));
 		s = (String) config.getProperty("profile");
-		if (s == null) s = "VO";
+		if (s == null) s = "wa";
 		profile = new JTextField(s);
 		line.add(profile);
 		add(line);

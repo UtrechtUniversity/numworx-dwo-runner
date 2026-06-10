@@ -1,14 +1,21 @@
 package nl.numworx.toolloader;
 
+import java.awt.HeadlessException;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.function.BooleanSupplier;
@@ -18,6 +25,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
+import javax.swing.JRootPane;
 
 import org.knopflerfish.service.repository.XmlBackedRepositoryFactory;
 import org.osgi.framework.Bundle;
@@ -29,17 +37,99 @@ import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
 
 import fi.beans.loader.Loader;
+import fi.beans.mainframe.AppletContext;
+import fi.beans.mainframe.AppletStub;
+import fi.beans.mainframe.JApplet;
 import fi.beans.scorm.SAMLLoginIF;
 import fi.dwo.bootloader.LoaderBuilder;
 import fi.dwo.bootloader.LoaderBuilderFactory;
 import fi.dwo.bootloader.impl.Config;
 import fi.dwo.bootloader.LoaderBuilder.Update;
 import fi.dwo.eawt.EAWT;
-
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 
 public class Activator extends fi.dwo.bootloader.impl.Activator implements BundleActivator, BooleanSupplier {
 	
+	public class Stub implements AppletStub, AppletContext {
+		
+		final Properties props;
+
+		public Stub(Properties p) {
+			props = p;
+		}
+
+		@Override
+		public boolean isActive() {
+			return true;
+		}
+
+		@Override
+		public URL getDocumentBase() {
+			return getCodeBase();
+		}
+
+		@Override
+		public URL getCodeBase() {
+			try {
+				return SettingsPanel.serverURI.toURL();
+			} catch (MalformedURLException e) {
+			}
+			return null;
+		}
+
+		@Override
+		public String getParameter(String name) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public void appletResize(int width, int height) {
+			main.setSize(width, height);
+		}
+
+		@Override
+		public Image getImage(URL url) {
+			return null;
+		}
+
+		@Override
+		public void showDocument(URL url) {
+
+		}
+
+		@Override
+		public void showDocument(URL url, String target) {
+
+		}
+
+		@Override
+		public void showStatus(String status) {
+			
+
+		}
+
+		@Override
+		public void setStream(String key, InputStream stream) throws IOException {
+		}
+
+		@Override
+		public InputStream getStream(String key) {
+			return null;
+		}
+
+		@Override
+		public Iterator<String> getStreamKeys() {
+			return null;
+		}
+
+		@Override
+		public AppletContext getAppletContext() {
+			return this;
+		}
+
+	}
+
 	private class Delegate extends Properties {
 
 		private Config setter;
@@ -104,7 +194,17 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 			}
 			p = new Delegate(p, config);
 			main.hide();
-			startTeacherTool(p);
+			JApplet applet = startTeacherTool(p);
+			if (applet == null) stopApplication();
+			AppletStub stub = new Stub(p);
+			applet.setStub(stub);
+			applet.init();
+			JRootPane rootPane = applet.getRootPane();
+			rootPane.invalidate();
+			main.setRootPane(rootPane);
+			main.pack();
+			main.show();
+			applet.start();
 		}
 
 	}
@@ -125,10 +225,23 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 		
 	}
 
-    private JFrame main;
+	class PrimaryFrame extends JFrame {
+
+		PrimaryFrame(String title) throws HeadlessException {
+			super(title);
+		}
+
+		@Override
+		public void setRootPane(JRootPane root) {
+			super.setRootPane(root);
+		}
+		
+	}
+	
+    private PrimaryFrame main;
     private BundleContext context;
     private Supplier<fi.beans.scorm.SAMLLoginIF> samlLogin;
-	private Class<?> teachertool;
+	private Class<? extends JApplet> teachertool;
 	private String jarindex;
 	private ServiceReference<EAWT> eawtref;
 
@@ -137,7 +250,7 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 		super.start(context);
 		if(config == null) return; // update in progress
 		
-        main = new JFrame("Teacher Tool");
+        main = new PrimaryFrame("Teacher Tool");
         main.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         main.addWindowListener(new Closer());
         SettingsPanel content = new SettingsPanel(context, samlLogin, config);
@@ -203,8 +316,8 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 		
 	}
 
-	Object startTeacherTool(Properties props) {
-    	Constructor<?> constructor;
+	JApplet startTeacherTool(Properties props) {
+    	Constructor<? extends JApplet> constructor;
 		try {
 			constructor = teachertool.getConstructor(Properties.class);
 	    	return constructor.newInstance(props);
@@ -232,7 +345,7 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 					.setLocation(location)
 					.setUpdate(Update.ALWAYS)
 					.startWrap(TOOL);
-			teachertool = bundles.get(0).loadClass(TOOL);			
+			teachertool = (Class<? extends JApplet>) bundles.get(0).loadClass(TOOL);			
 		} catch (BundleException
 				|URISyntaxException
 				|ClassNotFoundException
@@ -282,7 +395,7 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
         super.stop(context);
     }
 
-    private void stopApplication() {
+    void stopApplication() {
 		ServiceReference<EventAdmin> ref = context.getServiceReference(EventAdmin.class);
 		if (ref != null) 
 		{
