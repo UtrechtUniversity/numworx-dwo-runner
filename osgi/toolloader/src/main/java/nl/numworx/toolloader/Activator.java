@@ -199,9 +199,7 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 			AppletStub stub = new Stub(p);
 			applet.setStub(stub);
 			applet.init();
-			JRootPane rootPane = applet.getRootPane();
-			rootPane.invalidate();
-			main.setRootPane(rootPane);
+			main.setApplet(applet);
 			main.pack();
 			main.show();
 			applet.start();
@@ -226,14 +224,36 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 	}
 
 	class PrimaryFrame extends JFrame {
+		
+		private JApplet applet;
+
+		public JApplet getApplet() {
+			return applet;
+		}
+
+		public void setApplet(JApplet applet) {
+			JRootPane rootPane = applet.getRootPane();
+			rootPane.invalidate();
+			this.applet = applet;
+			setRootPane(rootPane); // adopt.
+		}
 
 		PrimaryFrame(String title) throws HeadlessException {
 			super(title);
 		}
 
 		@Override
-		public void setRootPane(JRootPane root) {
-			super.setRootPane(root);
+		public void dispose() {
+			if (applet != null) {
+				try {
+					applet.stop();
+					applet.destroy();
+				} catch (Exception e) {
+					// .....
+				}
+				applet = null;
+			}
+			super.dispose();
 		}
 		
 	}
