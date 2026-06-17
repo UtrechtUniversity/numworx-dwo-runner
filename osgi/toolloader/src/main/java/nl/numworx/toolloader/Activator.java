@@ -5,6 +5,8 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -223,7 +225,7 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 		
 	}
 
-	class PrimaryFrame extends JFrame {
+	class PrimaryFrame extends JFrame implements PropertyChangeListener {
 		
 		private JApplet applet;
 
@@ -236,6 +238,9 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 			rootPane.invalidate();
 			this.applet = applet;
 			setRootPane(rootPane); // adopt.
+			applet.addPropertyChangeListener("rootPane", this);
+			validate();
+			repaint();
 		}
 
 		PrimaryFrame(String title) throws HeadlessException {
@@ -246,6 +251,8 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 		public void dispose() {
 			if (applet != null) {
 				try {
+					applet.removePropertyChangeListener("rootPane", this);
+					setRootPane(null); // gone.
 					applet.stop();
 					applet.destroy();
 				} catch (Exception e) {
@@ -254,6 +261,16 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 				applet = null;
 			}
 			super.dispose();
+		}
+
+		@Override
+		public void propertyChange(PropertyChangeEvent evt) {
+			JRootPane pane = (JRootPane) evt.getNewValue();
+			setRootPane(pane);
+			pane.invalidate();
+			validate();
+			repaint();
+			
 		}
 		
 	}
