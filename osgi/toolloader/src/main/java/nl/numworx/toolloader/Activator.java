@@ -26,6 +26,7 @@ import java.util.function.Supplier;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JRootPane;
 
@@ -163,7 +164,7 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 
 	}
 
-	public class OkAction extends AbstractAction implements Action {
+	public class OkAction extends AbstractAction implements Action, PropertyChangeListener {
 
 		private SettingsPanel settings;
 
@@ -200,11 +201,23 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 			if (applet == null) stopApplication();
 			AppletStub stub = new Stub(p);
 			applet.setStub(stub);
+			applet.addPropertyChangeListener("about", this);
 			applet.init();
 			main.setApplet(applet);
 			main.pack();
 			main.show();
 			applet.start();
+		}
+
+		@Override
+		public void propertyChange(PropertyChangeEvent evt) {
+			if (evt.getNewValue() instanceof JDialog) {
+				JDialog dialog = (JDialog) evt.getNewValue();
+				EAWT eawt = context.getService(eawtref);
+				Supplier<JDialog> about = () -> dialog;
+				eawt.setAbout(about);
+			}
+			
 		}
 
 	}
