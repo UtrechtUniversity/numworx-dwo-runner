@@ -3,7 +3,7 @@
   <parent>
     <groupId>nl.uu.fi.dwo</groupId>
     <artifactId>runner-parent</artifactId>
-    <version>3.0.1-SNAPSHOT</version>
+    <version>3.0.0</version>
   </parent>
   <groupId>nl.numworx.dwo.maintenance</groupId>
   <artifactId>maintenance</artifactId>
@@ -120,5 +120,5 @@
                 </properties>
         </profile>
   </profiles>
-  <version>3.0.1-SNAPSHOT</version>
+  <version>3.0.0</version>
 </project>
