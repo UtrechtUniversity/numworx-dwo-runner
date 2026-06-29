@@ -678,7 +678,7 @@ public class Builder implements LoaderBuilder {
 // there is a claim that jarindex is up to date, which is not.
 				Version vb = b.getVersion();
 				Version vr = getBundleVersion(resource.get());
-				if (vr.equals(vb)) update = Update.NEVER;
+				if (vr.equals(vb) && update == Update.MAYBE) update = Update.NEVER;
 // no need for check last modified
 				else if(update == Update.MAYBE) update = Update.ALWAYS;
 			}

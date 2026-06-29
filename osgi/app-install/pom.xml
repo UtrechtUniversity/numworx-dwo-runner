@@ -389,6 +389,12 @@
         	<artifactId>toolloader</artifactId>
         	<version>2.5.51-SNAPSHOT</version>
         </dependency>
+        <dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.service.async</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
 	</dependencies>
  	<repositories>
  	    <repository>
