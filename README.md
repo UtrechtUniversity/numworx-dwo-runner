@@ -2,41 +2,30 @@
 
 ## Introduction
 
-In this section, provide an overview of your code and describe the
-project in which the code was developed. Highlight the purpose,
-scope, and potential uses of your code. Also, consider including
-links to relevant publications or resources that provide additional
-context.
+The main purpose of this project is to facilitate running the Numworx Author application, maintenance and initialize the database. 
 
 ## Prerequisites
 
-Include any necessary prerequisites for using your code, such as
-required datasets, specific software, dependencies or hardware
-requirements. For example: This project requires Python 3.8 or later
-and install the dependencies with `pip install -r
-requirements.txt`. 
+This project has dependencies from de numworx-dwo-project project. Since TeamDev stopped supporting OSGI headers in their manifest for the jxbrowser, they are rebuild using the bnd tools.
 
 ## Contents 
 
 ### Folder structure
 
-Describe the organization of your package, including the contents of
-each folder and the files it contains. Use tables or file trees to
-make it easy for users to understand your folder structure. Describe
-where results and figures are stored if not added to the project
-folder.
+The important folders:
+* DWO_runner, a simple java-8 runner application for the Numworx Author jars at https://app.dwo.nl/dwo/
+* initdb, initiaize the database. create all tables for the JPA persistent classes
+* maintenance, remove old users and their data from the database
+* osgi, part of the OSGi runner application at https://github.com/wimvvelt/numworx-author. All supporting bundles.
 
 ### File formats 
 
-Describe the file format(s) used in your project and the software
-required to open them. 
+Everything is a Java-11 Maven project. Install with `mvn clean install`
 
 ## Usage
 
-Provide clear and concise instructions on how to use your code.
-Include examples of how to execute the code and describe the expected
-output. If your work consists of multiple execution steps, provide
-detailed step-by-step instructions. 
+Build and install this project with maven. The artefacts are dependencies of the numworx-dwo-resources and numworx-dwo-setup projects.
+The github repository https://maven.pkg.github.com/UtrechtUniversity/numworx-dwo-runner contains the deployed artifacts.
 
 ## License
 
