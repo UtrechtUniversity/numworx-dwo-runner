@@ -1,5 +1,6 @@
 package nl.numworx.toolloader;
 
+import java.awt.Dimension;
 import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -53,6 +54,10 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 
 public class Activator extends fi.dwo.bootloader.impl.Activator implements BundleActivator, BooleanSupplier {
 	
+	final static int TEACHERTOOL_WIDTH = 1600;
+	final static int TEACHERTOOL_HEIGHT=  900;
+	
+	
 	public class Stub implements AppletStub, AppletContext {
 		
 		final Properties props;
@@ -88,7 +93,8 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 
 		@Override
 		public void appletResize(int width, int height) {
-			main.setSize(width, height);
+			var bounds = main.getInsets();
+			main.setSize(width+bounds.left+bounds.right, height+bounds.bottom+bounds.top);
 		}
 
 		@Override
@@ -202,9 +208,21 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 			AppletStub stub = new Stub(p);
 			applet.setStub(stub);
 			applet.addPropertyChangeListener("about", this);
-			applet.init();
+			int width, height;
+			try {
+				width = Integer.parseInt(p.getProperty("nl.numworx.teachertool.width"));
+			} catch(Exception oops) {
+				width = TEACHERTOOL_WIDTH;
+			}
+			try {
+				height = Integer.parseInt(p.getProperty("nl.numworx.teachertool.height"));
+			} catch(Exception oops) {
+				height = TEACHERTOOL_HEIGHT;
+			}
 			main.setApplet(applet);
-			main.pack();
+			applet.setSize(width, height);		
+			applet.init();
+			main.validate();
 			main.show();
 			applet.start();
 		}
@@ -238,6 +256,7 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 		
 	}
 
+	@SuppressWarnings("serial")
 	class PrimaryFrame extends JFrame implements PropertyChangeListener {
 		
 		private JApplet applet;
@@ -253,6 +272,7 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 			setRootPane(rootPane); // adopt.
 			applet.addPropertyChangeListener("rootPane", this);
 			validate();
+			pack();
 			repaint();
 		}
 
@@ -432,9 +452,21 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 		return context.getService(reference);
 	}
 
+	public void saveSize() {
+		if (main!=null && main.getApplet() != null)
+		{
+			Dimension size = main.getRootPane().getSize();
+			config.setProperty("nl.numworx.teachertool.width", Integer.toString(size.width));
+			config.setProperty("nl.numworx.teachertool.height", Integer.toString(size.height));
+		}
+	}
+	
+	
 	public void stop(BundleContext context) throws Exception {
 		if (main!=null)
+		{
 			main.dispose();
+		}
         main = null;
     	if (eawtref != null) {
     		EAWT s = context.getService(eawtref);
@@ -446,6 +478,8 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
     }
 
     void stopApplication() {
+    	saveSize();
+    	
 		ServiceReference<EventAdmin> ref = context.getServiceReference(EventAdmin.class);
 		if (ref != null) 
 		{
