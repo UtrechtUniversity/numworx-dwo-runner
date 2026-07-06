@@ -224,7 +224,7 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 			applet.init();
 			main.validate();
 			main.show();
-			applet.start();
+			main.start();
 		}
 
 		@Override
@@ -260,9 +260,20 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 	class PrimaryFrame extends JFrame implements PropertyChangeListener {
 		
 		private JApplet applet;
+		private boolean started;
 
 		public JApplet getApplet() {
 			return applet;
+		}
+
+		public void start() {
+			started = true;
+			applet.start();
+		}
+		
+		public void stop() {
+			if (started) applet.stop();
+			started = false;
 		}
 
 		public void setApplet(JApplet applet) {
@@ -286,7 +297,7 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 				try {
 					applet.removePropertyChangeListener("rootPane", this);
 					setRootPane(null); // gone.
-					applet.stop();
+					stop();
 					applet.destroy();
 				} catch (Exception e) {
 					// .....
@@ -458,6 +469,7 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 			Dimension size = main.getRootPane().getSize();
 			config.setProperty("nl.numworx.teachertool.width", Integer.toString(size.width));
 			config.setProperty("nl.numworx.teachertool.height", Integer.toString(size.height));
+			main.stop();
 		}
 	}
 	
