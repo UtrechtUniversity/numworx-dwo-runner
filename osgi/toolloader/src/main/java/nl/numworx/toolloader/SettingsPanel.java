@@ -1,6 +1,8 @@
 package nl.numworx.toolloader;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
@@ -33,16 +35,22 @@ import org.osgi.service.cm.ConfigurationException;
 import org.osgi.service.cm.ManagedService;
 import fi.beans.scorm.SAMLLoginIF;
 import fi.dwo.bootloader.impl.Config;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.cache.PublicProfileCache;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.OAuthManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherStudentModelManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountLoginsManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.DwoLocale;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
+import nl.uu.fi.dwo.rest.dom.entities.DomId;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
@@ -50,7 +58,7 @@ import nl.uu.fi.dwo.rest.util.DWO2ExceptionTranslatorInterface;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 @SuppressWarnings("serial")
-public class SettingsPanel extends JPanel {
+public class SettingsPanel extends JPanel implements ItemListener {
 
 	public class Translator implements DWO2ExceptionTranslatorInterface {
 
@@ -63,13 +71,13 @@ public class SettingsPanel extends JPanel {
 		@Override
 		public String decodeMessageInJSON(String json) {
 			// TODO Auto-generated method stub
-			return null;
+			return "";
 		}
 
 		@Override
 		public Dwo2ExceptionCode decodeCodeInJSON(String json) {
 			// TODO Auto-generated method stub
-			return null;
+			return Dwo2ExceptionCode.valueOf(json);
 		}
 
 		@Override
@@ -94,6 +102,9 @@ public class SettingsPanel extends JPanel {
 	private Config config;
 
 	private ServiceRegistration<ManagedService> ref;
+
+	private JComboBox<DomStudentModelContext> modelselect;
+	private DomSchoolsRolesAndClassesV2 logins;
 	
 	@SuppressWarnings("serial")
 	class LoginAction extends AbstractAction implements Predicate<Dwo2Exception> , ManagedService {
@@ -163,9 +174,8 @@ public class SettingsPanel extends JPanel {
 	        DomUserFull user = SecureUserAccountManager.getAccountData();
 	        name.setText(user.getUserName());
 	        name.setEnabled(false);
-// init school combobox:
-	        DomSchoolsRolesAndClassesV2 logins = SecureUserAccountLoginsManager.getSchoolLogins();
-	        DefaultComboBoxModel<String>model = new DefaultComboBoxModel<>(new Vector());
+logins = SecureUserAccountLoginsManager.getSchoolLogins();
+	        DefaultComboBoxModel<String>model = new DefaultComboBoxModel<>();
 			for (DomSchoolRoleAndClassV2 login : logins.getSchoolsRolesAndClassesList()) {
 				if (login.getRole().getRoleName().equals("TEACHER"))
 					model.addElement(login.getSchool().getSchoolName());
@@ -173,6 +183,7 @@ public class SettingsPanel extends JPanel {
 			schools.setModel(model);
 			schools.setSelectedItem(logins.getActiveSchoolRoleAndClass().getSchool().getSchoolName());
 			setRefreshToken(token);
+			selectAfterLogin();
 		}
 
 		@Override
@@ -245,7 +256,7 @@ public class SettingsPanel extends JPanel {
 		line.add(new JLabel("school"));
 		String s = (String) config.getProperty("school");
 		schools = s != null ? new JComboBox<>(new String[] { s}) : new JComboBox<>();
-
+		schools.addItemListener(this);
 		line.add(schools);
 		add(line);
 		line = Box.createHorizontalBox();
@@ -263,6 +274,27 @@ public class SettingsPanel extends JPanel {
 		line.add(language);
 		add(line);
 		add(Box.createVerticalStrut(20));
+		
+		
+		List<DomStudentModelContext> list = new ArrayList<>();
+//		try {
+//			SecureTeacherStudentModelManager modelManager = new SecureTeacherStudentModelManager();
+//			DomDwoProfile dwoprofile = PublicProfileCache.get(profile.getText());
+//			list = modelManager.getReducedList(dwoprofile);
+//		} catch (Dwo2Exception|RuntimeException e) {
+//		}
+		list.add(0, null);
+		StudentComboBoxModel model = new StudentComboBoxModel(list);
+		modelselect = new JComboBox<DomStudentModelContext>(model);
+		modelselect.setRenderer(new StudentModelRenderer());
+		modelselect.addItemListener(this);
+		line = Box.createHorizontalBox();
+		s = (String) config.getProperty("studentmodelcontext");
+		modelselect.setSelectedItem(model.find(s));
+		line.add(new JLabel("Model"));
+		line.add(modelselect);		
+		add(line);
+
 		line = Box.createHorizontalBox();
 		okBtn = new JButton("OK");
 		line.add(okBtn);
@@ -278,7 +310,21 @@ public class SettingsPanel extends JPanel {
 	}
 
 	
-	
+	private void selectAfterLogin() {
+		List<DomStudentModelContext> list = new ArrayList<>();
+		try {
+			SecureTeacherStudentModelManager modelManager = new SecureTeacherStudentModelManager();
+			DomDwoProfile dwoprofile = PublicProfileCache.get(profile.getText());
+			list = modelManager.getReducedList(dwoprofile);
+		} catch (Dwo2Exception e) {
+		}
+		list.add(0, null);
+		StudentComboBoxModel model = new StudentComboBoxModel(list);
+		String s = (String) config.getProperty("studentmodelcontext");
+		modelselect.setModel(model);		
+		modelselect.setSelectedItem(model.find(s));
+
+	}
 	
 	
 	
@@ -286,6 +332,41 @@ public class SettingsPanel extends JPanel {
 	public void setRefreshToken(String token) {
 		config.setProperty("refresh_token", token);
 		config.setProperty("userName", name.getText());
+	}
+
+
+
+	String getId() {
+		DomStudentModelContext c = (DomStudentModelContext) modelselect.getSelectedItem();
+		if (c == null) return null;
+		return c.getId().getIdString();
+	}
+
+
+
+	@Override
+	public void itemStateChanged(ItemEvent e) {
+		if (e.getStateChange() == e.SELECTED) {
+			Object item = e.getItem();
+			if (e.getSource() == modelselect) {		
+				if (item instanceof DomStudentModelContext) {
+					config.setProperty("studentmodelcontext", ((DomStudentModelContext) item).getId().getIdString());
+				}
+			} else if (e.getSource() == schools) {
+				DomContext context = StoredRestManager.getInstance().getAuthenticator().getContext();
+				for (DomSchoolRoleAndClassV2 login : logins.getSchoolsRolesAndClassesList()) {
+					if (login.getRole().getRoleName().equals("TEACHER"))
+						if (login.getSchool().getSchoolName().equals(item)) {
+							DomHasRole hr = login.getHasRole();
+							context.setDomHasRole(hr);
+							break;
+						}
+				}
+				selectAfterLogin();
+
+			}
+		}
+		
 	}
 	
 }

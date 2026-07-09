@@ -191,8 +191,11 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 			config.setProperty("profile", p.getProperty("profile"));
 			config.setProperty("school", p.getProperty("school"));
 // all relevant keys here!
-			Object m = config.getProperty("studentmodelcontext");
-			if (m != null) p.put("studentmodelcontext", m);
+			Object m =  settings.getId();
+			if (m != null) {
+				p.put("studentmodelcontext", m);
+				config.setProperty("studentmodelcontext", m);
+			}
 // root folder
 			m = config.getProperty("rootfolder");
 			if (m == null) {

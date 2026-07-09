@@ -138,6 +138,8 @@
 							javax.ws.*;resolution:=optional,
 							javax.xml.bind.*;resolution:=optional,
 							javax.activation;resolution:=optional,
+							fi.beans.mainframe,
+							fi.beans.scorm,
 							*
 						</Import-Package>
 <!-- 						<Embed-Transitive>false</Embed-Transitive>-->
