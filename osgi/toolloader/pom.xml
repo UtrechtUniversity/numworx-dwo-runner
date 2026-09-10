@@ -35,6 +35,13 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<artifactId>async-lib</artifactId>
+        	<groupId>nl.uu.fi.dwo</groupId>
+        	<version>3.0.1</version>
+			<scope>provided</scope>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
 			<groupId>fi.dwo</groupId>
 			<artifactId>bootloader</artifactId>
 			<version>${project.version}</version>
@@ -113,7 +120,6 @@
 								fi.beans.scorm,
 								nl.uu.fi.dwo.rest.*,
 								nl.uu.fi.dwo.lms.jclient.lib.rest.*,
-								nl.numworx.async,
 								fi.beans.loader,
 								com.owlike.genson,com.owlike.genson.ext,com.owlike.genson.ext.jaxb
 						</Export-Package>
