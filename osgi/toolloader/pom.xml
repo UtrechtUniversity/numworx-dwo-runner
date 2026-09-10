@@ -36,11 +36,17 @@
 		</dependency>
 		<dependency>
 			<artifactId>async-lib</artifactId>
-        	<groupId>nl.uu.fi.dwo</groupId>
-        	<version>3.0.1</version>
+        		<groupId>nl.uu.fi.dwo</groupId>
+        		<version>3.0.1</version>
 			<scope>provided</scope>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+  			<groupId>org.osgi</groupId>
+  			<artifactId>org.osgi.service.log</artifactId>
+  			<version>1.4.0</version>
+  			<scope>provided</scope>
+  		</dependency>
 		<dependency>
 			<groupId>fi.dwo</groupId>
 			<artifactId>bootloader</artifactId>
