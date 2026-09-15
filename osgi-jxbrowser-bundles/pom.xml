@@ -25,13 +25,13 @@
           <groupId>com.teamdev.jxbrowser</groupId>
           <artifactId>jxbrowser-cross-platform</artifactId>
           <type>pom</type>
-          <version>7.28.1</version>
+          <version>7.34.1</version>
           <optional>true</optional>
       </dependency>
       <dependency>
           <groupId>com.teamdev.jxbrowser</groupId>
           <artifactId>jxbrowser-swing</artifactId>
-          <version>7.28.1</version>
+          <version>7.34.1</version>
           <optional>true</optional>
       </dependency>
   </dependencies>
@@ -91,7 +91,7 @@
 					   <goals><goal>install-file</goal></goals>
 					   <phase>install</phase>
 					   <configuration>
-					   		<file>target/com.teamdev.jxbrowser-7.28.1.jar</file>
+					   		<file>target/com.teamdev.jxbrowser-7.34.1.jar</file>
 					   </configuration>
 					</execution>
                     <execution>
@@ -99,7 +99,7 @@
                        <goals><goal>install-file</goal></goals>
                        <phase>install</phase>
                        <configuration>
-                            <file>target/com.teamdev.jxbrowser-swing-7.28.1.jar</file>
+                            <file>target/com.teamdev.jxbrowser-swing-7.34.1.jar</file>
 							<classifier>swing</classifier>
                         </configuration>
                     </execution>
@@ -108,7 +108,7 @@
                        <goals><goal>install-file</goal></goals>
                        <phase>install</phase>
                        <configuration>
-                            <file>target/com.teamdev.jxbrowser-win64-7.28.1.jar</file>
+                            <file>target/com.teamdev.jxbrowser-win64-7.34.1.jar</file>
 							<classifier>win64</classifier>
                         </configuration>
                     </execution>
@@ -117,7 +117,7 @@
                        <goals><goal>install-file</goal></goals>
                        <phase>install</phase>
                        <configuration>
-                            <file>target/com.teamdev.jxbrowser-linux64-7.28.1.jar</file>
+                            <file>target/com.teamdev.jxbrowser-linux64-7.34.1.jar</file>
 							<classifier>linux64</classifier>
                         </configuration>
                     </execution>
@@ -126,7 +126,7 @@
                        <goals><goal>install-file</goal></goals>
                        <phase>install</phase>
                        <configuration>
-                            <file>target/com.teamdev.jxbrowser-linux64-arm-7.28.1.jar</file>
+                            <file>target/com.teamdev.jxbrowser-linux64-arm-7.34.1.jar</file>
 							<classifier>linux64-arm</classifier>
                         </configuration>
                     </execution>
@@ -135,7 +135,7 @@
                        <goals><goal>install-file</goal></goals>
                        <phase>install</phase>
                        <configuration>
-                            <file>target/com.teamdev.jxbrowser-mac-7.28.1.jar</file>
+                            <file>target/com.teamdev.jxbrowser-mac-7.34.1.jar</file>
 							<classifier>mac</classifier>
                         </configuration>
                     </execution>
@@ -144,7 +144,7 @@
                        <goals><goal>install-file</goal></goals>
                        <phase>install</phase>
                        <configuration>
-                            <file>target/com.teamdev.jxbrowser-mac-arm-7.28.1.jar</file>
+                            <file>target/com.teamdev.jxbrowser-mac-arm-7.34.1.jar</file>
 							<classifier>mac-arm</classifier>
                         </configuration>
                     </execution>
