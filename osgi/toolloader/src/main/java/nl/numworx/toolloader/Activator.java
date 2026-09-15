@@ -1,5 +1,6 @@
 package nl.numworx.toolloader;
 
+import java.awt.Dimension;
 import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -53,6 +54,10 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 
 public class Activator extends fi.dwo.bootloader.impl.Activator implements BundleActivator, BooleanSupplier {
 	
+	final static int TEACHERTOOL_WIDTH = 1600;
+	final static int TEACHERTOOL_HEIGHT=  900;
+	
+	
 	public class Stub implements AppletStub, AppletContext {
 		
 		final Properties props;
@@ -88,7 +93,8 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 
 		@Override
 		public void appletResize(int width, int height) {
-			main.setSize(width, height);
+			var bounds = main.getInsets();
+			main.setSize(width+bounds.left+bounds.right, height+bounds.bottom+bounds.top);
 		}
 
 		@Override
@@ -185,8 +191,11 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 			config.setProperty("profile", p.getProperty("profile"));
 			config.setProperty("school", p.getProperty("school"));
 // all relevant keys here!
-			Object m = config.getProperty("studentmodelcontext");
-			if (m != null) p.put("studentmodelcontext", m);
+			Object m =  settings.getId();
+			if (m != null) {
+				p.put("studentmodelcontext", m);
+				config.setProperty("studentmodelcontext", m);
+			}
 // root folder
 			m = config.getProperty("rootfolder");
 			if (m == null) {
@@ -202,11 +211,23 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 			AppletStub stub = new Stub(p);
 			applet.setStub(stub);
 			applet.addPropertyChangeListener("about", this);
-			applet.init();
+			int width, height;
+			try {
+				width = Integer.parseInt(p.getProperty("nl.numworx.teachertool.width"));
+			} catch(Exception oops) {
+				width = TEACHERTOOL_WIDTH;
+			}
+			try {
+				height = Integer.parseInt(p.getProperty("nl.numworx.teachertool.height"));
+			} catch(Exception oops) {
+				height = TEACHERTOOL_HEIGHT;
+			}
 			main.setApplet(applet);
-			main.pack();
+			applet.setSize(width, height);		
+			applet.init();
+			main.validate();
 			main.show();
-			applet.start();
+			main.start();
 		}
 
 		@Override
@@ -238,12 +259,24 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 		
 	}
 
+	@SuppressWarnings("serial")
 	class PrimaryFrame extends JFrame implements PropertyChangeListener {
 		
 		private JApplet applet;
+		private boolean started;
 
 		public JApplet getApplet() {
 			return applet;
+		}
+
+		public void start() {
+			started = true;
+			applet.start();
+		}
+		
+		public void stop() {
+			if (started) applet.stop();
+			started = false;
 		}
 
 		public void setApplet(JApplet applet) {
@@ -253,6 +286,7 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 			setRootPane(rootPane); // adopt.
 			applet.addPropertyChangeListener("rootPane", this);
 			validate();
+			pack();
 			repaint();
 		}
 
@@ -266,7 +300,7 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 				try {
 					applet.removePropertyChangeListener("rootPane", this);
 					setRootPane(null); // gone.
-					applet.stop();
+					stop();
 					applet.destroy();
 				} catch (Exception e) {
 					// .....
@@ -432,9 +466,22 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 		return context.getService(reference);
 	}
 
+	public void saveSize() {
+		if (main!=null && main.getApplet() != null)
+		{
+			Dimension size = main.getRootPane().getSize();
+			config.setProperty("nl.numworx.teachertool.width", Integer.toString(size.width));
+			config.setProperty("nl.numworx.teachertool.height", Integer.toString(size.height));
+			main.stop();
+		}
+	}
+	
+	
 	public void stop(BundleContext context) throws Exception {
 		if (main!=null)
+		{
 			main.dispose();
+		}
         main = null;
     	if (eawtref != null) {
     		EAWT s = context.getService(eawtref);
@@ -446,6 +493,8 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
     }
 
     void stopApplication() {
+    	saveSize();
+    	
 		ServiceReference<EventAdmin> ref = context.getServiceReference(EventAdmin.class);
 		if (ref != null) 
 		{

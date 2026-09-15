@@ -3,7 +3,7 @@
 	<parent>
 	  <groupId>nl.uu.fi.dwo</groupId>
 	  <artifactId>runner-parent</artifactId>
-	  <version>3.0.0</version>
+	  <version>3.0.1</version>
       <relativePath>../..</relativePath>
 	</parent>
 	<artifactId>app-install</artifactId>
@@ -91,9 +91,7 @@
 						<configuration>
 							<inputDir>${project.build.directory}/${project.build.finalName}</inputDir>
 							<outputFile>${project.build.directory}/${project.build.finalName}/index.xml</outputFile>
-							<indexFiles>
-								<include>*.jar</include>
-							</indexFiles>
+							<includeGzip>false</includeGzip>
 						</configuration>
 					</execution>
 				</executions>
@@ -159,7 +157,7 @@
 		<dependency>
 			<groupId>fi.dwo</groupId>
 			<artifactId>bootloader</artifactId>
-			<version>3.0.0</version>
+			<version>3.0.1</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>org.osgi.core</artifactId>
@@ -176,7 +174,7 @@
 		<dependency>
 			<groupId>fi.dwo</groupId>
 			<artifactId>dwojapplet-starter</artifactId>
-			<version>3.0.0</version>
+			<version>3.0.1</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>org.osgi.core</artifactId>
@@ -298,6 +296,12 @@
     <groupId>javax.xml.bind</groupId>
     <artifactId>jaxb-api</artifactId>
     <version>2.3.1</version>
+    <exclusions>
+    	<exclusion>
+    		<groupId>javax.activation</groupId>
+    		<artifactId>javax.activation-api</artifactId>
+    	</exclusion>
+    </exclusions>
 </dependency>
 		<dependency>
 			<groupId>javax.annotation</groupId>
@@ -307,42 +311,42 @@
 		<dependency>
 			<groupId>nl.numworx</groupId>
 			<artifactId>com.teamdev.jxbrowser</artifactId>
-			<version>3.0.0</version>
+			<version>3.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>nl.numworx</groupId>
 			<artifactId>com.teamdev.jxbrowser</artifactId>
-			<version>3.0.0</version>
+			<version>3.0.1</version>
 			<classifier>swing</classifier>
 		</dependency>
 		<dependency>
 			<groupId>nl.numworx</groupId>
 			<artifactId>com.teamdev.jxbrowser</artifactId>
-			<version>3.0.0</version>
+			<version>3.0.1</version>
 			<classifier>mac</classifier>
 		</dependency>
 		<dependency>
 			<groupId>nl.numworx</groupId>
 			<artifactId>com.teamdev.jxbrowser</artifactId>
-			<version>3.0.0</version>
+			<version>3.0.1</version>
 			<classifier>mac-arm</classifier>
 		</dependency>
 		<dependency>
 			<groupId>nl.numworx</groupId>
 			<artifactId>com.teamdev.jxbrowser</artifactId>
-			<version>3.0.0</version>
+			<version>3.0.1</version>
 			<classifier>linux64</classifier>
 		</dependency>
         <dependency>
             <groupId>nl.numworx</groupId>
             <artifactId>com.teamdev.jxbrowser</artifactId>
-            <version>3.0.0</version>
+            <version>3.0.1</version>
             <classifier>linux64-arm</classifier>
         </dependency>
 		<dependency>
 			<groupId>nl.numworx</groupId>
 			<artifactId>com.teamdev.jxbrowser</artifactId>
-			<version>3.0.0</version>
+			<version>3.0.1</version>
 			<classifier>win64</classifier>
 		</dependency>
         <dependency>
@@ -387,7 +391,7 @@
         <dependency>
         	<groupId>nl.numworx.toolloader</groupId>
         	<artifactId>toolloader</artifactId>
-        	<version>3.0.0</version>
+        	<version>3.0.1</version>
         </dependency>
         <dependency>
 			<groupId>org.osgi</groupId>
