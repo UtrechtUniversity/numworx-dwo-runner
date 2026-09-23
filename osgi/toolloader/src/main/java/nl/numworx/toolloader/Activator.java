@@ -207,7 +207,10 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 			p = new Delegate(p, config);
 			main.hide();
 			JApplet applet = startTeacherTool(p);
-			if (applet == null) stopApplication();
+			if (applet == null) {
+				stopApplication();
+				return;
+			}
 			AppletStub stub = new Stub(p);
 			applet.setStub(stub);
 			applet.addPropertyChangeListener("about", this);
