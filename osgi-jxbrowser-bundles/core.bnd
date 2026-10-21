@@ -1,4 +1,4 @@
-ver: 7.28.1
+ver: 7.34.1
 -classpath: target/jxbrowser-${ver}.jar
 Bundle-SymbolicName: com.teamdev.jxbrowser
 -output: target/${bsn}-${ver}.jar

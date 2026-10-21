@@ -1,4 +1,4 @@
-ver: 7.28.1
+ver: 7.34.1
 -classpath: target/jxbrowser-swing-${ver}.jar
 Bundle-SymbolicName: com.teamdev.jxbrowser-swing
 -output: target/com.teamdev.jxbrowser-swing-${ver}.jar
