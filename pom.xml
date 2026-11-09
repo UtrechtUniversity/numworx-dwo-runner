@@ -6,7 +6,7 @@
         <version>3.0.1</version>
 	</parent>
   <artifactId>runner-parent</artifactId>
-  <version>3.0.1</version>
+  <version>3.0.3-SNAPSHOT</version>
   <packaging>pom</packaging>
   <properties>
 	<dwo.version>${dwoVersion}</dwo.version>
