@@ -7,6 +7,7 @@ import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.HashMap;
@@ -115,7 +116,7 @@ public class SettingsPanel extends JPanel implements ItemListener {
 		public void actionPerformed(ActionEvent e) {
 			SAMLLoginIF panel = login.get();
 			panel.setEndpoint("/dwo/oauth2/entree");
-			panel.popup(SettingsPanel.this, serverURI + "oauth2/login3.jsp?idphint=dwo")
+			panel.popup(SettingsPanel.this, serverURI + "oauth2/login3.jsp?idphint=dwo&login_hint=" + URLEncoder.encode(name.getText()))
 			.then(pr -> {
 				System.out.println("got " + pr.getValue());
 				if (ref != null) ref.unregister();
@@ -174,7 +175,7 @@ public class SettingsPanel extends JPanel implements ItemListener {
 	        DomUserFull user = SecureUserAccountManager.getAccountData();
 	        name.setText(user.getUserName());
 	        name.setEnabled(false);
-logins = SecureUserAccountLoginsManager.getSchoolLogins();
+	        logins = SecureUserAccountLoginsManager.getSchoolLogins();
 	        DefaultComboBoxModel<String>model = new DefaultComboBoxModel<>();
 			for (DomSchoolRoleAndClassV2 login : logins.getSchoolsRolesAndClassesList()) {
 				if (login.getRole().getRoleName().equals("TEACHER"))
