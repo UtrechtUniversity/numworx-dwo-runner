@@ -53,8 +53,7 @@ public class Loader {
 		}
 
 		private void error(String string, Throwable e1) {
-			System.err.println(string);
-			e1.printStackTrace();			
+			System.getLogger(getClass().getName()).log(System.Logger.Level.ERROR, string, e1);
 		}
 		
 	}

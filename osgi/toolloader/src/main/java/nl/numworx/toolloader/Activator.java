@@ -430,7 +430,7 @@ public class Activator extends fi.dwo.bootloader.impl.Activator implements Bundl
 					.setBase(jarindex)
 					//.setBase(base)
 					.setLocation(location)
-					.setUpdate(Update.ALWAYS)
+					.setUpdate(Update.MAYBE)
 					.startWrap(TOOL);
 			teachertool = (Class<? extends JApplet>) bundles.get(0).loadClass(TOOL);			
 		} catch (BundleException
